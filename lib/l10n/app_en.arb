@@ -1,0 +1,90 @@
+{
+  "@@locale": "en",
+  "appTitle": "Travel App",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "companions": "Companions",
+  "tours": "Tours",
+  "bookings": "Bookings",
+  "content": "Content",
+  "profile": "Profile",
+  "travelCompanions": "Travel Companions",
+  "tourGroups": "Tour Groups",
+  "travelContent": "Travel Content",
+  "noCompanionsFound": "No companions found",
+  "noToursFound": "No tours found",
+  "noHotelsFound": "No hotels found",
+  "noContentFound": "No content found",
+  "companionDetails": "Companion Details",
+  "tourDetails": "Tour Details",
+  "hotelDetails": "Hotel Details",
+  "available": "Available",
+  "unavailable": "Unavailable",
+  "pricePerDay": "Price per day",
+  "destinations": "Destinations",
+  "interests": "Interests",
+  "skills": "Skills",
+  "languages": "Languages",
+  "chat": "Chat",
+  "bookNow": "Book Now",
+  "filter": "Filter",
+  "search": "Search",
+  "searchHotels": "Search hotels...",
+  "sort": "Sort",
+  "sortHotels": "Sort Hotels",
+  "priceLowToHigh": "Price: Low to High",
+  "priceHighToLow": "Price: High to Low",
+  "ratingHighToLow": "Rating: High to Low",
+  "hotels": "Hotels",
+  "tickets": "Tickets",
+  "insurance": "Insurance",
+  "orders": "Orders",
+  "favorites": "Favorites",
+  "reviews": "Reviews",
+  "wallet": "Wallet",
+  "notifications": "Notifications",
+  "language": "Language",
+  "english": "English",
+  "chinese": "中文",
+  "selectLanguage": "Select Language",
+  "all": "All",
+  "guide": "Guide",
+  "tips": "Tips",
+  "travelNotes": "Travel Notes",
+  "trending": "Trending",
+  "duration": "Duration",
+  "days": "{count, plural, =1{day} other{days}}",
+  "@days": {
+    "description": "Number of days",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "maxParticipants": "Max {count}",
+  "@maxParticipants": {
+    "description": "Maximum participants",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "route": "Route",
+  "description": "Description",
+  "amenities": "Amenities",
+  "location": "Location",
+  "rating": "Rating",
+  "reviews": "Reviews",
+  "views": "Views",
+  "likes": "Likes",
+  "author": "Author",
+  "publishDate": "Publish Date",
+  "guest": "Guest"
+}
+
+
+
+
