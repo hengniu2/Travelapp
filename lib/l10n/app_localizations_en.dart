@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Travel App';
 
   @override
+  String get home => 'Home';
+
+  @override
   String get companions => 'Companions';
 
   @override

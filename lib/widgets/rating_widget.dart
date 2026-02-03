@@ -49,11 +49,15 @@ class RatingWidget extends StatelessWidget {
         ),
         if (reviewCount > 0) ...[
           const SizedBox(width: 4),
-          Text(
-            '共$reviewCount人预订',
-            style: TextStyle(
-              fontSize: size - 6,
-              color: Colors.grey.shade600,
+          Flexible(
+            child: Text(
+              '共$reviewCount人预订',
+              style: TextStyle(
+                fontSize: size - 6,
+                color: Colors.grey.shade600,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

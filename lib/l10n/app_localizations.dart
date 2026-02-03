@@ -101,6 +101,12 @@ abstract class AppLocalizations {
   /// **'Travel App'**
   String get appTitle;
 
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
   /// No description provided for @companions.
   ///
   /// In en, this message translates to:

@@ -22,12 +22,16 @@ class PriceWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          showFrom ? '${formatter.format(price)}起' : formatter.format(price),
-          style: style ?? const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFE53935), // Red price color like Chinese apps
+        Flexible(
+          child: Text(
+            showFrom ? '${formatter.format(price)}起' : formatter.format(price),
+            style: style ?? const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFE53935), // Red price color like Chinese apps
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

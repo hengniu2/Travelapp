@@ -1,6 +1,7 @@
 {
   "@@locale": "zh",
   "appTitle": "旅行应用",
+  "home": "首页",
   "companions": "旅伴",
   "tours": "旅游团",
   "bookings": "预订",

@@ -12,6 +12,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => '旅行应用';
 
   @override
+  String get home => '首页';
+
+  @override
   String get companions => '旅伴';
 
   @override
