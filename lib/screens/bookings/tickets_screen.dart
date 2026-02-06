@@ -114,13 +114,11 @@ class _TicketsScreenState extends State<TicketsScreen> {
       ),
       body: Column(
         children: [
-          // Search bar with gradient
+          // Search bar with image background
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.white.withOpacity(0.95)],
-              ),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
@@ -138,7 +136,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: AppTheme.sunsetGradient),
+                    color: AppTheme.categoryOrange,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(Icons.search, color: Colors.white, size: 20),
@@ -210,11 +208,10 @@ class _TicketsScreenState extends State<TicketsScreen> {
                               width: 120,
                               height: 120,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: gradient),
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: gradient[0].withOpacity(0.3),
+                                    color: typeColor.withOpacity(0.3),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -222,34 +219,11 @@ class _TicketsScreenState extends State<TicketsScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.network(
-                                  ticket.image ?? TravelImages.getTourImage(ticket.hashCode),
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(colors: gradient),
-                                      ),
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress.expectedTotalBytes != null
-                                              ? loadingProgress.cumulativeBytesLoaded /
-                                                  loadingProgress.expectedTotalBytes!
-                                              : null,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(colors: gradient),
-                                      ),
-                                      child: const Icon(Icons.confirmation_number, size: 50, color: Colors.white70),
-                                    );
-                                  },
+                                child: TravelImages.buildImageBackground(
+                                  imageUrl: ticket.image ?? TravelImages.getTourImage(ticket.hashCode),
+                                  opacity: 0.3,
+                                  cacheWidth: 300,
+                                  child: const SizedBox.shrink(),
                                 ),
                               ),
                             ),

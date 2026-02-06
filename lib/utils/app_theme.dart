@@ -33,7 +33,8 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      fontFamily: 'Roboto',
+      // Chinese system fonts: PingFang SC (iOS) / Noto Sans SC (Android)
+      fontFamily: 'PingFang SC', // Falls back to system default on Android
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
         brightness: Brightness.light,
@@ -41,7 +42,7 @@ class AppTheme {
         secondary: secondaryColor,
         tertiary: accentColor,
       ),
-      scaffoldBackgroundColor: backgroundColor,
+      scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Light gray background like Xiaohongshu
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: true,
@@ -56,10 +57,10 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        elevation: 6,
-        shadowColor: Colors.black.withOpacity(0.15),
+        elevation: 0, // No elevation, use soft shadows instead
+        shadowColor: Colors.black.withOpacity(0.08),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16), // 14-20px range, using 16px
         ),
         color: cardColor,
       ),

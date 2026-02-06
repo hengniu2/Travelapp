@@ -29,305 +29,6 @@ class CompanionDetailScreen extends StatelessWidget {
     final gradient = gradients[companion.hashCode % gradients.length];
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text(l10n.companionDetails),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 8),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: appProvider.isFavorite(companion.id)
-                    ? [AppTheme.categoryPink, AppTheme.categoryRed]
-                    : [Colors.grey.shade300, Colors.grey.shade400],
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-            icon: Icon(
-              appProvider.isFavorite(companion.id)
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-                color: Colors.white,
-            ),
-            onPressed: () {
-              appProvider.toggleFavorite(companion.id);
-            },
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-          children: [
-            Container(
-                  height: 350,
-              width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: gradient,
-                    ),
-                  ),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.network(
-                        companion.avatar ?? TravelImages.getCompanionAvatar(companion.hashCode),
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: gradient),
-                            ),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: gradient),
-                            ),
-                            child: Center(
-                      child: Text(
-                        companion.name[0],
-                                style: const TextStyle(
-                                  fontSize: 100,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                    ),
-                          );
-                        },
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.4),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Availability badge
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: companion.isAvailable
-                            ? [const Color(0xFF4CAF50), const Color(0xFF66BB6A)]
-                            : [const Color(0xFFE53935), const Color(0xFFEF5350)],
-                      ),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: (companion.isAvailable
-                              ? const Color(0xFF4CAF50)
-                              : const Color(0xFFE53935))
-                              .withOpacity(0.4),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          companion.isAvailable ? Icons.check_circle : Icons.cancel,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          companion.isAvailable ? l10n.available : l10n.unavailable,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.all(20),
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          companion.name,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
-                          ),
-                        ),
-                      ),
-                      RatingWidget(
-                        rating: companion.rating,
-                        reviewCount: companion.reviewCount,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  if (companion.bio != null) ...[
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.primaryColor.withOpacity(0.1),
-                            AppTheme.primaryColor.withOpacity(0.05),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppTheme.primaryColor.withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                      companion.bio!,
-                        style: TextStyle(
-                          fontSize: 16,
-                          height: 1.6,
-                          color: AppTheme.textSecondary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                  _buildSection(
-                    l10n.destinations,
-                    companion.destinations,
-                    Icons.location_on,
-                    AppTheme.categoryBlue,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSection(
-                    l10n.interests,
-                    companion.interests,
-                    Icons.favorite,
-                    AppTheme.categoryPink,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSection(
-                    l10n.skills,
-                    companion.skills,
-                    Icons.star,
-                    AppTheme.categoryOrange,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSection(
-                    l10n.languages,
-                    companion.languages,
-                    Icons.language,
-                    AppTheme.categoryPurple,
-                  ),
-                  const SizedBox(height: 24),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: AppTheme.primaryGradient,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.primaryColor.withOpacity(0.3),
-                          blurRadius: 15,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.pricePerDay,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                          ),
-                            const SizedBox(height: 4),
-                            PriceWidget(
-                              price: companion.pricePerDay,
-                              style: const TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                        ],
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                        ),
-                          child: const Icon(
-                            Icons.attach_money,
-                            color: Colors.white,
-                            size: 24,
-                        ),
-                      ),
-                    ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -340,91 +41,449 @@ class CompanionDetailScreen extends StatelessWidget {
           ],
         ),
         child: SafeArea(
-        child: Padding(
+          child: Padding(
             padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            CompanionChatScreen(companion: companion),
-                      ),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    side: BorderSide(color: AppTheme.primaryColor, width: 2),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.chat, size: 18),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          l10n.chat,
-                          style: const TextStyle(fontSize: 13),
-                          overflow: TextOverflow.ellipsis,
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CompanionChatScreen(companion: companion),
                         ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton(
-                  onPressed: companion.isAvailable
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  CompanionBookingScreen(companion: companion),
-                            ),
-                          );
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color: AppTheme.primaryColor, width: 2),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.book_online, size: 18),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          l10n.bookNow,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.chat, size: 18),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            l10n.chat,
+                            style: const TextStyle(fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton(
+                    onPressed: companion.isAvailable
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CompanionBookingScreen(companion: companion),
+                              ),
+                            );
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.book_online, size: 18),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            l10n.bookNow,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+      body: TravelImages.buildImageBackground(
+        imageUrl: TravelImages.getCompanionBackground(companion.hashCode % 10),
+        opacity: 0.04,
+        cacheWidth: 1200,
+        child: Container(
+          color: AppTheme.backgroundColor,
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 400,
+                floating: false,
+                pinned: true,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      TravelImages.buildImageBackground(
+                        imageUrl: TravelImages.getCompanionBackground(companion.hashCode % 10),
+                        opacity: 0.5,
+                        cacheWidth: 1200,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.3),
+                                Colors.black.withOpacity(0.5),
+                                Colors.black.withOpacity(0.7),
+                              ],
+                              stops: const [0.0, 0.6, 1.0],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Profile avatar overlay
+                      Positioned(
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 4,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: ClipOval(
+                                child: TravelImages.buildImageBackground(
+                                  imageUrl: TravelImages.getSafeImageUrl(
+                                    companion.avatar,
+                                    companion.hashCode,
+                                    400,
+                                    400,
+                                  ),
+                                  opacity: 0.0,
+                                  cacheWidth: 400,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: gradient),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        companion.name[0],
+                                        style: const TextStyle(
+                                          fontSize: 40,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    companion.name,
+                                    style: const TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          blurRadius: 6,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  RatingWidget(
+                                    rating: companion.rating,
+                                    reviewCount: companion.reviewCount,
+                                    size: 14,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  Container(
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.25),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.4),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        appProvider.isFavorite(companion.id)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        appProvider.toggleFavorite(companion.id);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Availability and stats bar
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white,
+                          Colors.white.withOpacity(0.95),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStatCard(
+                          Icons.check_circle,
+                          companion.isAvailable ? '在线' : '离线',
+                          companion.isAvailable ? const Color(0xFF4CAF50) : Colors.grey,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: Colors.grey.shade300,
+                        ),
+                        _buildStatCard(
+                          Icons.star,
+                          '${companion.rating}分',
+                          AppTheme.categoryOrange,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: Colors.grey.shade300,
+                        ),
+                        _buildStatCard(
+                          Icons.people,
+                          '${companion.reviewCount}评价',
+                          AppTheme.categoryBlue,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (companion.bio != null) ...[
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppTheme.primaryColor.withOpacity(0.1),
+                                  AppTheme.primaryColor.withOpacity(0.05),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppTheme.primaryColor.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              companion.bio!,
+                              style: TextStyle(
+                                fontSize: 16,
+                                height: 1.6,
+                                color: AppTheme.textSecondary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                        _buildSection(
+                          l10n.destinations,
+                          companion.destinations,
+                          Icons.location_on,
+                          AppTheme.categoryBlue,
+                        ),
+                        const SizedBox(height: 20),
+                        _buildSection(
+                          l10n.interests,
+                          companion.interests,
+                          Icons.favorite,
+                          AppTheme.categoryPink,
+                        ),
+                        const SizedBox(height: 20),
+                        _buildSection(
+                          l10n.skills,
+                          companion.skills,
+                          Icons.star,
+                          AppTheme.categoryOrange,
+                        ),
+                        const SizedBox(height: 20),
+                        _buildSection(
+                          l10n.languages,
+                          companion.languages,
+                          Icons.language,
+                          AppTheme.categoryPurple,
+                        ),
+                        const SizedBox(height: 24),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: AppTheme.primaryGradient,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.primaryColor.withOpacity(0.3),
+                                blurRadius: 15,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    l10n.pricePerDay,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white.withOpacity(0.9),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  PriceWidget(
+                                    price: companion.pricePerDay,
+                                    style: const TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.attach_money,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(IconData icon, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
@@ -511,6 +570,3 @@ class CompanionDetailScreen extends StatelessWidget {
     );
   }
 }
-
-
-

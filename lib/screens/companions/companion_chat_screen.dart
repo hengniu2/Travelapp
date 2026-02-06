@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/companion.dart';
+import '../../utils/travel_images.dart';
 
 class CompanionChatScreen extends StatefulWidget {
   final Companion companion;
@@ -61,10 +62,14 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
+      body: TravelImages.buildImageBackground(
+        imageUrl: TravelImages.getChatBackground(0),
+        opacity: 0.05,
+        cacheWidth: 800,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
@@ -147,6 +152,7 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

@@ -73,11 +73,13 @@ class _ContentScreenState extends State<ContentScreen> {
     };
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text(l10n.travelContent),
-      ),
-      body: Column(
+      body: TravelImages.buildImageBackground(
+        imageUrl: TravelImages.getContentImage(10),
+        opacity: 0.03,
+        cacheWidth: 1200,
+        child: Container(
+          color: AppTheme.backgroundColor,
+          child: Column(
         children: [
           Container(
             height: 60,
@@ -237,47 +239,17 @@ class _ContentScreenState extends State<ContentScreen> {
                                 Container(
                                         height: 220,
                                   width: double.infinity,
-                                  child: Image.network(
-                                          content.image ?? TravelImages.getContentImage(index),
-                                    fit: BoxFit.cover,
-                                          loadingBuilder: (context, child, loadingProgress) {
-                                            if (loadingProgress == null) return child;
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                  colors: gradient,
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: CircularProgressIndicator(
-                                                  value: loadingProgress.expectedTotalBytes != null
-                                                      ? loadingProgress.cumulativeBytesLoaded /
-                                                          loadingProgress.expectedTotalBytes!
-                                                      : null,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                  colors: gradient,
-                                                ),
-                                              ),
-                                              child: const Icon(
-                                                Icons.image,
-                                                size: 70,
-                                                color: Colors.white70,
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                  child: TravelImages.buildImageBackground(
+                                    imageUrl: TravelImages.getSafeImageUrl(
+                                      content.image, 
+                                      index, 
+                                      800, 
+                                      600
+                                    ),
+                                    opacity: 0.0,
+                                    cacheWidth: 800,
+                                    child: const SizedBox.shrink(),
+                                  ),
                                       ),
                                       // Gradient overlay
                                       Positioned.fill(
@@ -467,6 +439,8 @@ class _ContentScreenState extends State<ContentScreen> {
                   ),
           ),
         ],
+          ),
+        ),
       ),
     );
   }

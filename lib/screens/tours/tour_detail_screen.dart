@@ -58,25 +58,19 @@ class TourDetailScreen extends StatelessWidget {
                 Container(
                   height: 350,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: gradient,
-                    ),
-                  ),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       Image.network(
                         tour.image ?? TravelImages.getTourImage(tour.hashCode),
                         fit: BoxFit.cover,
+                        cacheWidth: 800,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: gradient),
-                            ),
+                          return TravelImages.buildImageBackground(
+                            imageUrl: TravelImages.getTourImage(tour.hashCode),
+                            opacity: 0.3,
+                            cacheWidth: 800,
                             child: Center(
                               child: CircularProgressIndicator(
                                 value: loadingProgress.expectedTotalBytes != null
@@ -89,11 +83,13 @@ class TourDetailScreen extends StatelessWidget {
                           );
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: gradient),
+                          return TravelImages.buildImageBackground(
+                            imageUrl: TravelImages.getTourImage(tour.hashCode),
+                            opacity: 0.5,
+                            cacheWidth: 800,
+                            child: const Center(
+                              child: Icon(Icons.image, size: 100, color: Colors.white70),
                             ),
-                            child: const Icon(Icons.image, size: 100, color: Colors.white70),
                           );
                         },
                       ),

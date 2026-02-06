@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../utils/travel_images.dart';
+import '../../utils/app_theme.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -31,7 +33,11 @@ class NotificationsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Notifications'),
       ),
-      body: ListView.builder(
+      body: TravelImages.buildImageBackground(
+        imageUrl: TravelImages.getNotificationBackground(0),
+        opacity: 0.1,
+        cacheWidth: 600,
+        child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: notifications.length,
         itemBuilder: (context, index) {
@@ -66,6 +72,7 @@ class NotificationsScreen extends StatelessWidget {
             ),
           );
         },
+        ),
       ),
     );
   }
