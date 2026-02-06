@@ -463,8 +463,9 @@ class CompanionDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

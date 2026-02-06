@@ -390,19 +390,13 @@ class _CachedImageWithFallback extends StatelessWidget {
       fit: fit,
       memCacheWidth: cacheWidth,
       memCacheHeight: cacheHeight,
-      // Use placeholder while loading
+      // Use placeholder while loading - just show gradient, no spinner
       placeholder: (context, url) => Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: gradient,
-          ),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2,
           ),
         ),
       ),
@@ -420,12 +414,6 @@ class _CachedImageWithFallback extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: gradient,
-              ),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2,
               ),
             ),
           ),

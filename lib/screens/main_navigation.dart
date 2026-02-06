@@ -100,83 +100,89 @@ class _MainNavigationState extends State<MainNavigation> {
             ),
             child: SafeArea(
               top: false,
-              child: Container(
+              child: SizedBox(
                 height: 70,
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(
-                    navItems.length,
-                    (index) => Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _currentIndex = index),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeInOutCubic,
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            gradient: _currentIndex == index
-                                ? LinearGradient(
-                                    colors: [
-                                      AppTheme.primaryColor.withOpacity(0.2),
-                                      AppTheme.primaryColor.withOpacity(0.1),
-                                    ],
-                                  )
-                                : null,
-                            boxShadow: _currentIndex == index
-                                ? [
-                                    BoxShadow(
-                                      color: AppTheme.primaryColor.withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: List.generate(
+                      navItems.length,
+                      (index) => Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _currentIndex = index),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeInOutCubic,
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: _currentIndex == index
+                                  ? LinearGradient(
+                                      colors: [
+                                        AppTheme.primaryColor.withOpacity(0.2),
+                                        AppTheme.primaryColor.withOpacity(0.1),
+                                      ],
+                                    )
+                                  : null,
+                              boxShadow: _currentIndex == index
+                                  ? [
+                                      BoxShadow(
+                                        color: AppTheme.primaryColor.withOpacity(0.2),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: _currentIndex == index
+                                          ? AppTheme.primaryColor.withOpacity(0.15)
+                                          : Colors.transparent,
                                     ),
-                                  ]
-                                : null,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _currentIndex == index
-                                      ? AppTheme.primaryColor.withOpacity(0.15)
-                                      : Colors.transparent,
-                                ),
-                                child: Icon(
-                                  _currentIndex == index
-                                      ? navItems[index]['icon'] as IconData
-                                      : navItems[index]['iconOutlined'] as IconData,
-                                  color: _currentIndex == index
-                                      ? AppTheme.primaryColor
-                                      : Colors.grey.shade600,
-                                  size: 22,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  navItems[index]['label'] as String,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: _currentIndex == index
-                                        ? FontWeight.bold
-                                        : FontWeight.w500,
-                                    color: _currentIndex == index
-                                        ? AppTheme.primaryColor
-                                        : Colors.grey.shade600,
-                                    letterSpacing: 0.3,
+                                    child: Icon(
+                                      _currentIndex == index
+                                          ? navItems[index]['icon'] as IconData
+                                          : navItems[index]['iconOutlined'] as IconData,
+                                      color: _currentIndex == index
+                                          ? AppTheme.primaryColor
+                                          : Colors.grey.shade600,
+                                      size: 22,
+                                    ),
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 2),
+                                Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      navItems[index]['label'] as String,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: _currentIndex == index
+                                            ? FontWeight.bold
+                                            : FontWeight.w500,
+                                        color: _currentIndex == index
+                                            ? AppTheme.primaryColor
+                                            : Colors.grey.shade600,
+                                        letterSpacing: 0.3,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

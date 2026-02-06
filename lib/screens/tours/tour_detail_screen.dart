@@ -67,19 +67,12 @@ class TourDetailScreen extends StatelessWidget {
                         cacheWidth: 800,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
+                          // Just show gradient background while loading, no spinner
                           return TravelImages.buildImageBackground(
                             imageUrl: TravelImages.getTourImage(tour.hashCode),
                             opacity: 0.3,
                             cacheWidth: 800,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: const SizedBox.shrink(),
                           );
                         },
                         errorBuilder: (context, error, stackTrace) {

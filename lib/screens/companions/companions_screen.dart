@@ -466,12 +466,6 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(colors: gradient),
                                 ),
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                ),
                               ),
                               errorWidget: (context, url, error) {
                                 return Container(

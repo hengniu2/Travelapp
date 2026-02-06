@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Allow all HTTPS connections to Unsplash and other image services -->
+    <!-- Allow all HTTPS connections -->
     <base-config cleartextTraffic="false">
         <trust-anchors>
             <!-- Trust preinstalled CAs -->
@@ -15,8 +15,10 @@
         <domain includeSubdomains="true">unsplash.com</domain>
         <domain includeSubdomains="true">source.unsplash.com</domain>
         <domain includeSubdomains="true">images.unsplash.com</domain>
+        <domain includeSubdomains="true">api.unsplash.com</domain>
         <domain includeSubdomains="true">picsum.photos</domain>
         <domain includeSubdomains="true">via.placeholder.com</domain>
+        <domain includeSubdomains="true">placeholder.com</domain>
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
