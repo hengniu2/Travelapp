@@ -27,11 +27,9 @@ class HotelDetailScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: appProvider.isFavorite(hotel.id)
-                    ? [AppTheme.categoryPink, AppTheme.categoryRed]
-                    : [Colors.grey.shade300, Colors.grey.shade400],
-              ),
+              color: appProvider.isFavorite(hotel.id)
+                  ? AppTheme.categoryPink
+                  : Colors.grey.shade300,
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -57,44 +55,19 @@ class HotelDetailScreen extends StatelessWidget {
                 Container(
                   height: 350,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: gradient,
-                    ),
-                  ),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Image.network(
-                        hotel.image ?? TravelImages.getHotelImage(hotel.hashCode),
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: gradient),
-                            ),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: gradient),
-                            ),
-                            child: const Icon(Icons.hotel, size: 100, color: Colors.white70),
-                          );
-                        },
+                      TravelImages.buildImageBackground(
+                        imageUrl: TravelImages.getSafeImageUrl(
+                          hotel.image, 
+                          hotel.hashCode, 
+                          800, 
+                          600
+                        ),
+                        opacity: 0.0,
+                        cacheWidth: 800,
+                        child: const SizedBox.shrink(),
                       ),
                       Container(
                         decoration: BoxDecoration(

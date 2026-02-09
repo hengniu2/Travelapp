@@ -9,6 +9,13 @@ allprojects {
         google()
         mavenCentral()
     }
+    // Force consistent Kotlin stdlib to avoid corrupted cache / module metadata issues
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24")
+        }
+    }
 }
 
 val newBuildDir: Directory =

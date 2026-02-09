@@ -9,7 +9,7 @@ class AppProvider with ChangeNotifier {
   final List<Order> _orders = [];
   final List<String> _favorites = [];
   double _walletBalance = 0.0;
-  Locale _locale = const Locale('en');
+  Locale _locale = const Locale('zh');
 
   User? get currentUser => _currentUser;
   List<Order> get orders => _orders;
@@ -58,12 +58,10 @@ class AppProvider with ChangeNotifier {
     );
     _walletBalance = 500.0;
     
-    // Load saved language preference
+    // Load saved language preference (default: Chinese)
     final prefs = await SharedPreferences.getInstance();
     final savedLanguage = prefs.getString('language_code');
-    if (savedLanguage != null) {
-      _locale = Locale(savedLanguage);
-    }
+    _locale = Locale(savedLanguage ?? 'zh');
     
     notifyListeners();
   }

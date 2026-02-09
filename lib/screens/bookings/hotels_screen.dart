@@ -179,20 +179,31 @@ class _HotelsScreenState extends State<HotelsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(24),
+                          width: 120,
+                          height: 120,
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppTheme.primaryColor.withOpacity(0.1),
-                                AppTheme.primaryColor.withOpacity(0.05),
-                              ],
-                            ),
                             shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.primaryColor.withOpacity(0.2),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
                           ),
-                          child: Icon(
-                            Icons.hotel_outlined,
-                            size: 64,
-                            color: AppTheme.primaryColor,
+                          child: ClipOval(
+                            child: TravelImages.buildImageBackground(
+                              imageUrl: TravelImages.getHotelImage(0),
+                              opacity: 0.3,
+                              cacheWidth: 300,
+                              child: Center(
+                                child: Icon(
+                                  Icons.hotel_outlined,
+                                  size: 64,
+                                  color: AppTheme.primaryColor,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -246,16 +257,15 @@ class _HotelsScreenState extends State<HotelsScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                  // Hotel image with gradient
+                                  // Hotel image
                                 Container(
                                     width: 120,
                                     height: 120,
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(colors: gradient),
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: gradient[0].withOpacity(0.3),
+                                          color: AppTheme.categoryBlue.withOpacity(0.3),
                                           blurRadius: 12,
                                           offset: const Offset(0, 4),
                                         ),
@@ -263,34 +273,16 @@ class _HotelsScreenState extends State<HotelsScreen> {
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20),
-                                      child: Image.network(
-                                        hotel.image ?? TravelImages.getHotelImage(hotel.hashCode),
-                                        fit: BoxFit.cover,
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) return child;
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(colors: gradient),
-                                            ),
-                                            child: Center(
-                                              child: CircularProgressIndicator(
-                                                value: loadingProgress.expectedTotalBytes != null
-                                                    ? loadingProgress.cumulativeBytesLoaded /
-                                                        loadingProgress.expectedTotalBytes!
-                                                    : null,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                  decoration: BoxDecoration(
-                                              gradient: LinearGradient(colors: gradient),
-                                  ),
-                                            child: const Icon(Icons.hotel, size: 50, color: Colors.white70),
-                                          );
-                                        },
+                                      child: TravelImages.buildImageBackground(
+                                        imageUrl: TravelImages.getSafeImageUrl(
+                                          hotel.image, 
+                                          hotel.hashCode, 
+                                          300, 
+                                          300
+                                        ),
+                                        opacity: 0.3,
+                                        cacheWidth: 300,
+                                        child: const SizedBox.shrink(),
                                       ),
                                     ),
                                 ),
@@ -317,24 +309,23 @@ class _HotelsScreenState extends State<HotelsScreen> {
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                           child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                        children: [
+                                            children: [
                                               Icon(Icons.location_on, size: 16, color: AppTheme.categoryBlue),
                                               const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              hotel.location,
+                                              Expanded(
+                                                child: Text(
+                                                  hotel.location,
                                                   style: TextStyle(
                                                     fontSize: 13,
                                                     color: AppTheme.categoryBlue,
                                                     fontWeight: FontWeight.w600,
                                                   ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
                                         ),
                                         const SizedBox(height: 10),
                                       RatingWidget(

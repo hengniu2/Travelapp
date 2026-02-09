@@ -208,11 +208,6 @@ class _ToursScreenState extends State<ToursScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       height: 180,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: AppTheme.primaryGradient,
-        ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -223,89 +218,72 @@ class _ToursScreenState extends State<ToursScreen> {
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          // Decorative circles
-          Positioned(
-            top: -30,
-            right: -30,
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -20,
-            left: -20,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
-              ),
-            ),
-          ),
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: TravelImages.buildImageBackground(
+          imageUrl: TravelImages.getTourImage(0),
+          opacity: 0.7,
+          cacheWidth: 800,
+          child: Stack(
+            children: [
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.explore, color: Colors.white, size: 28),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          '跟团游',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 1,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black26,
+                                offset: Offset(0, 2),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Icon(Icons.explore, color: Colors.white, size: 28),
-                    ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      '跟团游',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
+                      child: const Text(
+                        '省时省心,"吃住行玩"一站式打包',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    '省时省心,"吃住行玩"一站式打包',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -331,11 +309,6 @@ class _ToursScreenState extends State<ToursScreen> {
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: gradient,
-                  ),
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
@@ -345,10 +318,20 @@ class _ToursScreenState extends State<ToursScreen> {
                     ),
                   ],
                 ),
-                child: Icon(
-                  cat['icon'] as IconData,
-                  color: Colors.white,
-                  size: 32,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: TravelImages.buildImageBackground(
+                    imageUrl: TravelImages.getTourImage(categories.indexOf(cat)),
+                    opacity: 0.7,
+                    cacheWidth: 200,
+                    child: Center(
+                      child: Icon(
+                        cat['icon'] as IconData,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -427,271 +410,204 @@ class _ToursScreenState extends State<ToursScreen> {
   }
 
   Widget _buildTourCard(Tour tour, int index) {
-    final gradients = [
-      AppTheme.primaryGradient,
-      AppTheme.sunsetGradient,
-      AppTheme.oceanGradient,
-      AppTheme.purpleGradient,
-    ];
-    final gradient = gradients[index % gradients.length];
+    final isHot = tour.isTrending;
+    final isRecommended = tour.rating >= 4.5;
     
     return Container(
-      width: 300,
-      margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
-            spreadRadius: 2,
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                child: Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: gradient,
-                    ),
-                  ),
-                  child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.network(
-                          tour.image ?? TravelImages.getTourImage(index),
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: gradient,
-                                ),
-                              ),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: gradient,
-                                ),
-                              ),
-                              child: const Icon(Icons.image, size: 70, color: Colors.white70),
-                            );
-                          },
-                        ),
-                            // Overlay gradient for better text readability
-                            Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withOpacity(0.3),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TourDetailScreen(tour: tour),
               ),
-              // Booking count badge
-              Positioned(
-                top: 12,
-                left: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.people, color: Colors.white, size: 14),
-                      const SizedBox(width: 4),
-                      Text(
-                        '共${tour.reviewCount}人预订',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              // Trending badge
-                            if (tour.isTrending)
-                              Positioned(
-                  top: 12,
-                  right: 12,
-                                child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppTheme.categoryRed, AppTheme.categoryOrange],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.categoryRed.withOpacity(0.4),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.local_fire_department, color: Colors.white, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          '热门',
-                          style: TextStyle(
-                                      color: Colors.white,
-                            fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                        ),
-                      ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                tour.title,
-                  style: TextStyle(
-                    fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                    height: 1.4,
-                    color: AppTheme.textPrimary,
-                              ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Large image section
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.primaryColor.withOpacity(0.15),
-                            AppTheme.primaryColor.withOpacity(0.08),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppTheme.primaryColor.withOpacity(0.3),
-                          width: 1,
+                    TravelImages.buildImageBackground(
+                      imageUrl: TravelImages.getSafeImageUrl(tour.image, index, 1200, 675),
+                      opacity: 0.0,
+                      cacheWidth: 1200,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.3),
+                            ],
+                            stops: const [0.5, 1.0],
+                          ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                    ),
+                    // Badges
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (isHot)
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFFF1744), Color(0xFFFF6B6B)],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                          Icon(Icons.shopping_cart_outlined, size: 12, color: AppTheme.primaryColor),
-                                  const SizedBox(width: 4),
-                          Text(
-                            '0购物',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: AppTheme.primaryColor,
-                              fontWeight: FontWeight.w600,
+                                  Icon(
+                                    Icons.local_fire_department,
+                                    color: Colors.white,
+                                    size: 14,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    '热门',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
                               ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.accentColor.withOpacity(0.15),
-                            AppTheme.accentColor.withOpacity(0.08),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppTheme.accentColor.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                                children: [
-                          Icon(Icons.verified, size: 12, color: AppTheme.accentColor),
-                                  const SizedBox(width: 4),
-                          Text(
-                            '成团保障',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: AppTheme.accentColor,
-                              fontWeight: FontWeight.w600,
                             ),
-                          ),
+                          if (isRecommended)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF00C853), Color(0xFF4DD865)],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                '推荐',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
-                                ],
+                    // Title overlay
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.6),
+                            ],
+                          ),
+                        ),
+                        child: Text(
+                          tour.title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black54,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
                               ),
-                const SizedBox(height: 14),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                    PriceWidget(price: tour.price),
-                                  RatingWidget(
-                                    rating: tour.rating,
-                                    reviewCount: tour.reviewCount,
-                                  ),
+                            ],
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              // Info section
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: PriceWidget(
+                        price: tour.price,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFE53935),
+                        ),
+                      ),
+                    ),
+                    RatingWidget(
+                      rating: tour.rating,
+                      reviewCount: tour.reviewCount,
+                      size: 14,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -701,97 +617,188 @@ class _ToursScreenState extends State<ToursScreen> {
     final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text(l10n.tourGroups),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.chat_bubble_outline),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: _filteredTours.isEmpty
-          ? Center(
-              child: Text(
-                l10n.noToursFound,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: AppTheme.textPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSearchBar(),
-                  _buildHeroBanner(),
-                  _buildCategoryIcons(),
-                  _buildPopularDestinations(),
-                  const SizedBox(height: 16),
-                  // Featured Tours Section
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              '精选推荐',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+      body: TravelImages.buildImageBackground(
+        imageUrl: TravelImages.getTourImage(10),
+        opacity: 0.03,
+        cacheWidth: 1200,
+        child: Container(
+          color: AppTheme.backgroundColor,
+          child: _filteredTours.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TravelImages.buildImageBackground(
+                        imageUrl: TravelImages.getTourImage(5),
+                        opacity: 0.2,
+                        cacheWidth: 400,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppTheme.primaryColor.withOpacity(0.3),
+                              width: 3,
                             ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                '查看更多 >',
-                                style: TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                                ],
-                              ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          height: 320,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _filteredTours.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          TourDetailScreen(tour: _filteredTours[index]),
-                                    ),
-                                  );
-                                },
-                                child: _buildTourCard(_filteredTours[index], index),
-                              );
-                            },
+                          ),
+                          child: Icon(
+                            Icons.explore_outlined,
+                            size: 80,
+                            color: AppTheme.primaryColor,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        l10n.noToursFound,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: AppTheme.textPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
+                )
+              : CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      expandedHeight: 0,
+                      floating: true,
+                      pinned: false,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      flexibleSpace: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.white.withOpacity(0.95),
+                              Colors.white.withOpacity(0.85),
+                            ],
+                          ),
+                        ),
+                        child: SafeArea(
+                          bottom: false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  l10n.tourGroups,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.textPrimary,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.08),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.filter_list, color: AppTheme.primaryColor),
+                                        onPressed: _showFilterDialog,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSearchBar(),
+                          _buildHeroBanner(),
+                          _buildCategoryIcons(),
+                          _buildPopularDestinations(),
+                          const SizedBox(height: 20),
+                          // Featured Tours Section
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      '精选推荐',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.textPrimary,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        '查看更多 >',
+                                        style: TextStyle(
+                                          color: AppTheme.primaryColor,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  height: 340,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _filteredTours.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: const EdgeInsets.only(right: 16),
+                                        width: 320,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TourDetailScreen(tour: _filteredTours[index]),
+                                              ),
+                                            );
+                                          },
+                                          child: _buildTourCard(_filteredTours[index], index),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
     );
   }
 }

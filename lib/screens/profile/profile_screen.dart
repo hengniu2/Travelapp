@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/travel_images.dart';
 import 'package:provider/provider.dart';
 import 'orders_screen.dart';
 import 'favorites_screen.dart';
@@ -19,30 +20,33 @@ class ProfileScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text(l10n.profile),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 40, bottom: 40, left: 24, right: 24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: AppTheme.primaryGradient,
+      body: TravelImages.buildImageBackground(
+        imageUrl: TravelImages.getProfileBackground(5),
+        opacity: 0.04,
+        cacheWidth: 1200,
+        child: Container(
+          color: AppTheme.backgroundColor,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+            SizedBox(
+              width: double.infinity,
+              child: TravelImages.buildImageBackground(
+                imageUrl: TravelImages.getProfileBackground(0),
+                opacity: 0.8,
+                cacheWidth: 800,
+                child: Container(
+                padding: const EdgeInsets.only(top: 40, bottom: 40, left: 24, right: 24),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withOpacity(0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primaryColor.withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Column(
+                child: Column(
                 children: [
                   Stack(
                     children: [
@@ -68,29 +72,16 @@ class ProfileScreen extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                     child: user?.avatar != null
                               ? ClipOval(
-                                  child: Image.network(
-                                    user!.avatar!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: AppTheme.primaryGradient,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            (user?.name.isNotEmpty ?? false) ? user!.name[0] : 'U',
-                                            style: const TextStyle(
-                                              fontSize: 40,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                  child: TravelImages.buildImageBackground(
+                                    imageUrl: TravelImages.getSafeImageUrl(
+                                      user!.avatar, 
+                                      user.hashCode, 
+                                      200, 
+                                      200
+                                    ),
+                                    opacity: 0.0,
+                                    cacheWidth: 200,
+                                    child: const SizedBox.shrink(),
                                   ),
                                 )
                               : Container(
@@ -174,7 +165,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+                ),
               ),
+            ),
             ),
             _buildMenuItem(
               context,
@@ -250,7 +243,9 @@ class ProfileScreen extends StatelessWidget {
                 _showLanguageDialog(context);
               },
             ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
