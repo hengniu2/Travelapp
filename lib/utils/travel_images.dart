@@ -1,259 +1,204 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 /// Comprehensive image collection for Chinese Travel App
-/// Uses Unsplash API with Chinese travel-specific search queries
-/// Provides beautiful, meaningful images for travel destinations
-/// Fallback chain: Unsplash API -> Picsum Photos -> Placeholder -> Gradient
+/// Uses local meaningful images from assets/images folder
 class TravelImages {
-  // Unsplash Access Key (demo key - replace with your own from unsplash.com/developers)
-  // Get your free API key at: https://unsplash.com/developers
-  static const String _unsplashAccessKey = 'YOUR_UNSPLASH_ACCESS_KEY';
-  static const String _unsplashApiUrl = 'https://api.unsplash.com';
-  
-  // Chinese travel destinations and keywords for meaningful images
-  static const List<String> _chineseTravelKeywords = [
-    'china travel',
-    'beijing',
-    'shanghai',
-    'great wall china',
-    'forbidden city',
-    'terracotta warriors',
-    'guilin mountains',
-    'yangtze river',
-    'tibet',
-    'suzhou gardens',
-    'hangzhou west lake',
-    'xi an',
-    'chengdu',
-    'chinese temple',
-    'chinese architecture',
-    'chinese landscape',
-    'chinese culture',
-    'chinese mountains',
-    'chinese city',
-    'chinese nature',
-    'chinese heritage',
-    'chinese tourism',
-    'chinese landmarks',
-    'chinese scenery',
-    'chinese countryside',
+  // ==================== HOME SCREEN IMAGES ====================
+  static String getHomeHeader(int index) {
+    final images = [
+      'assets/images/home/header/home_header_bg_1.jpg',
+      'assets/images/home/header/home_header_bg_2.jpg',
+      'assets/images/home/header/home_header_bg_3.jpg',
   ];
-
-  // Alternative keywords for different contexts
-  static const List<String> _travelKeywords = [
-    'travel',
-    'adventure',
-    'nature',
-    'landscape',
-    'mountain',
-    'beach',
-    'city',
-    'architecture',
-    'culture',
-    'tourism',
-  ];
-
-  /// Get Unsplash random photo URL with search query
-  /// Uses Unsplash's public image service with variety
-  static String _getUnsplashPhotoUrl(int index, int width, int height, {String? category}) {
-    final keyword = category ?? _chineseTravelKeywords[index % _chineseTravelKeywords.length];
-    final encodedKeyword = Uri.encodeComponent(keyword);
-    
-    // Use different URL patterns for more variety
-    // Pattern 1: Featured photos with keyword
-    if (index % 3 == 0) {
-      return 'https://source.unsplash.com/featured/${width}x${height}/?$encodedKeyword&sig=${index * 17}';
-    }
-    // Pattern 2: Random with keyword
-    else if (index % 3 == 1) {
-      return 'https://source.unsplash.com/${width}x${height}/?$encodedKeyword&sig=${index * 23}';
-    }
-    // Pattern 3: Daily photo with keyword variation
-    else {
-      return 'https://source.unsplash.com/daily/${width}x${height}/?$encodedKeyword&sig=${index * 31}';
-    }
+    return images[index % images.length];
   }
 
-  /// Get Unsplash API photo URL (requires API key)
-  /// This method provides the best results with proper search
-  static Future<String> _getUnsplashApiPhotoUrl(int index, int width, int height, {String? category}) async {
-    if (_unsplashAccessKey == 'YOUR_UNSPLASH_ACCESS_KEY') {
-      // Fall back to direct URL method if no API key
-      return _getUnsplashPhotoUrl(index, width, height, category: category);
-    }
-
-    try {
-      final keyword = category ?? _chineseTravelKeywords[index % _chineseTravelKeywords.length];
-      final encodedKeyword = Uri.encodeComponent(keyword);
-      
-      // Use Unsplash Search API
-      final url = Uri.parse(
-        '$_unsplashApiUrl/search/photos?query=$encodedKeyword&per_page=30&client_id=$_unsplashAccessKey'
-      );
-      
-      final response = await http.get(url);
-      
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final results = data['results'] as List?;
-        
-        if (results != null && results.isNotEmpty) {
-          // Get a different photo based on index
-          final photoIndex = index % results.length;
-          final photo = results[photoIndex];
-          final urls = photo['urls'] as Map<String, dynamic>;
-          
-          // Return appropriate size based on requested dimensions
-          if (width <= 400) {
-            return urls['small'] as String? ?? urls['regular'] as String;
-          } else if (width <= 1080) {
-            return urls['regular'] as String? ?? urls['full'] as String;
-          } else {
-            return urls['full'] as String;
-          }
-        }
-      }
-    } catch (e) {
-      // Fall through to direct URL method
-    }
-    
-    // Fallback to direct URL method
-    return _getUnsplashPhotoUrl(index, width, height, category: category);
+  /// Get action button images
+  static String getActionCompanions(int index) {
+    final images = [
+      'assets/images/home/actions/action_companions_bg_1.jpg',
+      'assets/images/home/actions/action_companions_bg_2.jpg',
+      'assets/images/home/actions/action_companions_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
-  /// Get image URL from multiple sources with fallback
-  /// Primary: Unsplash API/URLs (high quality travel images)
-  /// Fallback: Picsum Photos (reliable backup)
-  static String _getImageUrl(int index, int width, int height, {String? providedUrl, String? category}) {
-    // If provided URL is valid and not Unsplash, use it
-    if (providedUrl != null && 
-        !providedUrl.contains('unsplash.com') && 
-        !providedUrl.contains('source.unsplash.com')) {
-      return providedUrl;
-    }
-    
-    // Use Unsplash with Chinese travel keywords for variety
-    // Rotate through different keywords to get more variety
-    final keywordIndex = (index * 7) % _chineseTravelKeywords.length; // Multiply for more variety
-    final keyword = category ?? _chineseTravelKeywords[keywordIndex];
-    
-    // Use the improved Unsplash URL method
-    return _getUnsplashPhotoUrl(index, width, height, category: keyword);
+  static String getActionTours(int index) {
+    final images = [
+      'assets/images/home/actions/action_tours_bg_1.jpg',
+      'assets/images/home/actions/action_tours_bg_2.jpg',
+      'assets/images/home/actions/action_tours_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
-  /// Get fallback image URL (Picsum Photos - very reliable)
-  static String _getFallbackImageUrl(int index, int width, int height) {
-    // Picsum Photos as backup - very reliable, no API key needed
-    // Use different seeds for variety
-    final seed = 'travel${index * 7}'; // Multiply for more variety
-    return 'https://picsum.photos/seed/$seed/$width/$height';
+  static String getActionBookings(int index) {
+    final images = [
+      'assets/images/home/actions/action_bookings_bg_1.jpg',
+      'assets/images/home/actions/action_bookings_bg_2.jpg',
+      'assets/images/home/actions/action_bookings_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
-  /// Get alternative fallback URL (Placeholder.com)
-  static String _getPlaceholderUrl(int index, int width, int height) {
-    return 'https://via.placeholder.com/${width}x${height}?text=Travel+$index';
+  static String getActionContent(int index) {
+    final images = [
+      'assets/images/home/actions/action_content_bg_1.jpg',
+      'assets/images/home/actions/action_content_bg_2.jpg',
+      'assets/images/home/actions/action_content_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
-  /// Get safe image URL - always returns a working URL
-  /// Tries Unsplash first, then falls back to Picsum
-  static String getSafeImageUrl(String? providedUrl, int index, int width, int height, {String? category}) {
-    return _getImageUrl(index, width, height, providedUrl: providedUrl, category: category);
-  }
-
-  // ==================== CHINESE DESTINATIONS & TOURS ====================
+  // ==================== TOURS ====================
   static String getTourImage(int index) {
-    // Use specific Chinese travel keywords for tours
-    final keywords = ['china travel', 'chinese landmarks', 'chinese heritage', 'chinese tourism'];
-    final keyword = keywords[index % keywords.length];
-    return _getImageUrl(index, 800, 600, category: keyword);
+    final images = [
+      'assets/images/tours/cards/tour_list_item_1.jpg',
+      'assets/images/tours/cards/tour_list_item_2.jpg',
+      'assets/images/tours/cards/tour_list_item_3.jpg',
+      'assets/images/tours/cards/tour_list_item_4.jpg',
+      'assets/images/tours/cards/tour_list_item_5.jpg',
+      'assets/images/tours/cards/tour_list_item_6.jpg',
+      'assets/images/home/tours/tour_card_bg_1.jpg',
+      'assets/images/home/tours/tour_card_bg_2.jpg',
+      'assets/images/tours/detail/tour_detail_hero_1.jpg',
+      'assets/images/tours/detail/tour_detail_hero_2.jpg',
+      'assets/images/tours/detail/tour_detail_hero_3.jpg',
+    ];
+    return images[index % images.length];
   }
   
   static List<String> get chineseTourImages {
     return List.generate(15, (i) => getTourImage(i));
   }
 
-  // ==================== HOME SCREEN IMAGES ====================
-  static String getHomeHeader(int index) {
-    // Use landscape keywords for headers
-    final keywords = ['chinese landscape', 'china travel', 'chinese scenery', 'chinese nature'];
-    final keyword = keywords[index % keywords.length];
-    return _getImageUrl(100 + index, 1200, 400, category: keyword);
-  }
-
-  /// Get action button images with specific keywords
-  static String getActionCompanions(int index) {
-    return _getImageUrl(200 + index, 400, 400, category: 'people travel');
-  }
-
-  static String getActionTours(int index) {
-    return _getImageUrl(210 + index, 400, 400, category: 'china travel');
-  }
-
-  static String getActionBookings(int index) {
-    return _getImageUrl(220 + index, 400, 400, category: 'chinese hotel');
-  }
-
-  static String getActionContent(int index) {
-    return _getImageUrl(230 + index, 400, 400, category: 'chinese culture');
-  }
-
   // ==================== COMPANIONS ====================
   /// Get companion avatar
   static String getCompanionAvatar(int index) {
-    return _getImageUrl(300 + index, 400, 400, category: 'portrait');
+    final images = [
+      'assets/images/companions/avatars/companion_avatar_1.jpg',
+      'assets/images/companions/avatars/companion_avatar_2.jpg',
+      'assets/images/companions/avatars/companion_avatar_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
   /// Get companion background
   static String getCompanionBackground(int index) {
-    return _getImageUrl(310 + index, 800, 600, category: 'adventure travel');
+    final images = [
+      'assets/images/home/companions/companion_card_bg_1.jpg',
+      'assets/images/home/companions/companion_card_bg_2.jpg',
+      'assets/images/companions/detail/companion_detail_header_1.jpg',
+      'assets/images/companions/detail/companion_detail_header_2.jpg',
+      'assets/images/companions/detail/companion_detail_header_3.jpg',
+      'assets/images/companions/detail/companion_detail_header_4.jpg',
+      'assets/images/companions/profiles/companion_profile_bg_1.jpg',
+      'assets/images/companions/profiles/companion_profile_bg_2.jpg',
+      'assets/images/companions/profiles/companion_profile_bg_3.jpg',
+      'assets/images/companions/profiles/companion_profile_bg_4.jpg',
+    ];
+    return images[index % images.length];
   }
 
   // ==================== CONTENT/BLOG ====================
   /// Get content image
   static String getContentImage(int index) {
-    final keywords = ['chinese culture', 'chinese heritage', 'chinese architecture', 'chinese landmarks'];
-    final keyword = keywords[index % keywords.length];
-    return _getImageUrl(400 + index, 800, 600, category: keyword);
+    final images = [
+      'assets/images/home/content/content_card_bg_1.jpg',
+      'assets/images/tours/cards/tour_list_item_1.jpg',
+      'assets/images/tours/cards/tour_list_item_2.jpg',
+      'assets/images/tours/cards/tour_list_item_3.jpg',
+      'assets/images/tours/cards/tour_list_item_4.jpg',
+      'assets/images/tours/cards/tour_list_item_5.jpg',
+    ];
+    return images[index % images.length];
   }
 
   // ==================== HOTELS & ACCOMMODATION ====================
   /// Get hotel image
   static String getHotelImage(int index) {
-    return _getImageUrl(500 + index, 800, 600, category: 'chinese hotel');
+    final images = [
+      'assets/images/bookings/hotels/booking_hotels_bg_1.jpg',
+      'assets/images/bookings/hotels/booking_hotels_bg_2.jpg',
+      'assets/images/bookings/hotels/booking_hotels_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
   // ==================== PROFILE & WALLET ====================
   /// Get profile background
   static String getProfileBackground(int index) {
-    return _getImageUrl(600 + index, 800, 400, category: 'chinese nature');
+    // Use tour images as profile backgrounds
+    final images = [
+      'assets/images/tours/headers/tours_header_bg_1.jpg',
+      'assets/images/tours/headers/tours_header_bg_2.jpg',
+      'assets/images/tours/headers/tours_header_bg_3.jpg',
+      'assets/images/home/header/home_header_bg_1.jpg',
+      'assets/images/home/header/home_header_bg_2.jpg',
+      'assets/images/home/header/home_header_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
   /// Get wallet background
   static String getWalletBackground(int index) {
-    return _getImageUrl(700 + index, 800, 400, category: 'chinese city');
+    final images = [
+      'assets/images/tours/headers/tours_header_bg_1.jpg',
+      'assets/images/tours/headers/tours_header_bg_2.jpg',
+      'assets/images/tours/headers/tours_header_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
   /// Get booking background
   static String getBookingBackground(int index) {
-    return _getImageUrl(710 + index, 800, 400, category: 'china travel');
+    final images = [
+      'assets/images/bookings/hotels/booking_hotels_bg_1.jpg',
+      'assets/images/bookings/hotels/booking_hotels_bg_2.jpg',
+      'assets/images/bookings/hotels/booking_hotels_bg_3.jpg',
+      'assets/images/tours/headers/tours_header_bg_1.jpg',
+      'assets/images/tours/headers/tours_header_bg_2.jpg',
+    ];
+    return images[index % images.length];
   }
 
   /// Get notification background
   static String getNotificationBackground(int index) {
-    return _getImageUrl(720 + index, 600, 300, category: 'chinese nature');
+    final images = [
+      'assets/images/home/header/home_header_bg_1.jpg',
+      'assets/images/home/header/home_header_bg_2.jpg',
+      'assets/images/home/header/home_header_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
   /// Get chat background
   static String getChatBackground(int index) {
-    return _getImageUrl(730 + index, 800, 600, category: 'chinese landscape');
+    final images = [
+      'assets/images/companions/profiles/companion_profile_bg_1.jpg',
+      'assets/images/companions/profiles/companion_profile_bg_2.jpg',
+      'assets/images/companions/profiles/companion_profile_bg_3.jpg',
+    ];
+    return images[index % images.length];
   }
 
-  /// Build image background widget with overlay and automatic fallbacks
-  /// Uses cached_network_image for better performance and error handling
-  /// Fallback chain: Unsplash -> Picsum -> Placeholder -> Gradient
+  /// Get safe image URL - returns local asset path or provided URL
+  static String getSafeImageUrl(String? providedUrl, int index, int width, int height, {String? category}) {
+    // If provided URL is valid and not a local asset, use it
+    if (providedUrl != null && 
+        !providedUrl.startsWith('assets/images/') &&
+        !providedUrl.startsWith('assets/')) {
+      return providedUrl;
+    }
+    
+    // Otherwise use tour image as default
+    return getTourImage(index);
+  }
+
+  /// Build image background widget with overlay
+  /// Handles both local assets and network images
   static Widget buildImageBackground({
     required String imageUrl,
     required Widget child,
@@ -267,42 +212,27 @@ class TravelImages {
     // Use provided fallback gradient or generate one from imageUrl hash
     final gradient = fallbackGradient ?? getGradientForIndex(imageUrl.hashCode);
     
-    // Extract index from URL if possible, otherwise use hash
-    int imageIndex = imageUrl.hashCode;
-    try {
-      // Try to extract index from Unsplash URL
-      final unsplashMatch = RegExp(r'sig=(\d+)').firstMatch(imageUrl);
-      if (unsplashMatch != null) {
-        imageIndex = int.parse(unsplashMatch.group(1)!);
-      } else {
-        // Try Picsum URL
-        final picsumMatch = RegExp(r'seed/travel(\d+)').firstMatch(imageUrl);
-        if (picsumMatch != null) {
-          imageIndex = int.parse(picsumMatch.group(1)!);
-        }
-      }
-    } catch (e) {
-      // Use hash if parsing fails
-    }
-    
-    // Get fallback URLs
-    final fallbackUrl = _getFallbackImageUrl(imageIndex, cacheWidth ?? 800, cacheHeight ?? 600);
-    final placeholderUrl = _getPlaceholderUrl(imageIndex, cacheWidth ?? 800, cacheHeight ?? 600);
+    // Check if it's a local asset
+    final isLocalAsset = imageUrl.startsWith('assets/images/') || imageUrl.startsWith('assets/');
     
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
           children: [
-            // Background image with fallback chain using cached_network_image
+            // Background image
             Positioned.fill(
-              child: _CachedImageWithFallback(
-                primaryUrl: imageUrl,
-                fallbackUrl: fallbackUrl,
-                placeholderUrl: placeholderUrl,
+              child: isLocalAsset
+                  ? _LocalImageWidget(
+                      assetPath: imageUrl,
+                      fit: fit,
                 gradient: gradient,
+                    )
+                  : _CachedNetworkImageWidget(
+                      imageUrl: imageUrl,
                 fit: fit,
                 cacheWidth: cacheWidth,
                 cacheHeight: cacheHeight,
+                      gradient: gradient,
               ),
             ),
             // Dark overlay for text readability
@@ -362,36 +292,134 @@ class TravelImages {
   }
 }
 
-/// Widget that tries multiple image sources with fallbacks using cached_network_image
-/// This provides better error handling and caching for network images
-class _CachedImageWithFallback extends StatelessWidget {
-  final String primaryUrl;
-  final String fallbackUrl;
-  final String placeholderUrl;
+/// Widget for local asset images
+class _LocalImageWidget extends StatefulWidget {
+  final String assetPath;
+  final BoxFit fit;
   final List<Color> gradient;
+
+  const _LocalImageWidget({
+    required this.assetPath,
+    required this.fit,
+    required this.gradient,
+  });
+
+  @override
+  State<_LocalImageWidget> createState() => _LocalImageWidgetState();
+}
+
+class _LocalImageWidgetState extends State<_LocalImageWidget> {
+  bool _assetExists = true;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _verifyAsset();
+  }
+
+  Future<void> _verifyAsset() async {
+    try {
+      await rootBundle.load(widget.assetPath);
+      if (mounted) {
+        setState(() {
+          _assetExists = true;
+          _isLoading = false;
+        });
+        debugPrint('✅ Asset found: ${widget.assetPath}');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _assetExists = false;
+          _isLoading = false;
+        });
+        debugPrint('❌ Asset not found: ${widget.assetPath}');
+        debugPrint('   Error: $e');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      // Show gradient while verifying asset
+      return Container(
+        constraints: const BoxConstraints.expand(),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: widget.gradient,
+          ),
+        ),
+      );
+    }
+
+    if (!_assetExists) {
+      // Asset doesn't exist, show gradient fallback
+      return Container(
+        constraints: const BoxConstraints.expand(),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: widget.gradient,
+          ),
+        ),
+      );
+    }
+
+    // Asset exists, load it
+    return Image.asset(
+      widget.assetPath,
+      fit: widget.fit,
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint('❌ Error loading asset: ${widget.assetPath}');
+        debugPrint('   Error: $error');
+        
+        // Fallback to gradient if image fails to load - with proper constraints
+        return Container(
+          constraints: const BoxConstraints.expand(),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: widget.gradient,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Widget for network images with fallback
+class _CachedNetworkImageWidget extends StatelessWidget {
+  final String imageUrl;
   final BoxFit fit;
   final int? cacheWidth;
   final int? cacheHeight;
+  final List<Color> gradient;
 
-  const _CachedImageWithFallback({
-    required this.primaryUrl,
-    required this.fallbackUrl,
-    required this.placeholderUrl,
-    required this.gradient,
+  const _CachedNetworkImageWidget({
+    required this.imageUrl,
     required this.fit,
     this.cacheWidth,
     this.cacheHeight,
+    required this.gradient,
   });
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: primaryUrl,
+      imageUrl: imageUrl,
       fit: fit,
       memCacheWidth: cacheWidth,
       memCacheHeight: cacheHeight,
-      // Use placeholder while loading - just show gradient, no spinner
+      // Use placeholder while loading - show gradient with proper constraints
       placeholder: (context, url) => Container(
+        constraints: const BoxConstraints.expand(),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -400,33 +428,10 @@ class _CachedImageWithFallback extends StatelessWidget {
           ),
         ),
       ),
-      // Error handling with fallback chain
+      // Error handling with gradient fallback - with proper constraints
       errorWidget: (context, url, error) {
-        // Try fallback URL (Picsum)
-        return CachedNetworkImage(
-          imageUrl: fallbackUrl,
-          fit: fit,
-          memCacheWidth: cacheWidth,
-          memCacheHeight: cacheHeight,
-          placeholder: (context, url) => Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: gradient,
-              ),
-            ),
-          ),
-          errorWidget: (context, url, error) {
-            // Try placeholder URL
-            return CachedNetworkImage(
-              imageUrl: placeholderUrl,
-              fit: fit,
-              memCacheWidth: cacheWidth,
-              memCacheHeight: cacheHeight,
-              errorWidget: (context, url, error) {
-                // Final fallback: Beautiful gradient
                 return Container(
+          constraints: const BoxConstraints.expand(),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -434,10 +439,6 @@ class _CachedImageWithFallback extends StatelessWidget {
                       colors: gradient,
                     ),
                   ),
-                );
-              },
-            );
-          },
         );
       },
     );
