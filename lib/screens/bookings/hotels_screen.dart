@@ -309,24 +309,23 @@ class _HotelsScreenState extends State<HotelsScreen> {
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                           child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                        children: [
+                                            children: [
                                               Icon(Icons.location_on, size: 16, color: AppTheme.categoryBlue),
                                               const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              hotel.location,
+                                              Expanded(
+                                                child: Text(
+                                                  hotel.location,
                                                   style: TextStyle(
                                                     fontSize: 13,
                                                     color: AppTheme.categoryBlue,
                                                     fontWeight: FontWeight.w600,
                                                   ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
                                         ),
                                         const SizedBox(height: 10),
                                       RatingWidget(

@@ -253,9 +253,11 @@ class BookingsScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
               child: Container(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                 // Decorative circles
                 Stack(
                   alignment: Alignment.center,
@@ -301,27 +303,31 @@ class BookingsScreen extends StatelessWidget {
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.arrow_forward, size: 14, color: Colors.white),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          'Explore',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.arrow_forward, size: 14, color: Colors.white),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            'Explore',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                   ],
+                  ),
                 ),
               ),
             ),

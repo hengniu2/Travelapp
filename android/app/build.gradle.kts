@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.travel"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // ndkVersion omitted so build works without NDK installed (optional for most Flutter apps)
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
