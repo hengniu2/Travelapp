@@ -243,10 +243,45 @@ class ProfileScreen extends StatelessWidget {
                 _showLanguageDialog(context);
               },
             ),
+            _buildMenuItem(
+              context,
+              AppLocalizations.of(context)!.logout,
+              Icons.logout,
+              AppTheme.categoryRed,
+              () {
+                _showLogoutConfirm(context);
+              },
+            ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showLogoutConfirm(BuildContext context) {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
+
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.logout),
+        content: Text(l10n.logoutConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              appProvider.logout();
+            },
+            child: Text(l10n.logout, style: const TextStyle(color: AppTheme.categoryRed)),
+          ),
+        ],
       ),
     );
   }

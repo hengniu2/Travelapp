@@ -83,7 +83,31 @@
   "likes": "Likes",
   "author": "Author",
   "publishDate": "Publish Date",
-  "guest": "Guest"
+  "guest": "Guest",
+  "login": "Login",
+  "register": "Register",
+  "email": "Email",
+  "phone": "Phone number",
+  "displayName": "Display name",
+  "phoneRequired": "Please enter your phone number",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "name": "Name",
+  "loginButton": "Log in",
+  "registerButton": "Create account",
+  "noAccountRegister": "Don't have an account? Register",
+  "haveAccountLogin": "Already have an account? Log in",
+  "logout": "Log out",
+  "loginTitle": "Welcome back",
+  "registerTitle": "Create account",
+  "emailRequired": "Please enter your email",
+  "passwordRequired": "Please enter your password",
+  "nameRequired": "Please enter your name",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "loginFailed": "Login failed. Check email, phone number and password.",
+  "registerFailed": "Registration failed. Please try again.",
+  "cancel": "Cancel",
+  "logoutConfirm": "Are you sure you want to log out?"
 }
 
 

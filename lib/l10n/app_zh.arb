@@ -64,7 +64,31 @@
   "likes": "点赞",
   "author": "作者",
   "publishDate": "发布日期",
-  "guest": "访客"
+  "guest": "访客",
+  "login": "登录",
+  "register": "注册",
+  "email": "邮箱",
+  "phone": "手机号",
+  "displayName": "显示名称",
+  "phoneRequired": "请输入手机号",
+  "password": "密码",
+  "confirmPassword": "确认密码",
+  "name": "姓名",
+  "loginButton": "登录",
+  "registerButton": "创建账号",
+  "noAccountRegister": "没有账号？去注册",
+  "haveAccountLogin": "已有账号？去登录",
+  "logout": "退出登录",
+  "loginTitle": "欢迎回来",
+  "registerTitle": "创建账号",
+  "emailRequired": "请输入邮箱",
+  "passwordRequired": "请输入密码",
+  "nameRequired": "请输入姓名",
+  "passwordsDoNotMatch": "两次密码不一致",
+  "loginFailed": "登录失败，请检查邮箱、手机号和密码。",
+  "registerFailed": "注册失败，请重试。",
+  "cancel": "取消",
+  "logoutConfirm": "确定要退出登录吗？"
 }
 
 

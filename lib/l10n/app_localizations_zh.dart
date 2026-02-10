@@ -209,4 +209,76 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get guest => '访客';
+
+  @override
+  String get login => '登录';
+
+  @override
+  String get register => '注册';
+
+  @override
+  String get email => '邮箱';
+
+  @override
+  String get phone => '手机号';
+
+  @override
+  String get displayName => '显示名称';
+
+  @override
+  String get phoneRequired => '请输入手机号';
+
+  @override
+  String get password => '密码';
+
+  @override
+  String get confirmPassword => '确认密码';
+
+  @override
+  String get name => '姓名';
+
+  @override
+  String get loginButton => '登录';
+
+  @override
+  String get registerButton => '创建账号';
+
+  @override
+  String get noAccountRegister => '没有账号？去注册';
+
+  @override
+  String get haveAccountLogin => '已有账号？去登录';
+
+  @override
+  String get logout => '退出登录';
+
+  @override
+  String get loginTitle => '欢迎回来';
+
+  @override
+  String get registerTitle => '创建账号';
+
+  @override
+  String get emailRequired => '请输入邮箱';
+
+  @override
+  String get passwordRequired => '请输入密码';
+
+  @override
+  String get nameRequired => '请输入姓名';
+
+  @override
+  String get passwordsDoNotMatch => '两次密码不一致';
+
+  @override
+  String get loginFailed => '登录失败，请检查邮箱、手机号和密码。';
+
+  @override
+  String get registerFailed => '注册失败，请重试。';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get logoutConfirm => '确定要退出登录吗？';
 }

@@ -209,4 +209,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guest => 'Guest';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phone => 'Phone number';
+
+  @override
+  String get displayName => 'Display name';
+
+  @override
+  String get phoneRequired => 'Please enter your phone number';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get loginButton => 'Log in';
+
+  @override
+  String get registerButton => 'Create account';
+
+  @override
+  String get noAccountRegister => 'Don\'t have an account? Register';
+
+  @override
+  String get haveAccountLogin => 'Already have an account? Log in';
+
+  @override
+  String get logout => 'Log out';
+
+  @override
+  String get loginTitle => 'Welcome back';
+
+  @override
+  String get registerTitle => 'Create account';
+
+  @override
+  String get emailRequired => 'Please enter your email';
+
+  @override
+  String get passwordRequired => 'Please enter your password';
+
+  @override
+  String get nameRequired => 'Please enter your name';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get loginFailed => 'Login failed. Check email, phone number and password.';
+
+  @override
+  String get registerFailed => 'Registration failed. Please try again.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get logoutConfirm => 'Are you sure you want to log out?';
 }

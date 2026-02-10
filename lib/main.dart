@@ -5,6 +5,7 @@ import 'l10n/app_localizations.dart';
 import 'providers/app_provider.dart';
 import 'utils/app_theme.dart';
 import 'screens/main_navigation.dart';
+import 'screens/auth/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,13 +16,12 @@ class TravelApp extends StatelessWidget {
   const TravelApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return ChangeNotifierProvider(
       create: (_) {
         final provider = AppProvider();
-        // Initialize asynchronously - will update when done
+        // init() always sets isInitialized in finally, so splash never stays infinite
         provider.init().catchError((error) {
-          // Handle initialization error silently
           debugPrint('Error initializing app: $error');
         });
         return provider;
@@ -39,14 +39,28 @@ class TravelApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [
-              Locale('en'), // English
-              Locale('zh'), // Chinese
+              Locale('en'),
+              Locale('zh'),
             ],
-            home: const MainNavigation(),
+            home: _buildHome(appProvider),
             debugShowCheckedModeBanner: false,
           );
         },
       ),
     );
+  }
+
+  Widget _buildHome(AppProvider appProvider) {
+    if (!appProvider.isInitialized) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppTheme.primaryColor),
+        ),
+      );
+    }
+    if (appProvider.currentUser == null) {
+      return const LoginScreen();
+    }
+    return const MainNavigation();
   }
 }
