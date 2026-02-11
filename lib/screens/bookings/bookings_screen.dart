@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
+import '../../utils/travel_images.dart';
 import '../../widgets/price_widget.dart';
 import 'hotels_screen.dart';
 import 'tickets_screen.dart';
@@ -14,9 +15,9 @@ import '../profile/favorites_screen.dart';
 class BookingsScreen extends StatelessWidget {
   const BookingsScreen({super.key});
 
-  static const double _cardRadius = 20;
+  static const double _cardRadius = 8;
   static const double _padding = 18;
-  static const double _contentSurfaceRadius = 24;
+  static const double _contentSurfaceRadius = 12;
   static const double _heroHeight = 200;
 
   @override
@@ -31,35 +32,67 @@ class BookingsScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: _buildContentSurface(context, theme, l10n),
           ),
+          SliverPadding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 8),
+          ),
         ],
       ),
     );
   }
 
-  /// Branded hero: green gradient, soft wave bottom, centered title. No photography.
+  /// Branded hero: highlighted background image with green overlay, soft wave bottom, centered title.
   Widget _buildHero(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    final heroHeight = _heroHeight + MediaQuery.of(context).padding.top;
+    final bgImage = TravelImages.getBookingBackground(0);
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: _heroHeight + MediaQuery.of(context).padding.top,
+        height: heroHeight,
         child: Stack(
           children: [
             ClipPath(
               clipper: _WaveHeroClipper(),
-              child: Container(
-                width: double.infinity,
-                height: _heroHeight + MediaQuery.of(context).padding.top,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppTheme.primaryColor,
-                      AppTheme.primaryDark,
-                      const Color(0xFF00897B),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Background image (highlighted — visible through overlay)
+                  Positioned.fill(
+                    child: Image.asset(
+                      bgImage,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppTheme.primaryColor,
+                              AppTheme.primaryDark,
+                              const Color(0xFF00897B),
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  // Green-tinted overlay: keeps image visible but ensures title contrast
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            AppTheme.primaryColor.withValues(alpha: 0.35),
+                            AppTheme.primaryDark.withValues(alpha: 0.75),
+                            const Color(0xFF00897B).withValues(alpha: 0.85),
+                          ],
+                          stops: const [0.0, 0.5, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Positioned.fill(
@@ -158,7 +191,7 @@ class BookingsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: primary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(Icons.calendar_today_rounded, color: primary, size: 28),
           ),
@@ -243,7 +276,7 @@ class BookingsScreen extends StatelessWidget {
     ];
     const tags = ['最近预订', '热门推荐', '今日特价'];
     return SizedBox(
-      height: 152,
+      height: 168,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
@@ -336,7 +369,7 @@ class _CategoryCard extends StatelessWidget {
                 height: 48,
                 decoration: BoxDecoration(
                   color: item.color.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(item.icon, color: item.color, size: 26),
               ),
@@ -406,6 +439,7 @@ class _QuickCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(BookingsScreen._cardRadius),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 height: 88,
@@ -446,30 +480,37 @@ class _QuickCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: FittedBox(
+                    alignment: Alignment.topLeft,
+                    fit: BoxFit.scaleDown,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          item.title,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: onSurface,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 6),
+                        PriceWidget(
+                          price: item.price,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
-                    PriceWidget(
-                      price: item.price,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],

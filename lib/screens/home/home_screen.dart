@@ -7,6 +7,7 @@ import '../../services/data_service.dart';
 import '../../models/tour.dart';
 import '../../models/companion.dart';
 import '../../models/content.dart';
+import '../../models/user.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
@@ -19,7 +20,10 @@ import '../content/content_screen.dart';
 import '../tours/tour_detail_screen.dart';
 import '../companions/companion_detail_screen.dart';
 import '../content/content_detail_screen.dart';
+import '../profile/notifications_screen.dart';
 
+/// Premium home: gradient header, floating search, category grid, Popular / Recommendation / Travel Guides.
+/// No full-screen background images or blur. Clean layered layout.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -29,22 +33,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final DataService _dataService = DataService();
-  final PageController _heroPageController = PageController();
   List<Tour> _hotTours = [];
   List<Companion> _recommendCompanions = [];
   List<Tour> _topTours = [];
   List<TravelContent> _trendingContent = [];
 
+  static const Color _pageBackground = Color(0xFFF6F7F9);
+  static const Color _primaryGreen = Color(0xFF0FA958);
+  static const double _headerHeight = 260;
+  static const double _headerRadius = 12;
+  static const double _searchBarRadius = 8;
+  static const double _cardRadiusLg = 8;
+  static const double _cardRadiusMd = 6;
+  static const double _cardRadiusSm = 6;
+  static const double _spacing = 16;
+  static const double _spacingMd = 18;
+  static const double _spacingLg = 20;
+  static const double _spacingXl = 24;
+  static const double _shadowOpacity = 0.1;
+
   @override
   void initState() {
     super.initState();
     _loadData();
-  }
-
-  @override
-  void dispose() {
-    _heroPageController.dispose();
-    super.dispose();
   }
 
   void _loadData() {
@@ -56,29 +67,33 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_hotTours.length < 4) _hotTours = tours.take(4).toList();
       _recommendCompanions = companions.where((c) => c.isAvailable).take(4).toList();
       _topTours = tours.take(3).toList();
-      _trendingContent = content.take(2).toList();
+      _trendingContent = content.take(3).toList();
     });
   }
+
+  void _goToTours() => Navigator.push(context, MaterialPageRoute(builder: (_) => const ToursScreen()));
+  void _goToCompanions() => Navigator.push(context, MaterialPageRoute(builder: (_) => const CompanionsScreen()));
+  void _goToBookings() => Navigator.push(context, MaterialPageRoute(builder: (_) => const BookingsScreen()));
+  void _goToContent() => Navigator.push(context, MaterialPageRoute(builder: (_) => const ContentScreen()));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.scaffoldBackground,
+      backgroundColor: _pageBackground,
       body: SafeArea(
+        top: false,
         child: RefreshIndicator(
           onRefresh: () async => _loadData(),
+          color: _primaryGreen,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              SliverToBoxAdapter(child: _buildHeroCarousel()),
-              SliverToBoxAdapter(child: _buildSearchBar()),
+              _buildHeaderSliver(),
               SliverToBoxAdapter(child: _buildCategoryGrid()),
-              SliverToBoxAdapter(child: _buildPillTags()),
-              SliverToBoxAdapter(child: _buildSectionHot()),
-              SliverToBoxAdapter(child: _buildSectionRecommend()),
-              SliverToBoxAdapter(child: _buildSectionTop()),
-              SliverToBoxAdapter(child: _buildSectionContent()),
-              const SliverToBoxAdapter(child: SizedBox(height: AppDesignSystem.spacingXxl)),
+              SliverToBoxAdapter(child: _buildSectionPopular()),
+              SliverToBoxAdapter(child: _buildSectionRecommendation()),
+              SliverToBoxAdapter(child: _buildSectionTravelGuides()),
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
             ],
           ),
         ),
@@ -86,114 +101,196 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeroCarousel() {
-    const count = 3;
-    return Container(
-      height: 180,
-      margin: const EdgeInsets.only(
-        left: AppDesignSystem.spacingLg,
-        right: AppDesignSystem.spacingLg,
-        top: AppDesignSystem.spacingSm,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: AppDesignSystem.borderRadiusImage,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.shadowColor,
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: AppDesignSystem.borderRadiusImage,
-        child: PageView.builder(
-          controller: _heroPageController,
-          itemCount: count,
-          itemBuilder: (context, index) {
-            return TravelImages.buildImageBackground(
-              imageUrl: TravelImages.getHomeHeader(index),
-              opacity: 0.5,
-              cacheWidth: 800,
-              child: Container(
+  Widget _buildHeaderSliver() {
+    final l10n = AppLocalizations.of(context)!;
+    final user = context.watch<AppProvider>().currentUser;
+    final topPadding = MediaQuery.of(context).padding.top;
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: _headerHeight + topPadding,
+        width: double.infinity,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(_headerRadius)),
+              child: Image.asset(
+                TravelImages.getHomeHeader(0),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        const Color(0xFF0A7D40),
+                        const Color(0xFF0FA958),
+                        const Color(0xFF1DB954),
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(_headerRadius)),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.25),
+                      Colors.black.withValues(alpha: 0.35),
+                      const Color(0xFF0A7D40).withValues(alpha: 0.85),
+                      const Color(0xFF0FA958).withValues(alpha: 0.9),
                     ],
-                    stops: const [0.5, 1.0],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
               ),
-            );
-          },
+            ),
+            SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(_spacing, _spacing, _spacing, _spacing),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_rounded, size: 18, color: Colors.white.withValues(alpha: 0.95)),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            'Shanghai',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white.withValues(alpha: 0.95),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Material(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(_cardRadiusSm),
+                          child: InkWell(
+                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
+                            borderRadius: BorderRadius.circular(_cardRadiusSm),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildProfileAvatar(user),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      l10n.homeTitle,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        letterSpacing: 0.3,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.homeSubtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 14),
+                    _buildHeaderSearchBar(l10n),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    final l10n = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppDesignSystem.spacingLg,
-        AppDesignSystem.spacingLg,
-        AppDesignSystem.spacingLg,
-        AppDesignSystem.spacingMd,
-      ),
-      child: Material(
-        elevation: AppDesignSystem.elevationCard,
-        shadowColor: AppTheme.shadowColor,
-        borderRadius: AppDesignSystem.borderRadiusLg,
-        color: AppTheme.surfaceColor,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ToursScreen()),
-            );
-          },
-          borderRadius: AppDesignSystem.borderRadiusLg,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDesignSystem.spacingLg,
-              vertical: AppDesignSystem.spacingMd,
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.location_on_outlined, size: 20, color: AppTheme.primaryColor),
-                const SizedBox(width: AppDesignSystem.spacingSm),
-                Text(
-                  l10n.departFrom,
+  Widget _buildHeaderSearchBar(AppLocalizations l10n) {
+    return Material(
+      elevation: 4,
+      shadowColor: Colors.black.withValues(alpha: _shadowOpacity),
+      borderRadius: BorderRadius.circular(_searchBarRadius),
+      color: Colors.white,
+      child: InkWell(
+        onTap: _goToTours,
+        borderRadius: BorderRadius.circular(_searchBarRadius),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: _spacingLg, vertical: 12),
+          child: Row(
+            children: [
+              Icon(Icons.search_rounded, size: 22, color: AppTheme.textTertiary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.destinationKeywords,
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppTheme.textSecondary,
+                    fontWeight: FontWeight.w400,
+                    color: AppTheme.textTertiary,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: AppDesignSystem.spacingSm),
-                Container(
-                  width: 1,
-                  height: 20,
-                  color: Colors.grey.shade300,
-                ),
-                const SizedBox(width: AppDesignSystem.spacingLg),
-                Icon(Icons.search_rounded, size: 22, color: AppTheme.textTertiary),
-                const SizedBox(width: AppDesignSystem.spacingSm),
-                Expanded(
-                  child: Text(
-                    l10n.destinationKeywords,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppTheme.textTertiary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileAvatar(User? user) {
+    final size = 40.0;
+    if (user?.avatar != null && user!.avatar!.trim().isNotEmpty) {
+      return ClipOval(
+        child: Image.network(
+          user.avatar!,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _avatarPlaceholder(size, user),
+        ),
+      );
+    }
+    return _avatarPlaceholder(size, user);
+  }
+
+  Widget _avatarPlaceholder(double size, User? user) {
+    final initial = (user?.name != null && user!.name.trim().isNotEmpty) ? user.name[0].toUpperCase() : 'U';
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.25),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        initial,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
       ),
     );
@@ -202,37 +299,51 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCategoryGrid() {
     final l10n = AppLocalizations.of(context)!;
     final categories = [
-      (icon: Icons.local_fire_department_rounded, label: l10n.trending, color: AppTheme.categoryOrange, onTap: () => _goToTours()),
-      (icon: Icons.people_rounded, label: l10n.companions, color: AppTheme.categoryBlue, onTap: () => _goToCompanions()),
-      (icon: Icons.explore_rounded, label: l10n.tours, color: AppTheme.categoryGreen, onTap: () => _goToTours()),
-      (icon: Icons.hotel_rounded, label: l10n.hotels, color: AppTheme.categoryCyan, onTap: () => _goToBookings()),
-      (icon: Icons.article_rounded, label: l10n.content, color: AppTheme.categoryPurple, onTap: () => _goToContent()),
-      (icon: Icons.thumb_up_rounded, label: l10n.recommend, color: AppTheme.categoryPink, onTap: () => _goToCompanions()),
-      (icon: Icons.place_rounded, label: l10n.destinations, color: AppTheme.categoryYellow, onTap: () => _goToTours()),
-      (icon: Icons.apps_rounded, label: l10n.all, color: AppTheme.textSecondary, onTap: () => _goToTours()),
+      (icon: Icons.local_fire_department_rounded, label: l10n.hot, color: const Color(0xFFFFE0B2), iconColor: AppTheme.categoryOrange, onTap: _goToTours),
+      (icon: Icons.people_rounded, label: l10n.companions, color: const Color(0xFFB3E5FC), iconColor: AppTheme.categoryBlue, onTap: _goToCompanions),
+      (icon: Icons.explore_rounded, label: l10n.tours, color: const Color(0xFFC8E6C9), iconColor: _primaryGreen, onTap: _goToTours),
+      (icon: Icons.hotel_rounded, label: l10n.hotels, color: const Color(0xFFB2EBF2), iconColor: AppTheme.categoryCyan, onTap: _goToBookings),
+      (icon: Icons.article_rounded, label: l10n.content, color: const Color(0xFFE1BEE7), iconColor: AppTheme.categoryPurple, onTap: _goToContent),
+      (icon: Icons.thumb_up_rounded, label: l10n.recommend, color: const Color(0xFFF8BBD9), iconColor: AppTheme.categoryPink, onTap: _goToCompanions),
+      (icon: Icons.place_rounded, label: l10n.destinations, color: const Color(0xFFFFF9C4), iconColor: AppTheme.categoryYellow, onTap: _goToTours),
+      (icon: Icons.apps_rounded, label: l10n.all, color: const Color(0xFFE0E0E0), iconColor: AppTheme.textSecondary, onTap: _goToTours),
     ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingLg),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(_spacing, _spacingXl, _spacing, 0),
+      padding: const EdgeInsets.all(_spacing),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppDesignSystem.radiusLg),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: _shadowOpacity),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           Row(
-            children: List.generate(4, (col) => Expanded(
+            children: List.generate(4, (i) => Expanded(
               child: _categoryItem(
-                icon: categories[col].icon,
-                label: categories[col].label,
-                color: categories[col].color,
-                onTap: categories[col].onTap,
+                icon: categories[i].icon,
+                label: categories[i].label,
+                bgColor: categories[i].color,
+                iconColor: categories[i].iconColor,
+                onTap: categories[i].onTap,
               ),
             )),
           ),
-          const SizedBox(height: AppDesignSystem.spacingMd),
+          const SizedBox(height: _spacingLg),
           Row(
-            children: List.generate(4, (col) => Expanded(
+            children: List.generate(4, (i) => Expanded(
               child: _categoryItem(
-                icon: categories[col + 4].icon,
-                label: categories[col + 4].label,
-                color: categories[col + 4].color,
-                onTap: categories[col + 4].onTap,
+                icon: categories[i + 4].icon,
+                label: categories[i + 4].label,
+                bgColor: categories[i + 4].color,
+                iconColor: categories[i + 4].iconColor,
+                onTap: categories[i + 4].onTap,
               ),
             )),
           ),
@@ -244,30 +355,31 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _categoryItem({
     required IconData icon,
     required String label,
-    required Color color,
+    required Color bgColor,
+    required Color iconColor,
     required VoidCallback onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingXs),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: AppDesignSystem.borderRadiusMd,
+          borderRadius: BorderRadius.circular(_cardRadiusMd),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: AppDesignSystem.spacingSm),
+              const SizedBox(height: 4),
               Container(
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.15),
+                  color: bgColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 26),
+                child: Icon(icon, color: iconColor, size: 26),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Text(
                 label,
                 style: const TextStyle(
@@ -279,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppDesignSystem.spacingSm),
+              const SizedBox(height: 4),
             ],
           ),
         ),
@@ -287,77 +399,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _goToTours() => Navigator.push(context, MaterialPageRoute(builder: (_) => const ToursScreen()));
-  void _goToCompanions() => Navigator.push(context, MaterialPageRoute(builder: (_) => const CompanionsScreen()));
-  void _goToBookings() => Navigator.push(context, MaterialPageRoute(builder: (_) => const BookingsScreen()));
-  void _goToContent() => Navigator.push(context, MaterialPageRoute(builder: (_) => const ContentScreen()));
-
-  Widget _buildPillTags() {
-    final tags = ['北京', '三亚', '上海', '成都', '西安', '云南', '桂林', '杭州'];
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.fromLTRB(
-          AppDesignSystem.spacingLg,
-          AppDesignSystem.spacingMd,
-          AppDesignSystem.spacingLg,
-          AppDesignSystem.spacingLg,
-        ),
-        itemCount: tags.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: AppDesignSystem.spacingSm),
-            child: Material(
-              color: Colors.grey.shade100,
-              borderRadius: AppDesignSystem.borderRadiusXl,
-              child: InkWell(
-                onTap: _goToTours,
-                borderRadius: AppDesignSystem.borderRadiusXl,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDesignSystem.spacingLg,
-                    vertical: AppDesignSystem.spacingSm,
-                  ),
-                  child: Center(
-                    child: Text(
-                      tags[index],
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSectionHot() {
+  Widget _buildSectionPopular() {
     final l10n = AppLocalizations.of(context)!;
     if (_hotTours.isEmpty) return const SizedBox.shrink();
-    return _buildSectionHeader(l10n.trending, l10n.viewMore, _goToTours,
+    return _buildSection(
+      title: l10n.popular,
+      onSeeAll: _goToTours,
       child: SizedBox(
         height: 258,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingLg),
+          padding: const EdgeInsets.symmetric(horizontal: _spacing),
           itemCount: _hotTours.length,
           itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.only(right: AppDesignSystem.spacingLg),
-            child: _TourCard(
+            padding: const EdgeInsets.only(right: _spacing),
+            child: _PopularTourCard(
               tour: _hotTours[index],
               imageIndex: index,
-              showBookingCount: true,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TourDetailScreen(tour: _hotTours[index])),
-              ),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TourDetailScreen(tour: _hotTours[index]))),
             ),
           ),
         ),
@@ -365,25 +424,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionRecommend() {
+  Widget _buildSectionRecommendation() {
     final l10n = AppLocalizations.of(context)!;
     if (_recommendCompanions.isEmpty) return const SizedBox.shrink();
-    return _buildSectionHeader(l10n.recommend, l10n.viewMore, _goToCompanions,
+    return _buildSection(
+      title: l10n.recommend,
+      onSeeAll: _goToCompanions,
       child: SizedBox(
         height: 160,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingLg),
+          padding: const EdgeInsets.symmetric(horizontal: _spacing),
           itemCount: _recommendCompanions.length,
           itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.only(right: AppDesignSystem.spacingLg),
-            child: _CompanionCard(
+            padding: const EdgeInsets.only(right: _spacing),
+            child: _RecommendationCard(
               companion: _recommendCompanions[index],
               imageIndex: index,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CompanionDetailScreen(companion: _recommendCompanions[index])),
-              ),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => CompanionDetailScreen(companion: _recommendCompanions[index]))),
             ),
           ),
         ),
@@ -391,89 +449,69 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionTop() {
+  Widget _buildSectionTravelGuides() {
     final l10n = AppLocalizations.of(context)!;
-    if (_topTours.isEmpty) return const SizedBox.shrink();
-    return _buildSectionHeader(l10n.topRanking, l10n.viewMore, _goToTours,
-      child: SizedBox(
-        height: 258,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingLg),
-          itemCount: _topTours.length,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.only(right: AppDesignSystem.spacingLg),
-            child: _TourCard(
-              tour: _topTours[index],
-              imageIndex: index + 10,
-              topRank: index + 1,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TourDetailScreen(tour: _topTours[index])),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionContent() {
     if (_trendingContent.isEmpty) return const SizedBox.shrink();
-    final l10n = AppLocalizations.of(context)!;
-    return _buildSectionHeader('旅行攻略', l10n.viewMore, _goToContent,
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingLg),
-        itemCount: _trendingContent.length,
-        separatorBuilder: (_, __) => const SizedBox(height: AppDesignSystem.spacingLg),
-        itemBuilder: (context, index) {
-          final c = _trendingContent[index];
-          return _ContentCard(
-            content: c,
-            imageIndex: index,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => ContentDetailScreen(content: c)),
-            ),
-          );
-        },
+    return _buildSection(
+      title: l10n.travelGuides,
+      onSeeAll: _goToContent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: _spacing),
+        child: Column(
+          children: List.generate(
+            _trendingContent.length,
+            (index) {
+              final c = _trendingContent[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: _spacing),
+                child: _TravelGuideCard(
+                  content: c,
+                  imageIndex: index,
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ContentDetailScreen(content: c))),
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title, String actionLabel, VoidCallback onAction, {required Widget child}) {
+  Widget _buildSection({
+    required String title,
+    required VoidCallback onSeeAll,
+    required Widget child,
+  }) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppDesignSystem.spacingLg,
-            AppDesignSystem.spacingXl,
-            AppDesignSystem.spacingLg,
-            AppDesignSystem.spacingMd,
-          ),
+          padding: EdgeInsets.fromLTRB(_spacing, _spacingXl, _spacing, _spacingMd),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textPrimary,
+                ),
               ),
               TextButton(
-                onPressed: onAction,
+                onPressed: onSeeAll,
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDesignSystem.spacingMd),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text(
-                  actionLabel,
+                  l10n.seeAll,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.primaryColor,
+                    color: Color(0xFF0FA958),
                   ),
                 ),
               ),
@@ -481,37 +519,30 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child,
-        const SizedBox(height: AppDesignSystem.spacingLg),
       ],
     );
   }
 }
 
-class _TourCard extends StatelessWidget {
+class _PopularTourCard extends StatelessWidget {
   final Tour tour;
   final int imageIndex;
-  final bool showBookingCount;
-  final int? topRank;
   final VoidCallback onTap;
 
-  const _TourCard({
-    required this.tour,
-    required this.imageIndex,
-    this.showBookingCount = false,
-    this.topRank,
-    required this.onTap,
-  });
+  const _PopularTourCard({required this.tour, required this.imageIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = tour.image ?? TravelImages.getTourImage(imageIndex);
+    final l10n = AppLocalizations.of(context)!;
+    final imagePath = TravelImages.getTourImage(imageIndex);
+    final title = l10n.localeName == 'zh' ? (tour.titleZh ?? tour.title) : tour.title;
     return SizedBox(
       width: 280,
       child: Material(
-        elevation: AppDesignSystem.elevationCard,
-        shadowColor: AppTheme.shadowColor,
-        borderRadius: AppDesignSystem.borderRadiusImage,
-        color: AppTheme.surfaceColor,
+        elevation: 2,
+        shadowColor: Colors.black.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppDesignSystem.radiusLg),
+        color: Colors.white,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
@@ -521,98 +552,64 @@ class _TourCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  AspectRatio(
-                    aspectRatio: 16 / 10,
-                    child: TravelImages.buildImageBackground(
-                      imageUrl: imageUrl,
-                      opacity: 0,
-                      cacheWidth: 560,
-                      child: const SizedBox.expand(),
+                  SizedBox(
+                    height: 160,
+                    width: double.infinity,
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: AppTheme.categoryBlue.withValues(alpha: 0.2),
+                        child: const Icon(Icons.image_not_supported_outlined, size: 48),
+                      ),
                     ),
                   ),
-                  if (showBookingCount && tour.reviewCount > 0)
-                    Positioned(
-                      top: AppDesignSystem.spacingSm,
-                      right: AppDesignSystem.spacingSm,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDesignSystem.spacingSm,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          borderRadius: AppDesignSystem.borderRadiusSm,
-                        ),
-                        child: Text(
-                          '共${tour.reviewCount}人预订',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.white,
-                          ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
                         ),
                       ),
                     ),
-                  if (topRank != null)
-                    Positioned(
-                      top: AppDesignSystem.spacingSm,
-                      left: AppDesignSystem.spacingSm,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDesignSystem.spacingSm,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.categoryRed,
-                          borderRadius: AppDesignSystem.borderRadiusSm,
-                        ),
-                        child: Text(
-                          'TOP $topRank',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDesignSystem.spacingMd,
-                  vertical: AppDesignSystem.spacingSm,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)?.localeName == 'zh'
-                          ? (tour.titleZh ?? tour.title)
-                          : tour.title,
+                  ),
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: 12,
+                    child: Text(
+                      title,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                        color: Colors.white,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 6),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        PriceWidget(
-                          price: tour.price,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.categoryRed,
-                          ),
-                        ),
-                        RatingWidget(rating: tour.rating, reviewCount: tour.reviewCount, size: 12),
-                      ],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PriceWidget(
+                      price: tour.price,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.categoryRed,
+                      ),
                     ),
+                    RatingWidget(rating: tour.rating, reviewCount: tour.reviewCount, size: 12),
                   ],
                 ),
               ),
@@ -624,65 +621,56 @@ class _TourCard extends StatelessWidget {
   }
 }
 
-class _CompanionCard extends StatelessWidget {
+class _RecommendationCard extends StatelessWidget {
   final Companion companion;
   final int imageIndex;
   final VoidCallback onTap;
 
-  const _CompanionCard({
-    required this.companion,
-    required this.imageIndex,
-    required this.onTap,
-  });
+  const _RecommendationCard({required this.companion, required this.imageIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 140,
       child: Material(
-        elevation: AppDesignSystem.elevationCard,
-        shadowColor: AppTheme.shadowColor,
-        borderRadius: AppDesignSystem.borderRadiusImage,
+        elevation: 2,
+        shadowColor: Colors.black.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppDesignSystem.radiusLg),
         clipBehavior: Clip.antiAlias,
-        color: AppTheme.surfaceColor,
+        color: Colors.white,
         child: InkWell(
           onTap: onTap,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Image only — no avatar on top
-              SizedBox(
-                height: 88,
-                width: double.infinity,
-                child: TravelImages.buildImageBackground(
-                  imageUrl: TravelImages.getCompanionBackground(imageIndex),
-                  opacity: 0.2,
-                  cacheWidth: 280,
-                  child: const SizedBox.expand(),
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppDesignSystem.radiusLg)),
+                child: SizedBox(
+                  height: 88,
+                  width: double.infinity,
+                  child: Image.asset(
+                    TravelImages.getCompanionBackground(imageIndex),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: AppTheme.categoryBlue.withValues(alpha: 0.2),
+                      child: const Icon(Icons.person, size: 32),
+                    ),
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(AppDesignSystem.spacingSm),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   children: [
                     ClipOval(
-                      child: companion.avatar != null
-                          ? CachedNetworkImage(
-                              imageUrl: companion.avatar!,
-                              width: 36,
-                              height: 36,
-                              fit: BoxFit.cover,
-                              placeholder: (_, __) => _avatarFallback(36),
-                              errorWidget: (_, __, ___) => _avatarFallback(36),
-                            )
-                          : Image.asset(
-                              TravelImages.getCompanionAvatar(imageIndex),
-                              width: 36,
-                              height: 36,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _avatarFallback(36),
-                            ),
+                      child: Image.asset(
+                        TravelImages.getCompanionAvatar(imageIndex),
+                        width: 36,
+                        height: 36,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => _avatarFallback(),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -714,68 +702,76 @@ class _CompanionCard extends StatelessWidget {
     );
   }
 
-  Widget _avatarFallback(double size) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Center(
-        child: Text(
-          companion.name.isNotEmpty ? companion.name[0] : '?',
-          style: TextStyle(fontSize: size * 0.5, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
-        ),
+  Widget _avatarFallback() {
+    return Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withValues(alpha: 0.2),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        companion.name.isNotEmpty ? companion.name[0] : '?',
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
       ),
     );
   }
 }
 
-class _ContentCard extends StatelessWidget {
+class _TravelGuideCard extends StatelessWidget {
   final TravelContent content;
   final int imageIndex;
   final VoidCallback onTap;
 
-  const _ContentCard({
-    required this.content,
-    required this.imageIndex,
-    required this.onTap,
-  });
+  const _TravelGuideCard({required this.content, required this.imageIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = content.image ?? TravelImages.getContentImage(imageIndex);
+    final l10n = AppLocalizations.of(context)!;
+    final imagePath = TravelImages.getContentImage(imageIndex);
+    final title = l10n.localeName == 'zh' ? (content.titleZh ?? content.title) : content.title;
     return Material(
-      elevation: AppDesignSystem.elevationCard,
-      shadowColor: AppTheme.shadowColor,
-      borderRadius: AppDesignSystem.borderRadiusImage,
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(AppDesignSystem.radiusLg),
+      color: Colors.white,
       clipBehavior: Clip.antiAlias,
-      color: AppTheme.surfaceColor,
       child: InkWell(
         onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: TravelImages.buildImageBackground(
-                imageUrl: imageUrl,
-                opacity: 0,
-                cacheWidth: 800,
-                child: const SizedBox.expand(),
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(AppDesignSystem.radiusLg)),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: AppTheme.categoryPurple.withValues(alpha: 0.2),
+                    child: const Icon(Icons.article_outlined, size: 48),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context)?.localeName == 'zh'
-                        ? (content.titleZh ?? content.title)
-                        : content.title,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Icon(Icons.visibility_outlined, size: 14, color: AppTheme.textTertiary),

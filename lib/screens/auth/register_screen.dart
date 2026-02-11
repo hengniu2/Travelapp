@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
-import '../../providers/app_provider.dart';
-import '../../services/auth_api.dart';
+import '../../services/auth_api.dart' show AuthApi, AuthApiException;
 import '../../utils/app_theme.dart';
 import '../../utils/travel_images.dart';
+import '../../widgets/country_code_selector.dart';
+import 'phone_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,36 +15,42 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _displayNameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  CountryCode _selectedCountry = kCountryCodes.first;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _displayNameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  String _fullPhoneNumber() {
+    final local = _phoneNumberController.text.trim().replaceAll(RegExp(r'\s'), '');
+    return '${_selectedCountry.dialCode}$local';
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate() || _isLoading) return;
     setState(() => _isLoading = true);
     try {
-      await context.read<AppProvider>().register(
-            _displayNameController.text.trim(),
-            _phoneController.text.trim(),
-            _emailController.text.trim(),
-            _passwordController.text,
-          );
+      final phoneNumber = _fullPhoneNumber();
+      await AuthApi.register(
+        phoneNumber: phoneNumber,
+        password: _passwordController.text,
+      );
       if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => PhoneVerificationScreen(phoneNumber: phoneNumber),
+          ),
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.registerButton),
@@ -109,11 +115,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.phone,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
                   const SizedBox(height: 24),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
                           color: AppTheme.primaryColor.withValues(alpha: 0.15),
@@ -127,49 +141,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          TextFormField(
-                            controller: _displayNameController,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: l10n.displayName,
-                              prefixIcon: const Icon(Icons.person_outline),
-                            ),
+                          CountryCodePhoneInput(
+                            selectedCountry: _selectedCountry,
+                            onCountryChanged: (c) => setState(() => _selectedCountry = c),
+                            numberController: _phoneNumberController,
+                            l10n: l10n,
+                            labelText: l10n.phone,
+                            hintText: _selectedCountry.code == 'CN' ? '13800138000' : null,
                             validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return l10n.nameRequired;
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _phoneController,
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: l10n.phone,
-                              prefixIcon: const Icon(Icons.phone_outlined),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return l10n.phoneRequired;
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: l10n.email,
-                              prefixIcon: const Icon(Icons.email_outlined),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return l10n.emailRequired;
-                              }
+                              if (v == null || v.trim().isEmpty) return l10n.phoneRequired;
                               return null;
                             },
                           ),
@@ -183,20 +163,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
+                                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
                                 ),
-                                onPressed: () {
-                                  setState(
-                                      () => _obscurePassword = !_obscurePassword);
-                                },
+                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                               ),
                             ),
                             validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return l10n.passwordRequired;
-                              }
+                              if (v == null || v.isEmpty) return l10n.passwordRequired;
                               return null;
                             },
                           ),
@@ -211,23 +184,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureConfirmPassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
+                                  _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
                                 ),
-                                onPressed: () {
-                                  setState(() => _obscureConfirmPassword =
-                                      !_obscureConfirmPassword);
-                                },
+                                onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                               ),
                             ),
                             validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return l10n.passwordRequired;
-                              }
-                              if (v != _passwordController.text) {
-                                return l10n.passwordsDoNotMatch;
-                              }
+                              if (v == null || v.isEmpty) return l10n.passwordRequired;
+                              if (v != _passwordController.text) return l10n.passwordsDoNotMatch;
                               return null;
                             },
                           ),
@@ -240,17 +204,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ? const SizedBox(
                                       height: 24,
                                       width: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                     )
                                   : Text(
                                       l10n.registerButton,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                             ),
                           ),

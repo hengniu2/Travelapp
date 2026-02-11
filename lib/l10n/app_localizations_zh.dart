@@ -15,6 +15,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get home => '首页';
 
   @override
+  String get homeTitle => '探索世界';
+
+  @override
+  String get homeSubtitle => '发现下一个目的地';
+
+  @override
+  String get seeAll => '查看全部';
+
+  @override
+  String get popular => '热门';
+
+  @override
+  String get travelGuides => '旅行攻略';
+
+  @override
   String get companions => '旅伴';
 
   @override
@@ -25,6 +40,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get content => '内容';
+
+  @override
+  String get contentDiscover => '发现';
+
+  @override
+  String get contentSubtitle => '探索旅行灵感';
+
+  @override
+  String get featured => '大图推荐';
+
+  @override
+  String get latestArticles => '最新文章';
+
+  @override
+  String get searchContentPlaceholder => '搜索内容…';
 
   @override
   String get profile => '个人资料';
@@ -532,4 +562,87 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get additionalNotes => '补充说明';
+
+  @override
+  String get verifyPhone => '验证手机';
+
+  @override
+  String get verificationCodeSentTo => '验证码已发送至';
+
+  @override
+  String get code => '验证码';
+
+  @override
+  String get verify => '验证';
+
+  @override
+  String get resendCode => '重新发送';
+
+  @override
+  String resendCodeInSeconds(int seconds) {
+    return '重新发送（$seconds秒）';
+  }
+
+  @override
+  String get completeYourProfile => '完善个人资料';
+
+  @override
+  String get setDisplayNameToContinue => '请设置显示名称以继续使用。';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get avatarUrlOptional => '头像链接（选填）';
+
+  @override
+  String get editProfile => '编辑资料';
+
+  @override
+  String get updateFailed => '更新失败，请重试。';
+
+  @override
+  String get enter6DigitCode => '请输入6位验证码';
+
+  @override
+  String get verificationFailed => '验证失败';
+
+  @override
+  String get sendCodeFailed => '发送验证码失败';
+
+  @override
+  String get countryChina => '中国';
+
+  @override
+  String get countryUSA => '美国';
+
+  @override
+  String get countryUK => '英国';
+
+  @override
+  String get countryJapan => '日本';
+
+  @override
+  String get countryKorea => '韩国';
+
+  @override
+  String get countrySingapore => '新加坡';
+
+  @override
+  String get countryHongKong => '香港';
+
+  @override
+  String get countryTaiwan => '台湾';
+
+  @override
+  String get countryAustralia => '澳大利亚';
+
+  @override
+  String get countryGermany => '德国';
+
+  @override
+  String get countryFrance => '法国';
+
+  @override
+  String get countryIndia => '印度';
 }

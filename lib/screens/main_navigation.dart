@@ -65,13 +65,13 @@ class _MainNavigationState extends State<MainNavigation> {
       ),
       child: SafeArea(
         top: false,
-        child: SizedBox(
-          height: 64,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDesignSystem.spacingSm,
-              vertical: AppDesignSystem.spacingSm,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDesignSystem.spacingSm,
+            vertical: AppDesignSystem.spacingSm,
+          ),
+          child: SizedBox(
+            height: 64,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(
@@ -85,31 +85,34 @@ class _MainNavigationState extends State<MainNavigation> {
                       child: InkWell(
                         onTap: () => setState(() => _currentIndex = index),
                         borderRadius: AppDesignSystem.borderRadiusMd,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              selected ? item.icon : item.iconOut,
-                              size: iconSize,
-                              color: selected
-                                  ? AppTheme.primaryColor
-                                  : AppTheme.textTertiary,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              item.label,
-                              style: TextStyle(
-                                fontSize: labelSize,
-                                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                selected ? item.icon : item.iconOut,
+                                size: iconSize,
                                 color: selected
                                     ? AppTheme.primaryColor
                                     : AppTheme.textTertiary,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                              const SizedBox(height: 4),
+                              Text(
+                                item.label,
+                                style: TextStyle(
+                                  fontSize: labelSize,
+                                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                                  color: selected
+                                      ? AppTheme.primaryColor
+                                      : AppTheme.textTertiary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

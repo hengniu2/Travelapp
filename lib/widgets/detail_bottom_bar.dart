@@ -94,47 +94,51 @@ class DetailBottomBar extends StatelessWidget {
               ],
               if (price != null) ...[
                 Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.price,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppTheme.textSecondary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          PriceWidget(
-                            price: price!,
-                            prefix: '¥',
-                            showFrom: false,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.categoryRed,
-                            ),
+                  child: FittedBox(
+                    alignment: Alignment.centerLeft,
+                    fit: BoxFit.scaleDown,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.price,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.textSecondary,
+                            fontWeight: FontWeight.w500,
                           ),
-                          if (effectiveSuffix.isNotEmpty) ...[
-                            const SizedBox(width: 2),
-                            Text(
-                              effectiveSuffix,
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            PriceWidget(
+                              price: price!,
+                              prefix: '¥',
+                              showFrom: false,
                               style: TextStyle(
-                                fontSize: 14,
-                                color: AppTheme.textSecondary,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.categoryRed,
                               ),
                             ),
+                            if (effectiveSuffix.isNotEmpty) ...[
+                              const SizedBox(width: 2),
+                              Text(
+                                effectiveSuffix,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppTheme.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ] else

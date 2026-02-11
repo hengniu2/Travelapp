@@ -15,6 +15,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home => 'Home';
 
   @override
+  String get homeTitle => 'Explore the World';
+
+  @override
+  String get homeSubtitle => 'Find your next destination';
+
+  @override
+  String get seeAll => 'See All';
+
+  @override
+  String get popular => 'Popular';
+
+  @override
+  String get travelGuides => 'Travel Guides';
+
+  @override
   String get companions => 'Companions';
 
   @override
@@ -25,6 +40,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get content => 'Content';
+
+  @override
+  String get contentDiscover => 'Discover';
+
+  @override
+  String get contentSubtitle => 'Explore travel inspiration';
+
+  @override
+  String get featured => 'Featured';
+
+  @override
+  String get latestArticles => 'Latest Articles';
+
+  @override
+  String get searchContentPlaceholder => 'Search content…';
 
   @override
   String get profile => 'Profile';
@@ -532,4 +562,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get additionalNotes => 'Additional Notes';
+
+  @override
+  String get verifyPhone => 'Verify phone';
+
+  @override
+  String get verificationCodeSentTo => 'Verification code sent to';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String get resendCode => 'Resend code';
+
+  @override
+  String resendCodeInSeconds(int seconds) {
+    return 'Resend code (${seconds}s)';
+  }
+
+  @override
+  String get completeYourProfile => 'Complete your profile';
+
+  @override
+  String get setDisplayNameToContinue => 'Set a display name to continue.';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get avatarUrlOptional => 'Avatar URL (optional)';
+
+  @override
+  String get editProfile => 'Edit profile';
+
+  @override
+  String get updateFailed => 'Update failed. Please try again.';
+
+  @override
+  String get enter6DigitCode => 'Enter 6-digit code';
+
+  @override
+  String get verificationFailed => 'Verification failed';
+
+  @override
+  String get sendCodeFailed => 'Failed to send code';
+
+  @override
+  String get countryChina => 'China';
+
+  @override
+  String get countryUSA => 'United States';
+
+  @override
+  String get countryUK => 'United Kingdom';
+
+  @override
+  String get countryJapan => 'Japan';
+
+  @override
+  String get countryKorea => 'South Korea';
+
+  @override
+  String get countrySingapore => 'Singapore';
+
+  @override
+  String get countryHongKong => 'Hong Kong';
+
+  @override
+  String get countryTaiwan => 'Taiwan';
+
+  @override
+  String get countryAustralia => 'Australia';
+
+  @override
+  String get countryGermany => 'Germany';
+
+  @override
+  String get countryFrance => 'France';
+
+  @override
+  String get countryIndia => 'India';
 }

@@ -10,24 +10,36 @@ class AppProvider with ChangeNotifier {
   static const _keyUserEmail = 'user_email';
   static const _keyUserName = 'user_name';
   static const _keyUserPhone = 'user_phone';
+  static const _keyUserAvatar = 'user_avatar';
   static const _keyAccessToken = 'access_token';
   static const _keyRefreshToken = 'refresh_token';
 
-  /// Build User and save to prefs from /me API account map.
-  static Future<User> _userFromAccount(SharedPreferences prefs, Map<String, dynamic> account) async {
+  /// Build User from /me API data (account + profile). Saves to prefs.
+  static Future<User> _userFromMe(SharedPreferences prefs, Map<String, dynamic> data) async {
+    final account = data['account'] is Map ? data['account'] as Map<String, dynamic> : <String, dynamic>{};
+    final profile = data['profile'] is Map ? data['profile'] as Map<String, dynamic> : <String, dynamic>{};
     final id = account['id']?.toString() ?? '';
-    final email = account['email']?.toString() ?? '';
-    final phone = account['phone']?.toString() ?? '';
-    final name = account['display_name']?.toString() ?? email.split('@').first;
-    final user = User(id: id, name: name, email: email, phone: phone);
+    final phone = account['phone_number']?.toString() ?? '';
+    final name = profile['display_name']?.toString()?.trim() ?? '';
+    final email = profile['contact_email']?.toString()?.trim() ?? '';
+    final avatar = profile['avatar_url']?.toString()?.trim();
+    final user = User(
+      id: id,
+      name: name.isEmpty ? (phone.isNotEmpty ? phone : 'User') : name,
+      email: email,
+      avatar: avatar,
+      phone: phone,
+    );
     await prefs.setString(_keyUserId, user.id);
     await prefs.setString(_keyUserEmail, user.email);
     await prefs.setString(_keyUserName, user.name);
-    await prefs.setString(_keyUserPhone, user.phone!);
+    if (user.phone != null) await prefs.setString(_keyUserPhone, user.phone!);
+    if (user.avatar != null) await prefs.setString(_keyUserAvatar, user.avatar!);
     return user;
   }
 
   User? _currentUser;
+  bool _needsProfileCompletion = false;
   final List<Order> _orders = [];
   final List<String> _favorites = [];
   double _walletBalance = 0.0;
@@ -35,6 +47,7 @@ class AppProvider with ChangeNotifier {
   bool _initialized = false;
 
   User? get currentUser => _currentUser;
+  bool get needsProfileCompletion => _needsProfileCompletion;
   List<Order> get orders => _orders;
   List<String> get favorites => _favorites;
   double get walletBalance => _walletBalance;
@@ -43,6 +56,11 @@ class AppProvider with ChangeNotifier {
 
   void setUser(User user) {
     _currentUser = user;
+    notifyListeners();
+  }
+
+  void setNeedsProfileCompletion(bool value) {
+    _needsProfileCompletion = value;
     notifyListeners();
   }
 
@@ -81,17 +99,22 @@ class AppProvider with ChangeNotifier {
 
       if (accessToken != null && accessToken.isNotEmpty) {
         try {
-          final account = await AuthApi.getMe(accessToken);
-          _currentUser = await _userFromAccount(prefs, account);
+          final data = await AuthApi.getMe(accessToken);
+          _currentUser = await _userFromMe(prefs, data);
+          final profile = data['profile'] is Map ? data['profile'] as Map<String, dynamic> : null;
+          final displayName = profile?['display_name']?.toString()?.trim();
+          _needsProfileCompletion = displayName == null || displayName.isEmpty;
           _walletBalance = 500.0;
         } catch (e) {
           debugPrint('AppProvider.init getMe error: $e');
           await _clearAuthPrefs(prefs);
           _currentUser = null;
+          _needsProfileCompletion = false;
           _walletBalance = 0.0;
         }
       } else {
         _currentUser = null;
+        _needsProfileCompletion = false;
         _walletBalance = 0.0;
       }
 
@@ -100,6 +123,7 @@ class AppProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('AppProvider.init error: $e');
       _currentUser = null;
+      _needsProfileCompletion = false;
       _walletBalance = 0.0;
     } finally {
       _initialized = true;
@@ -112,39 +136,64 @@ class AppProvider with ChangeNotifier {
     await prefs.remove(_keyUserEmail);
     await prefs.remove(_keyUserName);
     await prefs.remove(_keyUserPhone);
+    await prefs.remove(_keyUserAvatar);
     await prefs.remove(_keyAccessToken);
     await prefs.remove(_keyRefreshToken);
   }
 
-  /// Login via API, then fetch profile from /me to get display_name from DB.
-  Future<void> login(String email, String phone, String password) async {
-    if (email.trim().isEmpty || phone.trim().isEmpty || password.isEmpty) return;
-    final tokens = await AuthApi.login(email: email, phone: phone, password: password);
+  /// Login: phone + password. On success fetches /me; if no display_name sets needsProfileCompletion.
+  Future<void> login(String phoneNumber, String password) async {
+    if (phoneNumber.trim().isEmpty || password.isEmpty) return;
+    final tokens = await AuthApi.login(phoneNumber: phoneNumber.trim(), password: password);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyAccessToken, tokens['access_token']!);
     await prefs.setString(_keyRefreshToken, tokens['refresh_token'] ?? '');
-    final account = await AuthApi.getMe(tokens['access_token']!);
-    _currentUser = await _userFromAccount(prefs, account);
+    final data = await AuthApi.getMe(tokens['access_token']!);
+    _currentUser = await _userFromMe(prefs, data);
+    final profile = data['profile'] is Map ? data['profile'] as Map<String, dynamic> : null;
+    final displayName = profile?['display_name']?.toString()?.trim();
+    _needsProfileCompletion = displayName == null || displayName.isEmpty;
     _walletBalance = 500.0;
     notifyListeners();
   }
 
-  /// Register via API, then login and fetch profile from /me (display_name from DB).
-  Future<void> register(String displayName, String phone, String email, String password) async {
-    if (displayName.trim().isEmpty || phone.trim().isEmpty || email.trim().isEmpty || password.isEmpty) return;
-    await AuthApi.register(
-      email: email,
-      phone: phone,
-      password: password,
-      displayName: displayName,
-    );
-    final tokens = await AuthApi.login(email: email, phone: phone, password: password);
+  /// Register: phone + password only. Does not login; caller navigates to phone verification.
+  static Future<String> register(String phoneNumber, String password) async {
+    if (phoneNumber.trim().isEmpty || password.isEmpty) {
+      throw AuthApiException('Phone and password required');
+    }
+    return AuthApi.register(phoneNumber: phoneNumber.trim(), password: password);
+  }
+
+  /// Update profile via PATCH /api/customer/profile, then refresh user and clear needsProfileCompletion.
+  Future<void> updateProfile({
+    String? displayName,
+    String? avatarUrl,
+    String? contactEmail,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyAccessToken, tokens['access_token']!);
-    await prefs.setString(_keyRefreshToken, tokens['refresh_token'] ?? '');
-    final account = await AuthApi.getMe(tokens['access_token']!);
-    _currentUser = await _userFromAccount(prefs, account);
-    _walletBalance = 500.0;
+    final accessToken = prefs.getString(_keyAccessToken);
+    if (accessToken == null || accessToken.isEmpty) return;
+    await AuthApi.updateProfile(
+      accessToken,
+      displayName: displayName,
+      avatarUrl: avatarUrl,
+      contactEmail: contactEmail,
+    );
+    final data = await AuthApi.getMe(accessToken);
+    _currentUser = await _userFromMe(prefs, data);
+    _needsProfileCompletion = false;
+    notifyListeners();
+  }
+
+  /// After profile update (PATCH), refresh user from /me and clear needsProfileCompletion.
+  Future<void> refreshUserAfterProfileUpdate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString(_keyAccessToken);
+    if (accessToken == null || accessToken.isEmpty) return;
+    final data = await AuthApi.getMe(accessToken);
+    _currentUser = await _userFromMe(prefs, data);
+    _needsProfileCompletion = false;
     notifyListeners();
   }
 
@@ -152,6 +201,7 @@ class AppProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await _clearAuthPrefs(prefs);
     _currentUser = null;
+    _needsProfileCompletion = false;
     _orders.clear();
     _favorites.clear();
     _walletBalance = 0.0;
@@ -160,11 +210,9 @@ class AppProvider with ChangeNotifier {
 
   Future<void> setLocale(Locale locale) async {
     if (_locale == locale) return;
-    
     _locale = locale;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language_code', locale.languageCode);
     notifyListeners();
   }
 }
-

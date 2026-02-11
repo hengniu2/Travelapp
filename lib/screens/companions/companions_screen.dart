@@ -186,7 +186,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.25),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.4),
                         width: 1.5,
@@ -398,7 +398,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                   AspectRatio(
                     aspectRatio: 16 / 9,
                     child: TravelImages.buildImageBackground(
-                      imageUrl: TravelImages.getCompanionBackground(companion.id.hashCode.abs()),
+                      imageUrl: TravelImages.getCompanionBackground(index),
                       opacity: 0.0,
                       cacheWidth: 1200,
                       child: Container(
@@ -442,7 +442,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: companion.avatar ??
-                                  TravelImages.getCompanionAvatar(companion.id.hashCode.abs()),
+                                  TravelImages.getCompanionAvatar(index),
                               fit: BoxFit.cover,
                               memCacheWidth: 256,
                               memCacheHeight: 256,
@@ -704,8 +704,8 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
                   ),
                 ),
                 child: Column(
@@ -750,7 +750,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFF4CAF50).withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
@@ -801,7 +801,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 avatarColor.withOpacity(0.08),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: avatarColor.withOpacity(0.4),
                               width: 1.5,
@@ -841,7 +841,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: Colors.grey.shade300,
                               width: 1,
@@ -879,7 +879,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 AppTheme.categoryPink.withOpacity(0.08),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: AppTheme.categoryPink.withOpacity(0.3),
                               width: 1.5,

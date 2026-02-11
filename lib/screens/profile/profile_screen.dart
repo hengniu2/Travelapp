@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
+import '../../models/user.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
@@ -10,9 +11,32 @@ import 'favorites_screen.dart';
 import 'reviews_screen.dart';
 import 'wallet_screen.dart';
 import 'notifications_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  static Widget _avatarPlaceholder(User? user) {
+    final initial = (user?.name != null && user!.name.trim().isNotEmpty)
+        ? user.name[0].toUpperCase()
+        : 'U';
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(colors: AppTheme.primaryGradient),
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          initial,
+          style: const TextStyle(
+            fontSize: 40,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,38 +95,17 @@ class ProfileScreen extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 46,
                           backgroundColor: Colors.transparent,
-                    child: user?.avatar != null
+                    child: (user?.avatar != null && user!.avatar!.trim().isNotEmpty)
                               ? ClipOval(
-                                  child: TravelImages.buildImageBackground(
-                                    imageUrl: TravelImages.getSafeImageUrl(
-                                      user!.avatar, 
-                                      user.hashCode, 
-                                      200, 
-                                      200
-                                    ),
-                                    opacity: 0.0,
-                                    cacheWidth: 200,
-                                    child: const SizedBox.shrink(),
+                                  child: Image.network(
+                                    user.avatar!,
+                                    width: 92,
+                                    height: 92,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => _avatarPlaceholder(user),
                                   ),
                                 )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: AppTheme.primaryGradient,
-                                    ),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                            user?.name[0] ?? 'U',
-                                      style: const TextStyle(
-                                        fontSize: 40,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                          ),
-                  ),
-                                ),
+                              : _avatarPlaceholder(user),
                         ),
                       ),
                       Positioned(
@@ -169,6 +172,18 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
+            ),
+            _buildMenuItem(
+              context,
+              l10n.editProfile,
+              Icons.edit,
+              AppTheme.primaryColor,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                );
+              },
             ),
             _buildMenuItem(
               context,

@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 /// Use these constants across the app for a consistent, premium look.
 /// Rules: light tinted backgrounds, no plain white screens, no sharp corners,
 /// card-based surfaces, no default unstyled widgets.
+///
+/// Overflow prevention: When a [Column] or [Row] is inside a fixed-height/width
+/// parent, ensure content can't overflow: use [Expanded]/[Flexible],
+/// [FittedBox](fit: BoxFit.scaleDown), or [SingleChildScrollView].
 class AppDesignSystem {
   AppDesignSystem._();
 
@@ -22,14 +26,14 @@ class AppDesignSystem {
   static const EdgeInsets paddingVertical = EdgeInsets.symmetric(vertical: spacingLg);
   static const EdgeInsets paddingAllLg = EdgeInsets.symmetric(horizontal: spacingXl, vertical: spacingLg);
 
-  // ─── Border radius — no sharp corners ───────────────────────────────────
-  /// Small radius for images (minimal rounding).
-  static const double radiusImage = 6;
-  static const double radiusSm = 14;
-  static const double radiusMd = 16;
-  static const double radiusLg = 18;
-  static const double radiusXl = 20;
-  static const double radiusXxl = 24;
+  // ─── Border radius — nearly rectangle (small rounding) ───────────────────
+  /// Small radius for images and cards.
+  static const double radiusImage = 4;
+  static const double radiusSm = 6;
+  static const double radiusMd = 8;
+  static const double radiusLg = 8;
+  static const double radiusXl = 10;
+  static const double radiusXxl = 12;
 
   static BorderRadius get borderRadiusImage => BorderRadius.circular(radiusImage);
   static BorderRadius get borderRadiusSm => BorderRadius.circular(radiusSm);

@@ -107,6 +107,36 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
+  /// No description provided for @homeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the World'**
+  String get homeTitle;
+
+  /// No description provided for @homeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find your next destination'**
+  String get homeSubtitle;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See All'**
+  String get seeAll;
+
+  /// No description provided for @popular.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get popular;
+
+  /// No description provided for @travelGuides.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Guides'**
+  String get travelGuides;
+
   /// No description provided for @companions.
   ///
   /// In en, this message translates to:
@@ -130,6 +160,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Content'**
   String get content;
+
+  /// No description provided for @contentDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get contentDiscover;
+
+  /// No description provided for @contentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore travel inspiration'**
+  String get contentSubtitle;
+
+  /// No description provided for @featured.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured'**
+  String get featured;
+
+  /// No description provided for @latestArticles.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest Articles'**
+  String get latestArticles;
+
+  /// No description provided for @searchContentPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search content…'**
+  String get searchContentPlaceholder;
 
   /// No description provided for @profile.
   ///
@@ -1132,6 +1192,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Additional Notes'**
   String get additionalNotes;
+
+  /// No description provided for @verifyPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify phone'**
+  String get verifyPhone;
+
+  /// No description provided for @verificationCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code sent to'**
+  String get verificationCodeSentTo;
+
+  /// No description provided for @code.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get code;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendCode;
+
+  /// No description provided for @resendCodeInSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code ({seconds}s)'**
+  String resendCodeInSeconds(int seconds);
+
+  /// No description provided for @completeYourProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your profile'**
+  String get completeYourProfile;
+
+  /// No description provided for @setDisplayNameToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a display name to continue.'**
+  String get setDisplayNameToContinue;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @avatarUrlOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar URL (optional)'**
+  String get avatarUrlOptional;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// No description provided for @updateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed. Please try again.'**
+  String get updateFailed;
+
+  /// No description provided for @enter6DigitCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit code'**
+  String get enter6DigitCode;
+
+  /// No description provided for @verificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification failed'**
+  String get verificationFailed;
+
+  /// No description provided for @sendCodeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send code'**
+  String get sendCodeFailed;
+
+  /// No description provided for @countryChina.
+  ///
+  /// In en, this message translates to:
+  /// **'China'**
+  String get countryChina;
+
+  /// No description provided for @countryUSA.
+  ///
+  /// In en, this message translates to:
+  /// **'United States'**
+  String get countryUSA;
+
+  /// No description provided for @countryUK.
+  ///
+  /// In en, this message translates to:
+  /// **'United Kingdom'**
+  String get countryUK;
+
+  /// No description provided for @countryJapan.
+  ///
+  /// In en, this message translates to:
+  /// **'Japan'**
+  String get countryJapan;
+
+  /// No description provided for @countryKorea.
+  ///
+  /// In en, this message translates to:
+  /// **'South Korea'**
+  String get countryKorea;
+
+  /// No description provided for @countrySingapore.
+  ///
+  /// In en, this message translates to:
+  /// **'Singapore'**
+  String get countrySingapore;
+
+  /// No description provided for @countryHongKong.
+  ///
+  /// In en, this message translates to:
+  /// **'Hong Kong'**
+  String get countryHongKong;
+
+  /// No description provided for @countryTaiwan.
+  ///
+  /// In en, this message translates to:
+  /// **'Taiwan'**
+  String get countryTaiwan;
+
+  /// No description provided for @countryAustralia.
+  ///
+  /// In en, this message translates to:
+  /// **'Australia'**
+  String get countryAustralia;
+
+  /// No description provided for @countryGermany.
+  ///
+  /// In en, this message translates to:
+  /// **'Germany'**
+  String get countryGermany;
+
+  /// No description provided for @countryFrance.
+  ///
+  /// In en, this message translates to:
+  /// **'France'**
+  String get countryFrance;
+
+  /// No description provided for @countryIndia.
+  ///
+  /// In en, this message translates to:
+  /// **'India'**
+  String get countryIndia;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/data_service.dart';
 import '../../models/content.dart';
-import '../../widgets/image_first_card.dart';
 import '../../widgets/empty_state.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
 import '../../utils/route_transitions.dart';
 import 'content_detail_screen.dart';
+import 'widgets/content_category_tab_bar.dart';
+import 'widgets/featured_content_card.dart';
+import 'widgets/content_article_card.dart';
 
+/// Content hub: hero header, category pills, featured → trending → latest hierarchy,
+/// pull-to-refresh, empty state. Travel magazine feel.
 class ContentScreen extends StatefulWidget {
   const ContentScreen({super.key});
 
@@ -21,7 +24,7 @@ class ContentScreen extends StatefulWidget {
 class _ContentScreenState extends State<ContentScreen> {
   final DataService _dataService = DataService();
   List<TravelContent> _content = [];
-  String _selectedTypeKey = 'all'; // Use keys instead of localized strings
+  String _selectedTypeKey = 'all';
 
   @override
   void initState() {
@@ -29,40 +32,23 @@ class _ContentScreenState extends State<ContentScreen> {
     _loadContent();
   }
 
-  void _loadContent() {
-    _content = _dataService.getTravelContent();
+  Future<void> _loadContent() async {
+    setState(() {
+      _content = _dataService.getTravelContent();
+    });
   }
 
   List<TravelContent> get _filteredContent {
     if (_selectedTypeKey == 'all') return _content;
-    
-    // Map keys to actual type values in data
     final typeKeyMap = {
       'all': null,
       'guide': 'Guide',
       'tips': 'Tips',
       'travelNotes': 'Travel Notes',
     };
-    
     final targetType = typeKeyMap[_selectedTypeKey];
     if (targetType == null) return _content;
-    
     return _content.where((c) => c.type == targetType).toList();
-  }
-  
-  String _getTypeLabel(String key, AppLocalizations l10n) {
-    switch (key) {
-      case 'all':
-        return l10n.all;
-      case 'guide':
-        return l10n.guide;
-      case 'tips':
-        return l10n.tips;
-      case 'travelNotes':
-        return l10n.travelNotes;
-      default:
-        return l10n.all;
-    }
   }
 
   String _getContentTypeLabel(String type, AppLocalizations l10n) {
@@ -78,325 +64,321 @@ class _ContentScreenState extends State<ContentScreen> {
     }
   }
 
+  Color _typeColor(String type) {
+    switch (type) {
+      case 'Guide':
+        return AppTheme.categoryBlue;
+      case 'Tips':
+        return AppTheme.categoryOrange;
+      case 'Travel Notes':
+        return AppTheme.categoryPurple;
+      default:
+        return AppTheme.primaryColor;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    
-    final filterColors = {
-      'all': AppTheme.primaryColor,
-      'guide': AppTheme.categoryBlue,
-      'tips': AppTheme.categoryOrange,
-      'travelNotes': AppTheme.categoryPurple,
-    };
-    
+    final filtered = _filteredContent;
+    final featured =
+        filtered.isEmpty ? null : filtered.first;
+    final trending = filtered.length > 1
+        ? filtered.sublist(1, filtered.length > 4 ? 4 : filtered.length)
+        : <TravelContent>[];
+    final latest = filtered.length > 1
+        ? filtered.sublist(1)
+        : <TravelContent>[];
+
     return Scaffold(
-      body: TravelImages.buildImageBackground(
-        imageUrl: TravelImages.getContentImage(10),
-        opacity: 0.08,
-        cacheWidth: 1200,
-        child: Container(
-          color: AppTheme.backgroundColor,
-          child: Column(
-        children: [
-          Container(
-            height: 60,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: ['all', 'guide', 'tips', 'travelNotes']
-                  .map((key) => Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: _selectedTypeKey == key
-                                ? LinearGradient(
-                                    colors: [
-                                      filterColors[key]!,
-                                      filterColors[key]!.withOpacity(0.8),
-                                    ],
-                                  )
-                                : null,
-                            color: _selectedTypeKey == key
-                                ? null
-                                : Colors.white,
-                            borderRadius: AppDesignSystem.borderRadiusImage,
-                            border: Border.all(
-                              color: _selectedTypeKey == key
-                                  ? Colors.transparent
-                                  : filterColors[key]!.withOpacity(0.3),
-                              width: 2,
-                            ),
-                            boxShadow: _selectedTypeKey == key
-                                ? [
-                                    BoxShadow(
-                                      color: filterColors[key]!.withOpacity(0.3),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ]
-                                : null,
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                              setState(() => _selectedTypeKey = key);
-                              },
-                              borderRadius: AppDesignSystem.borderRadiusImage,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                child: Text(
-                                  _getTypeLabel(key, l10n),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: _selectedTypeKey == key
-                                        ? Colors.white
-                                        : filterColors[key]!,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ))
-                  .toList(),
+      backgroundColor: theme.colorScheme.surfaceContainerLow,
+      body: RefreshIndicator(
+        onRefresh: _loadContent,
+        color: AppTheme.primaryColor,
+        child: CustomScrollView(
+          slivers: [
+            _buildHero(theme, l10n),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _CategorySliverDelegate(
+                child: ContentCategoryTabBar(
+                  selectedKey: _selectedTypeKey,
+                  onSelected: (key) => setState(() => _selectedTypeKey = key),
+                  l10n: l10n,
+                ),
+              ),
             ),
-          ),
-          Expanded(
-            child: _filteredContent.isEmpty
-                ? EmptyState(
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppDesignSystem.spacingLg,
+                  AppDesignSystem.spacingXl,
+                  AppDesignSystem.spacingLg,
+                  AppDesignSystem.spacingMd,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (featured != null) ...[
+                      _sectionTitle(theme, l10n.featured),
+                      const SizedBox(height: 12),
+                      FeaturedContentCard(
+                        content: featured,
+                        onTap: () => pushSlideUp(
+                          context,
+                          ContentDetailScreen(content: featured),
+                        ),
+                        typeColor: _typeColor(featured.type),
+                        getContentTypeLabel: (t) => _getContentTypeLabel(t, l10n),
+                        imageIndex: 0,
+                      ),
+                    ],
+                    const SizedBox(height: 28),
+                    _sectionTitle(theme, l10n.hot),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 200,
+                      child: trending.isEmpty
+                          ? _buildTrendingPlaceholder(context, theme)
+                          : ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(
+                                left: 0,
+                                right: AppDesignSystem.spacingLg,
+                              ),
+                              itemCount: trending.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 12),
+                              itemBuilder: (context, index) {
+                                final c = trending[index];
+                                return SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                  child: ContentArticleCard(
+                                    content: c,
+                                    compact: true,
+                                    onTap: () => pushSlideUp(
+                                      context,
+                                      ContentDetailScreen(content: c),
+                                    ),
+                                    typeColor: _typeColor(c.type),
+                                    getContentTypeLabel: (t) =>
+                                        _getContentTypeLabel(t, l10n),
+                                    imageIndex: index + 1,
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                    const SizedBox(height: 28),
+                    _sectionTitle(theme, l10n.latestArticles),
+                    const SizedBox(height: 12),
+                  ],
+                ),
+              ),
+            ),
+            if (latest.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: EmptyState(
                     icon: Icons.article_outlined,
                     headline: l10n.noContentFound,
                     subtitle: l10n.contentEmptySubtitle,
                     iconColor: AppTheme.categoryPurple,
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
-                    itemCount: _filteredContent.length,
-                    itemBuilder: (context, index) {
-                      final content = _filteredContent[index];
-                      final typeColors = {
-                        'Guide': AppTheme.categoryBlue,
-                        'Tips': AppTheme.categoryOrange,
-                        'Travel Notes': AppTheme.categoryPurple,
-                      };
-                      final typeColor = typeColors[content.type] ?? AppTheme.primaryColor;
-                      final gradients = [
-                        AppTheme.primaryGradient,
-                        AppTheme.sunsetGradient,
-                        AppTheme.oceanGradient,
-                        AppTheme.purpleGradient,
-                      ];
-                      final gradient = gradients[index % gradients.length];
-                      
-                      return ImageFirstCard(
-                        onTap: () {
-                          pushSlideUp(
+                  ),
+                ),
+              )
+            else
+              SliverPadding(
+                padding: const EdgeInsets.only(
+                  left: AppDesignSystem.spacingLg,
+                  right: AppDesignSystem.spacingLg,
+                  bottom: AppDesignSystem.spacingXxl + 24,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final c = latest[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: ContentArticleCard(
+                          content: c,
+                          onTap: () => pushSlideUp(
                             context,
-                            ContentDetailScreen(content: content),
-                          );
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(AppDesignSystem.radiusImage)),
-                                child: Stack(
-                                    children: [
-                                Container(
-                                        height: 220,
-                                  width: double.infinity,
-                                  child: TravelImages.buildImageBackground(
-                                    imageUrl: TravelImages.getSafeImageUrl(
-                                      content.image, 
-                                      index, 
-                                      800, 
-                                      600
-                                    ),
-                                    opacity: 0.0,
-                                    cacheWidth: 800,
-                                    child: const SizedBox.shrink(),
-                                  ),
-                                ),
-                                // Gradient overlay
-                                Positioned.fill(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.transparent,
-                                                Colors.black.withOpacity(0.3),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      // Type badge
-                                      Positioned(
-                                        top: AppDesignSystem.spacingMd,
-                                        left: AppDesignSystem.spacingMd,
-                                        child: CardBadge(
-                                          label: _getContentTypeLabel(content.type, l10n),
-                                          color: typeColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              Padding(
-                                padding: const EdgeInsets.all(AppDesignSystem.spacingXl),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      l10n.localeName == 'zh'
-                                          ? (content.titleZh ?? content.title)
-                                          : content.title,
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppTheme.textPrimary,
-                                        height: 1.3,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      l10n.localeName == 'zh'
-                                          ? (content.contentZh ?? content.content)
-                                          : content.content,
-                                      style: TextStyle(
-                                        color: Colors.grey.shade700,
-                                        fontSize: 14,
-                                        height: 1.5,
-                                      ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        if (content.author != null) ...[
-                                          Container(
-                                            padding: const EdgeInsets.all(6),
-                                            decoration: BoxDecoration(
-                                              color: typeColor.withOpacity(0.1),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            child: Icon(Icons.person,
-                                                size: 14, color: typeColor),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            l10n.localeName == 'zh'
-                                                ? (content.authorZh ?? content.author!)
-                                                : content.author!,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey.shade700,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 16),
-                                        ],
-                                        Container(
-                                          padding: const EdgeInsets.all(6),
-                                          decoration: BoxDecoration(
-                                            color: typeColor.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Icon(Icons.calendar_today,
-                                              size: 14, color: typeColor),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          DateFormat.yMMMd(Localizations.localeOf(context).toString())
-                                              .format(content.publishDate),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade700,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: AppTheme.categoryBlue.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.visibility,
-                                                  size: 14, color: AppTheme.categoryBlue),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${content.views}',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppTheme.categoryBlue,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: AppTheme.categoryPink.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                        Icon(Icons.favorite,
-                                                  size: 14, color: AppTheme.categoryPink),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${content.likes}',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppTheme.categoryPink,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ContentDetailScreen(content: c),
                           ),
+                          typeColor: _typeColor(c.type),
+                          getContentTypeLabel: (t) =>
+                              _getContentTypeLabel(t, l10n),
+                          imageIndex: index + 1,
+                        ),
                       );
                     },
+                    childCount: latest.length,
                   ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHero(ThemeData theme, AppLocalizations l10n) {
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 200,
+        width: double.infinity,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              TravelImages.getContentImage(0),
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppTheme.categoryPurple.withValues(alpha: 0.5),
+                    AppTheme.categoryPurple.withValues(alpha: 0.75),
+                    AppTheme.primaryColor.withValues(alpha: 0.85),
+                  ],
+                  stops: const [0.0, 0.5, 1.0],
+                ),
+              ),
+            ),
+            SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppDesignSystem.spacingLg,
+              AppDesignSystem.spacingMd,
+              AppDesignSystem.spacingLg,
+              AppDesignSystem.spacingLg,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l10n.contentDiscover,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.contentSubtitle,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Material(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius:
+                          BorderRadius.circular(AppDesignSystem.radiusMd),
+                      child: InkWell(
+                        onTap: () {
+                          // TODO: open search
+                        },
+                        borderRadius:
+                            BorderRadius.circular(AppDesignSystem.radiusMd),
+                        child: const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.search_rounded,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
-          ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(ThemeData theme, String title) {
+    return Text(
+      title,
+      style: theme.textTheme.titleLarge?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: theme.colorScheme.onSurface,
+      ),
+    );
+  }
+
+  Widget _buildTrendingPlaceholder(BuildContext context, ThemeData theme) {
+    return Center(
+      child: Text(
+        AppLocalizations.of(context)!.noContentFound,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
         ),
       ),
     );
   }
 }
 
+class _CategorySliverDelegate extends SliverPersistentHeaderDelegate {
+  _CategorySliverDelegate({required this.child});
 
+  final Widget child;
 
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: child,
+    );
+  }
+
+  @override
+  double get maxExtent => 56;
+
+  @override
+  double get minExtent => 56;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
+}

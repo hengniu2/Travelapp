@@ -165,31 +165,35 @@ class _GridItem extends StatelessWidget {
           action.onTap?.call();
         },
         borderRadius: AppDesignSystem.borderRadiusMd,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: AppDesignSystem.borderRadiusMd,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: AppDesignSystem.borderRadiusMd,
+                ),
+                child: Icon(action.icon, size: iconSize, color: color),
               ),
-              child: Icon(action.icon, size: iconSize, color: color),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              action.label,
-              style: TextStyle(
-                fontSize: 12,
-                color: AppTheme.textPrimary,
-                fontWeight: FontWeight.w500,
+              const SizedBox(height: 8),
+              Text(
+                action.label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppTheme.textPrimary,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
+import '../../utils/app_theme.dart';
 
 class CompanionFilterScreen extends StatefulWidget {
   final String selectedDestination;
@@ -138,14 +139,16 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
     String selected,
     Function(String) onChanged,
   ) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 12),
@@ -155,13 +158,28 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
           children: options.map((option) {
             final isSelected = option == selected;
             return FilterChip(
-              label: Text(option),
+              label: Text(
+                option,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: isSelected
+                      ? Colors.white
+                      : AppTheme.textPrimary,
+                ),
+              ),
               selected: isSelected,
-              onSelected: (selected) {
-                if (selected) {
-                  onChanged(option);
-                }
+              onSelected: (value) {
+                if (value) onChanged(option);
               },
+              backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              selectedColor: AppTheme.primaryColor,
+              checkmarkColor: Colors.white,
+              side: BorderSide(
+                color: isSelected
+                    ? AppTheme.primaryColor
+                    : theme.colorScheme.outline.withValues(alpha: 0.6),
+              ),
             );
           }).toList(),
         ),

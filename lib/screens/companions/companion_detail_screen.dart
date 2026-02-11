@@ -371,7 +371,7 @@ class CompanionDetailScreen extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [color, color.withOpacity(0.7)],
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
                     color: color.withOpacity(0.3),

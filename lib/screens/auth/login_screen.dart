@@ -5,7 +5,10 @@ import '../../providers/app_provider.dart';
 import '../../services/auth_api.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/travel_images.dart';
+import '../../widgets/country_code_selector.dart';
+import 'profile_update_screen.dart';
 import 'register_screen.dart';
+import '../main_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,35 +19,46 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
+  CountryCode _selectedCountry = kCountryCodes.first;
   bool _obscurePassword = true;
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _phoneController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  String _fullPhoneNumber() {
+    final local = _phoneNumberController.text.trim().replaceAll(RegExp(r'\s'), '');
+    return '${_selectedCountry.dialCode}$local';
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate() || _isLoading) return;
     setState(() => _isLoading = true);
     try {
-      await context.read<AppProvider>().login(
-            _emailController.text.trim(),
-            _phoneController.text.trim(),
-            _passwordController.text,
-          );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.loginButton),
-            backgroundColor: AppTheme.primaryColor,
-          ),
+      final provider = context.read<AppProvider>();
+      await provider.login(_fullPhoneNumber(), _passwordController.text);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.loginButton),
+          backgroundColor: AppTheme.primaryColor,
+        ),
+      );
+      if (provider.needsProfileCompletion) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const ProfileUpdateScreen()),
+          (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const MainNavigation()),
+          (route) => false,
         );
       }
     } catch (e) {
@@ -88,27 +102,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppTheme.textOnDark,
                       letterSpacing: 0.5,
                       shadows: [
-                        Shadow(
-                          color: Colors.black38,
-                          offset: Offset(0, 2),
-                          blurRadius: 6,
-                        ),
+                        Shadow(color: Colors.black38, offset: Offset(0, 2), blurRadius: 6),
                       ],
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${l10n.email} & ${l10n.phone}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
+                    l10n.phone,
+                    style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.9)),
                   ),
                   const SizedBox(height: 32),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
                           color: AppTheme.primaryColor.withValues(alpha: 0.15),
@@ -122,34 +129,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: l10n.email,
-                              prefixIcon: const Icon(Icons.email_outlined),
-                            ),
+                          CountryCodePhoneInput(
+                            selectedCountry: _selectedCountry,
+                            onCountryChanged: (c) => setState(() => _selectedCountry = c),
+                            numberController: _phoneNumberController,
+                            l10n: l10n,
+                            labelText: l10n.phone,
+                            hintText: _selectedCountry.code == 'CN' ? '13800138000' : null,
                             validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return l10n.emailRequired;
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _phoneController,
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: l10n.phone,
-                              prefixIcon: const Icon(Icons.phone_outlined),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return l10n.phoneRequired;
-                              }
+                              if (v == null || v.trim().isEmpty) return l10n.phoneRequired;
                               return null;
                             },
                           ),
@@ -163,21 +151,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelText: l10n.password,
                               prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                ),
-                                onPressed: () {
-                                  setState(
-                                      () => _obscurePassword = !_obscurePassword);
-                                },
+                                icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                               ),
                             ),
                             validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return l10n.passwordRequired;
-                              }
+                              if (v == null || v.isEmpty) return l10n.passwordRequired;
                               return null;
                             },
                           ),
@@ -190,17 +169,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? const SizedBox(
                                       height: 24,
                                       width: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                     )
                                   : Text(
                                       l10n.loginButton,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                             ),
                           ),
@@ -213,9 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (context) => const RegisterScreen(),
-                          ),
+                          MaterialPageRoute<void>(builder: (context) => const RegisterScreen()),
                         );
                       },
                       child: Text(

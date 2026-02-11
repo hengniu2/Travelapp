@@ -109,7 +109,7 @@ class _HotelsScreenState extends State<HotelsScreen> {
                   AppTheme.primaryColor.withOpacity(0.05),
                 ],
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: IconButton(
             icon: const Icon(Icons.sort),
@@ -145,7 +145,7 @@ class _HotelsScreenState extends State<HotelsScreen> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: AppTheme.primaryGradient),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.search, color: Colors.white, size: 20),
                 ),

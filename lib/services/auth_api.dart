@@ -3,22 +3,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthApi {
-  static const String _baseUrl = 'https://travel-china-api.onrender.com/api/auth';
-  static String get _customerUrl => '$_baseUrl/customer';
+  static const String _baseUrl = 'https://travel-china-api.onrender.com/api';
 
-  /// Register. Returns user_id on success (201), throws [AuthApiException] on error.
+  /// Register (role CUSTOMER). Returns user_id on 201. Throws [AuthApiException] on error.
   static Future<String> register({
-    required String email,
-    required String phone,
+    required String phoneNumber,
     required String password,
-    required String displayName,
   }) async {
-    final uri = Uri.parse('$_customerUrl/register');
+    final uri = Uri.parse('$_baseUrl/auth/register');
     final body = jsonEncode({
-      'email': email.trim(),
-      'phone': phone.trim(),
+      'role': 'CUSTOMER',
+      'phone_number': phoneNumber.trim(),
       'password': password,
-      'display_name': displayName.trim(),
     });
     final response = await http.post(
       uri,
@@ -37,16 +33,48 @@ class AuthApi {
     throw AuthApiException(_extractMessage(decoded, response.statusCode));
   }
 
-  /// Login. Returns Map with access_token and refresh_token on success (200), throws [AuthApiException] on error.
+  /// Send verification code to phone. 200 = success.
+  static Future<void> sendPhoneCode({required String phoneNumber}) async {
+    final uri = Uri.parse('$_baseUrl/auth/send-phone-code');
+    final body = jsonEncode({'phone_number': phoneNumber.trim()});
+    final response = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    );
+    final decoded = _decodeJson(response.body);
+    if (response.statusCode == 200) return;
+    throw AuthApiException(_extractMessage(decoded, response.statusCode));
+  }
+
+  /// Verify phone with code. 200 = success.
+  static Future<void> verifyPhone({
+    required String phoneNumber,
+    required String code,
+  }) async {
+    final uri = Uri.parse('$_baseUrl/auth/verify-phone');
+    final body = jsonEncode({
+      'phone_number': phoneNumber.trim(),
+      'code': code.trim(),
+    });
+    final response = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    );
+    final decoded = _decodeJson(response.body);
+    if (response.statusCode == 200) return;
+    throw AuthApiException(_extractMessage(decoded, response.statusCode));
+  }
+
+  /// Login. Returns access_token and refresh_token on 200.
   static Future<Map<String, String>> login({
-    required String email,
-    required String phone,
+    required String phoneNumber,
     required String password,
   }) async {
-    final uri = Uri.parse('$_customerUrl/login');
+    final uri = Uri.parse('$_baseUrl/auth/login');
     final body = jsonEncode({
-      'email': email.trim(),
-      'phone': phone.trim(),
+      'phone_number': phoneNumber.trim(),
       'password': password,
     });
     final response = await http.post(
@@ -71,9 +99,9 @@ class AuthApi {
     throw AuthApiException(_extractMessage(decoded, response.statusCode));
   }
 
-  /// Get current user profile. Requires valid access token. Returns account map (id, email, phone, display_name, ...).
+  /// Get current user (GET /api/auth/me). Returns { account, profile }.
   static Future<Map<String, dynamic>> getMe(String accessToken) async {
-    final uri = Uri.parse('$_baseUrl/me');
+    final uri = Uri.parse('$_baseUrl/auth/me');
     final response = await http.get(
       uri,
       headers: {
@@ -84,11 +112,41 @@ class AuthApi {
     final decoded = _decodeJson(response.body);
     if (response.statusCode == 200) {
       final data = decoded != null ? decoded['data'] : null;
-      final account = data is Map ? data['account'] : null;
-      if (account is! Map<String, dynamic>) {
-        throw AuthApiException('Invalid response: missing account');
+      if (data is! Map<String, dynamic>) {
+        throw AuthApiException('Invalid response: missing data');
       }
-      return account;
+      return data;
+    }
+    throw AuthApiException(_extractMessage(decoded, response.statusCode));
+  }
+
+  /// Update customer profile (PATCH /api/customer/profile).
+  static Future<Map<String, dynamic>> updateProfile(
+    String accessToken, {
+    String? displayName,
+    String? avatarUrl,
+    String? contactEmail,
+  }) async {
+    final uri = Uri.parse('$_baseUrl/customer/profile');
+    final body = <String, dynamic>{};
+    if (displayName != null) body['display_name'] = displayName.trim();
+    if (avatarUrl != null) body['avatar_url'] = avatarUrl.trim();
+    if (contactEmail != null) body['contact_email'] = contactEmail.trim();
+    final response = await http.patch(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(body),
+    );
+    final decoded = _decodeJson(response.body);
+    if (response.statusCode == 200) {
+      final data = decoded != null ? decoded['data'] : null;
+      if (data is! Map<String, dynamic>) {
+        throw AuthApiException('Invalid response: missing data');
+      }
+      return data;
     }
     throw AuthApiException(_extractMessage(decoded, response.statusCode));
   }
@@ -106,7 +164,7 @@ class AuthApi {
     if (decoded != null && decoded['message'] != null) {
       return decoded['message'].toString();
     }
-    return 'Request failed (${statusCode})';
+    return 'Request failed ($statusCode)';
   }
 }
 

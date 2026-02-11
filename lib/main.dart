@@ -6,6 +6,7 @@ import 'providers/app_provider.dart';
 import 'utils/app_theme.dart';
 import 'screens/main_navigation.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/auth/profile_update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +63,9 @@ class TravelApp extends StatelessWidget {
     }
     if (appProvider.currentUser == null) {
       return const LoginScreen();
+    }
+    if (appProvider.needsProfileCompletion) {
+      return const ProfileUpdateScreen();
     }
     return const MainNavigation();
   }

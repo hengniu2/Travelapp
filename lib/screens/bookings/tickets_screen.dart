@@ -126,7 +126,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: AppTheme.categoryOrange,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.search, color: Colors.white, size: 20),
                 ),
