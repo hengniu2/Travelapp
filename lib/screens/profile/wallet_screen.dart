@@ -4,19 +4,22 @@ import 'package:provider/provider.dart';
 import '../../widgets/price_widget.dart';
 import '../../utils/travel_images.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
+import '../../l10n/app_localizations.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final appProvider = Provider.of<AppProvider>(context);
     final balance = appProvider.walletBalance;
     final amountController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wallet'),
+        title: Text(l10n.wallet),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -24,7 +27,7 @@ class WalletScreen extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: AppDesignSystem.borderRadiusImage,
                 boxShadow: [
                   BoxShadow(
                     color: AppTheme.primaryColor.withOpacity(0.3),
@@ -34,7 +37,7 @@ class WalletScreen extends StatelessWidget {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: AppDesignSystem.borderRadiusImage,
                 child: TravelImages.buildImageBackground(
                   imageUrl: TravelImages.getWalletBackground(0),
                   opacity: 0.7,
@@ -43,8 +46,8 @@ class WalletScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        const Text(
-                          'Current Balance',
+                        Text(
+                          l10n.currentBalance,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white70,
@@ -78,12 +81,12 @@ class WalletScreen extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Add Money'),
+                    title: Text(l10n.addMoney),
                     content: TextField(
                       controller: amountController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Amount',
+                      decoration: InputDecoration(
+                        labelText: l10n.amount,
                         prefixText: '\$',
                       ),
                     ),
@@ -93,7 +96,7 @@ class WalletScreen extends StatelessWidget {
                           Navigator.pop(context);
                           amountController.clear();
                         },
-                        child: const Text('Cancel'),
+                        child: Text(l10n.cancel),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -104,20 +107,20 @@ class WalletScreen extends StatelessWidget {
                             amountController.clear();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Added \$${amount.toStringAsFixed(2)} to wallet'),
+                                content: Text('${l10n.addedToWallet} \$${amount.toStringAsFixed(2)}'),
                                 backgroundColor: Colors.green,
                               ),
                             );
                           }
                         },
-                        child: const Text('Add'),
+                        child: Text(l10n.add),
                       ),
                     ],
                   ),
                 );
               },
               icon: const Icon(Icons.add),
-              label: const Text('Add Money'),
+              label: Text(l10n.addMoney),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),

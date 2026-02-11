@@ -74,6 +74,16 @@ class TravelImages {
     return List.generate(15, (i) => getTourImage(i));
   }
 
+  /// Light-style header image for Tours page (use with low opacity for soft background).
+  static String getToursPageHeader(int index) {
+    final images = [
+      'assets/images/tours/headers/tours_header_bg_1.jpg',
+      'assets/images/tours/headers/tours_header_bg_2.jpg',
+      'assets/images/tours/headers/tours_header_bg_3.jpg',
+    ];
+    return images[index % images.length];
+  }
+
   // ==================== COMPANIONS ====================
   /// Get companion avatar
   static String getCompanionAvatar(int index) {
@@ -85,7 +95,8 @@ class TravelImages {
     return images[index % images.length];
   }
 
-  /// Get companion background
+  /// Get companion background (for list cards and detail content).
+  /// Rotates through card + detail + profile images.
   static String getCompanionBackground(int index) {
     final images = [
       'assets/images/home/companions/companion_card_bg_1.jpg',
@@ -98,6 +109,17 @@ class TravelImages {
       'assets/images/companions/profiles/companion_profile_bg_2.jpg',
       'assets/images/companions/profiles/companion_profile_bg_3.jpg',
       'assets/images/companions/profiles/companion_profile_bg_4.jpg',
+    ];
+    return images[index % images.length];
+  }
+
+  /// Get companions page header image only (different pool from cards so header ≠ card images).
+  /// Rotates by [index] so you can vary it (e.g. by day or section).
+  static String getCompanionPageHeader(int index) {
+    final images = [
+      'assets/images/home/actions/action_companions_bg_1.jpg',
+      'assets/images/home/actions/action_companions_bg_2.jpg',
+      'assets/images/home/actions/action_companions_bg_3.jpg',
     ];
     return images[index % images.length];
   }

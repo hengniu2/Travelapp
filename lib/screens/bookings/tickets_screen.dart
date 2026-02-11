@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import '../../services/data_service.dart';
 import '../../models/ticket.dart';
 import '../../widgets/price_widget.dart';
+import '../../widgets/image_first_card.dart';
+import '../../widgets/ios_bottom_sheet.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
+import '../../l10n/app_localizations.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({super.key});
@@ -37,43 +41,28 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 
   void _bookTicket(Ticket ticket) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Book ${ticket.name}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Price: \$${ticket.price.toStringAsFixed(2)}'),
-            const SizedBox(height: 16),
-            const Text('Select payment method:'),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('Wallet'),
-              onTap: () => _processPayment(ticket, 'wallet'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.credit_card),
-              title: const Text('Credit Card'),
-              onTap: () => _processPayment(ticket, 'card'),
-            ),
-          ],
+    showIosActionSheet(
+      context,
+      title: '${ticket.name} · ¥${ticket.price.toStringAsFixed(0)}',
+      cancelLabel: AppLocalizations.of(context)!.cancel,
+      actions: [
+        IosSheetAction(
+          icon: Icons.account_balance_wallet,
+          label: AppLocalizations.of(context)!.wallet,
+          onTap: () => _processPayment(ticket, 'wallet'),
+          color: AppTheme.primaryColor,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
+        IosSheetAction(
+          icon: Icons.credit_card,
+          label: AppLocalizations.of(context)!.creditCard,
+          onTap: () => _processPayment(ticket, 'card'),
+          color: AppTheme.categoryBlue,
+        ),
+      ],
     );
   }
 
   void _processPayment(Ticket ticket, String method) {
-    Navigator.pop(context);
-
     final appProvider = Provider.of<AppProvider>(context, listen: false);
 
     final order = Order(
@@ -98,8 +87,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ticket booked successfully!'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.ticketBookedSuccess),
         backgroundColor: Colors.green,
       ),
     );
@@ -110,7 +99,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('Attraction Tickets'),
+        title: Text(AppLocalizations.of(context)!.attractionTickets),
       ),
       body: Column(
         children: [
@@ -119,7 +108,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: AppDesignSystem.borderRadiusImage,
               boxShadow: [
                 BoxShadow(
                   color: AppTheme.categoryOrange.withOpacity(0.15),
@@ -131,7 +120,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search tickets...',
+                hintText: AppLocalizations.of(context)!.searchTickets,
                 prefixIcon: Container(
                   margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.all(8),
@@ -142,7 +131,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   child: const Icon(Icons.search, color: Colors.white, size: 20),
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: AppDesignSystem.borderRadiusImage,
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
@@ -170,7 +159,6 @@ class _TicketsScreenState extends State<TicketsScreen> {
 
                 if (!matchesSearch) return const SizedBox.shrink();
 
-                final gradient = TravelImages.getGradientForIndex(ticket.hashCode);
                 final typeColors = {
                   'Museum': AppTheme.categoryPurple,
                   'Theme Park': AppTheme.categoryPink,
@@ -178,179 +166,119 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   'Nature': AppTheme.categoryGreen,
                 };
                 final typeColor = typeColors[ticket.type] ?? AppTheme.categoryOrange;
-                
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: typeColor.withOpacity(0.15),
-                        blurRadius: 20,
-                        offset: const Offset(0, 6),
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _bookTicket(ticket),
-                      borderRadius: BorderRadius.circular(24),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Ticket image
-                            Container(
-                              width: 120,
-                              height: 120,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: typeColor.withOpacity(0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: TravelImages.buildImageBackground(
-                                  imageUrl: ticket.image ?? TravelImages.getTourImage(ticket.hashCode),
-                                  opacity: 0.3,
-                                  cacheWidth: 300,
-                                  child: const SizedBox.shrink(),
-                                ),
+
+                return ImageFirstCard(
+                  onTap: () => _bookTicket(ticket),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(AppDesignSystem.radiusImage)),
+                            child: SizedBox(
+                              height: 160,
+                              width: double.infinity,
+                              child: TravelImages.buildImageBackground(
+                                imageUrl: ticket.image ??
+                                    TravelImages.getTourImage(ticket.hashCode),
+                                opacity: 0.0,
+                                cacheWidth: 600,
+                                child: const SizedBox.shrink(),
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    ticket.name,
+                          ),
+                          Positioned(
+                            top: AppDesignSystem.spacingMd,
+                            right: AppDesignSystem.spacingMd,
+                            child: CardBadge(
+                              label: ticket.type,
+                              color: typeColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ticket.name,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.textPrimary,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: AppDesignSystem.spacingSm),
+                            Row(
+                              children: [
+                                Icon(Icons.location_on,
+                                    size: 14, color: AppTheme.categoryBlue),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    ticket.location,
                                     style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTheme.textPrimary,
+                                      fontSize: 12,
+                                      color: AppTheme.categoryBlue,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    maxLines: 2,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.categoryBlue.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.location_on, size: 14, color: AppTheme.categoryBlue),
-                                        const SizedBox(width: 4),
-                                        Expanded(
-                                          child: Text(
-                                            ticket.location,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppTheme.categoryBlue,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppDesignSystem.spacingMd),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                PriceWidget(
+                                  price: ticket.price,
+                                  prefix: '¥',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.categoryRed,
                                   ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          typeColor.withOpacity(0.15),
-                                          typeColor.withOpacity(0.08),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: typeColor.withOpacity(0.3),
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      ticket.type,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: typeColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: AppTheme.sunsetGradient),
+                                    borderRadius:
+                                        AppDesignSystem.borderRadiusSm,
                                   ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      PriceWidget(
-                                        price: ticket.price,
-                                        prefix: '¥',
+                                      Icon(Icons.book_online,
+                                          color: Colors.white, size: 16),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'Book',
                                         style: TextStyle(
-                                          fontSize: 22,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          color: AppTheme.categoryRed,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(colors: AppTheme.sunsetGradient),
-                                            borderRadius: BorderRadius.circular(16),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: AppTheme.categoryOrange.withOpacity(0.3),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(Icons.book_online, color: Colors.white, size: 16),
-                                              const SizedBox(width: 4),
-                                              Flexible(
-                                                child: Text(
-                                                  'Book',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                          fontSize: 13,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 );
               },

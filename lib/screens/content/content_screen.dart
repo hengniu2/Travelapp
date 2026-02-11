@@ -3,8 +3,12 @@ import 'package:intl/intl.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/data_service.dart';
 import '../../models/content.dart';
+import '../../widgets/image_first_card.dart';
+import '../../widgets/empty_state.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
+import '../../utils/route_transitions.dart';
 import 'content_detail_screen.dart';
 
 class ContentScreen extends StatefulWidget {
@@ -61,6 +65,19 @@ class _ContentScreenState extends State<ContentScreen> {
     }
   }
 
+  String _getContentTypeLabel(String type, AppLocalizations l10n) {
+    switch (type) {
+      case 'Guide':
+        return l10n.guide;
+      case 'Tips':
+        return l10n.tips;
+      case 'Travel Notes':
+        return l10n.travelNotes;
+      default:
+        return type;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -75,7 +92,7 @@ class _ContentScreenState extends State<ContentScreen> {
     return Scaffold(
       body: TravelImages.buildImageBackground(
         imageUrl: TravelImages.getContentImage(10),
-        opacity: 0.03,
+        opacity: 0.08,
         cacheWidth: 1200,
         child: Container(
           color: AppTheme.backgroundColor,
@@ -103,7 +120,7 @@ class _ContentScreenState extends State<ContentScreen> {
                             color: _selectedTypeKey == key
                                 ? null
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: AppDesignSystem.borderRadiusImage,
                             border: Border.all(
                               color: _selectedTypeKey == key
                                   ? Colors.transparent
@@ -126,7 +143,7 @@ class _ContentScreenState extends State<ContentScreen> {
                               onTap: () {
                               setState(() => _selectedTypeKey = key);
                               },
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 10),
@@ -150,41 +167,14 @@ class _ContentScreenState extends State<ContentScreen> {
           ),
           Expanded(
             child: _filteredContent.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppTheme.primaryColor.withOpacity(0.1),
-                                AppTheme.primaryColor.withOpacity(0.05),
-                              ],
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.article_outlined,
-                            size: 64,
-                            color: AppTheme.primaryColor,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.noContentFound,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: AppTheme.textPrimary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                ? EmptyState(
+                    icon: Icons.article_outlined,
+                    headline: l10n.noContentFound,
+                    subtitle: l10n.contentEmptySubtitle,
+                    iconColor: AppTheme.categoryPurple,
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
                     itemCount: _filteredContent.length,
                     itemBuilder: (context, index) {
                       final content = _filteredContent[index];
@@ -202,39 +192,20 @@ class _ContentScreenState extends State<ContentScreen> {
                       ];
                       final gradient = gradients[index % gradients.length];
                       
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: typeColor.withOpacity(0.15),
-                              blurRadius: 20,
-                              offset: const Offset(0, 6),
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ContentDetailScreen(content: content),
-                              ),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Always show image - use travel images if content.image is null
-                              ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                      top: Radius.circular(24)),
-                                  child: Stack(
+                      return ImageFirstCard(
+                        onTap: () {
+                          pushSlideUp(
+                            context,
+                            ContentDetailScreen(content: content),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(AppDesignSystem.radiusImage)),
+                                child: Stack(
                                     children: [
                                 Container(
                                         height: 220,
@@ -250,9 +221,9 @@ class _ContentScreenState extends State<ContentScreen> {
                                     cacheWidth: 800,
                                     child: const SizedBox.shrink(),
                                   ),
-                                      ),
-                                      // Gradient overlay
-                                      Positioned.fill(
+                                ),
+                                // Gradient overlay
+                                Positioned.fill(
                                         child: Container(
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
@@ -268,47 +239,25 @@ class _ContentScreenState extends State<ContentScreen> {
                                       ),
                                       // Type badge
                                       Positioned(
-                                        top: 12,
-                                        left: 12,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                typeColor,
-                                                typeColor.withOpacity(0.8),
-                                              ],
-                                            ),
-                                            borderRadius: BorderRadius.circular(16),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: typeColor.withOpacity(0.4),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Text(
-                                            content.type,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            ),
-                                          ),
+                                        top: AppDesignSystem.spacingMd,
+                                        left: AppDesignSystem.spacingMd,
+                                        child: CardBadge(
+                                          label: _getContentTypeLabel(content.type, l10n),
+                                          color: typeColor,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               Padding(
-                                padding: const EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(AppDesignSystem.spacingXl),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      content.title,
+                                      l10n.localeName == 'zh'
+                                          ? (content.titleZh ?? content.title)
+                                          : content.title,
                                       style: TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
@@ -320,7 +269,9 @@ class _ContentScreenState extends State<ContentScreen> {
                                     ),
                                     const SizedBox(height: 12),
                                     Text(
-                                      content.content,
+                                      l10n.localeName == 'zh'
+                                          ? (content.contentZh ?? content.content)
+                                          : content.content,
                                       style: TextStyle(
                                         color: Colors.grey.shade700,
                                         fontSize: 14,
@@ -344,7 +295,9 @@ class _ContentScreenState extends State<ContentScreen> {
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            content.author!,
+                                            l10n.localeName == 'zh'
+                                                ? (content.authorZh ?? content.author!)
+                                                : content.author!,
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.grey.shade700,
@@ -364,7 +317,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                         ),
                                         const SizedBox(width: 6),
                                         Text(
-                                          DateFormat('MMM dd, yyyy')
+                                          DateFormat.yMMMd(Localizations.localeOf(context).toString())
                                               .format(content.publishDate),
                                           style: TextStyle(
                                             fontSize: 12,
@@ -433,7 +386,6 @@ class _ContentScreenState extends State<ContentScreen> {
                               ),
                             ],
                           ),
-                        ),
                       );
                     },
                   ),

@@ -2,67 +2,42 @@ import 'package:flutter/material.dart';
 import '../../services/data_service.dart';
 import '../../models/insurance.dart';
 import '../../widgets/price_widget.dart';
+import '../../widgets/image_first_card.dart';
+import '../../widgets/ios_bottom_sheet.dart';
 import '../../providers/app_provider.dart';
+import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
+import '../../l10n/app_localizations.dart';
 
 class InsuranceScreen extends StatelessWidget {
   const InsuranceScreen({super.key});
 
   void _purchaseInsurance(BuildContext context, Insurance insurance) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Purchase ${insurance.name}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Price: \$${insurance.price.toStringAsFixed(2)}'),
-            const SizedBox(height: 8),
-            Text('Coverage: ${insurance.coverage}'),
-            const SizedBox(height: 8),
-            Text('Duration: ${insurance.duration} days'),
-            const SizedBox(height: 16),
-            const Text('Benefits:'),
-            ...insurance.benefits.map((benefit) => Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 4),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.check, size: 16, color: Colors.green),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(benefit)),
-                    ],
-                  ),
-                )),
-            const SizedBox(height: 16),
-            const Text('Select payment method:'),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('Wallet'),
-              onTap: () => _processPayment(context, insurance, 'wallet'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.credit_card),
-              title: const Text('Credit Card'),
-              onTap: () => _processPayment(context, insurance, 'card'),
-            ),
-          ],
+    showIosActionSheet(
+      context,
+      title: '${insurance.name} · ¥${insurance.price.toStringAsFixed(0)}',
+      cancelLabel: AppLocalizations.of(context)!.cancel,
+      actions: [
+        IosSheetAction(
+          icon: Icons.account_balance_wallet,
+          label: AppLocalizations.of(context)!.wallet,
+          onTap: () => _processPayment(context, insurance, 'wallet'),
+          color: AppTheme.primaryColor,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
+        IosSheetAction(
+          icon: Icons.credit_card,
+          label: AppLocalizations.of(context)!.creditCard,
+          onTap: () => _processPayment(context, insurance, 'card'),
+          color: AppTheme.categoryBlue,
+        ),
+      ],
     );
   }
 
   void _processPayment(
       BuildContext context, Insurance insurance, String method) {
-    Navigator.pop(context);
 
     final appProvider = Provider.of<AppProvider>(context, listen: false);
 
@@ -89,8 +64,8 @@ class InsuranceScreen extends StatelessWidget {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Insurance purchased successfully!'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.insurancePurchasedSuccess),
         backgroundColor: Colors.green,
       ),
     );
@@ -101,87 +76,138 @@ class InsuranceScreen extends StatelessWidget {
     final dataService = DataService();
     final insurances = dataService.getInsurancePlans();
 
+    final typeColors = {
+      'Basic': AppTheme.categoryBlue,
+      'Standard': AppTheme.categoryGreen,
+      'Premium': AppTheme.categoryOrange,
+    };
+
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('Travel Insurance'),
+        title: Text(AppLocalizations.of(context)!.travelInsurance),
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
         itemCount: insurances.length,
         itemBuilder: (context, index) {
           final insurance = insurances[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          final typeColor =
+              typeColors[insurance.type] ?? AppTheme.primaryColor;
+          return ImageFirstCard(
+            onTap: () => _purchaseInsurance(context, insurance),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 120,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        typeColor.withOpacity(0.9),
+                        typeColor.withOpacity(0.7),
+                      ],
+                    ),
+                    borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(AppDesignSystem.radiusImage)),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.shield,
+                      size: 56,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
                               insurance.name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
+                                color: AppTheme.textPrimary,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Chip(
-                              label: Text(insurance.type),
-                              backgroundColor: Colors.green.shade50,
-                            ),
-                          ],
+                          ),
+                          CardBadge(
+                            label: insurance.type,
+                            color: typeColor,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppDesignSystem.spacingSm),
+                      Text(
+                        'Coverage: ${insurance.coverage} · ${insurance.duration} days',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.textSecondary,
                         ),
                       ),
-                      PriceWidget(price: insurance.price),
+                      const SizedBox(height: AppDesignSystem.spacingMd),
+                      ...insurance.benefits.take(3).map((benefit) => Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Row(
+                              children: [
+                                Icon(Icons.check_circle,
+                                    size: 16, color: AppTheme.categoryGreen),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                    child: Text(benefit,
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: AppTheme.textPrimary))),
+                              ],
+                            ),
+                          )),
+                      const SizedBox(height: AppDesignSystem.spacingMd),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          PriceWidget(
+                            price: insurance.price,
+                            prefix: '¥',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.categoryRed,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  colors: AppTheme.primaryGradient),
+                              borderRadius:
+                                  AppDesignSystem.borderRadiusSm,
+                            ),
+                            child: const Text(
+                              'Purchase',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Coverage: ${insurance.coverage}',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Duration: ${insurance.duration} days',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Benefits:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ...insurance.benefits.map((benefit) => Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 4),
-                        child: Row(
-                          children: [
-                            Icon(Icons.check_circle,
-                                size: 16, color: Colors.green),
-                            const SizedBox(width: 8),
-                            Expanded(child: Text(benefit)),
-                          ],
-                        ),
-                      )),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _purchaseInsurance(context, insurance),
-                      child: const Text('Purchase'),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

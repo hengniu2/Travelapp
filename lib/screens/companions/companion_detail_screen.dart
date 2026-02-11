@@ -3,8 +3,10 @@ import '../../l10n/app_localizations.dart';
 import '../../models/companion.dart';
 import '../../widgets/rating_widget.dart';
 import '../../widgets/price_widget.dart';
+import '../../widgets/detail_bottom_bar.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
 import 'package:provider/provider.dart';
 import 'companion_chat_screen.dart';
@@ -29,104 +31,9 @@ class CompanionDetailScreen extends StatelessWidget {
     final gradient = gradients[companion.hashCode % gradients.length];
 
     return Scaffold(
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CompanionChatScreen(companion: companion),
-                        ),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      side: BorderSide(color: AppTheme.primaryColor, width: 2),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.chat, size: 18),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            l10n.chat,
-                            style: const TextStyle(fontSize: 13),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton(
-                    onPressed: companion.isAvailable
-                        ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CompanionBookingScreen(companion: companion),
-                              ),
-                            );
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.book_online, size: 18),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            l10n.bookNow,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: TravelImages.buildImageBackground(
+      body: Stack(
+        children: [
+          TravelImages.buildImageBackground(
         imageUrl: TravelImages.getCompanionBackground(companion.hashCode % 10),
         opacity: 0.04,
         cacheWidth: 1200,
@@ -140,6 +47,18 @@ class CompanionDetailScreen extends StatelessWidget {
                 pinned: true,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Material(
+                    color: Colors.black45,
+                    borderRadius: AppDesignSystem.borderRadiusImage,
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      borderRadius: AppDesignSystem.borderRadiusImage,
+                      child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                    ),
+                  ),
+                ),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     fit: StackFit.expand,
@@ -251,53 +170,23 @@ class CompanionDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                actions: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.25),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.4),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        appProvider.isFavorite(companion.id)
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        appProvider.toggleFavorite(companion.id);
-                      },
-                    ),
-                  ),
-                ],
               ),
-              SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Availability and stats bar
+                  // Availability and stats bar (card)
                   Container(
-                    margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.fromLTRB(AppDesignSystem.spacingLg, AppDesignSystem.spacingLg, AppDesignSystem.spacingLg, 0),
+                    padding: const EdgeInsets.all(AppDesignSystem.spacingXl),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white,
-                          Colors.white.withOpacity(0.95),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(24),
+                      color: AppTheme.surfaceColor,
+                      borderRadius: AppDesignSystem.borderRadiusXl,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
+                          color: AppTheme.shadowColor,
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
@@ -333,16 +222,16 @@ class CompanionDetailScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(20),
-                    padding: const EdgeInsets.all(24),
+                    margin: const EdgeInsets.all(AppDesignSystem.spacingLg),
+                    padding: const EdgeInsets.all(AppDesignSystem.spacingXxl),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
+                      color: AppTheme.surfaceColor,
+                      borderRadius: AppDesignSystem.borderRadiusXl,
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.primaryColor.withOpacity(0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
+                          color: AppTheme.shadowColor,
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
@@ -359,7 +248,7 @@ class CompanionDetailScreen extends StatelessWidget {
                                   AppTheme.primaryColor.withOpacity(0.05),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               border: Border.all(
                                 color: AppTheme.primaryColor.withOpacity(0.2),
                                 width: 1,
@@ -403,70 +292,52 @@ class CompanionDetailScreen extends StatelessWidget {
                           Icons.language,
                           AppTheme.categoryPurple,
                         ),
-                        const SizedBox(height: 24),
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: AppTheme.primaryGradient,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppTheme.primaryColor.withOpacity(0.3),
-                                blurRadius: 15,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.pricePerDay,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white.withOpacity(0.9),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  PriceWidget(
-                                    price: companion.pricePerDay,
-                                    style: const TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.attach_money,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        const SizedBox(height: AppDesignSystem.spacingXxl),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 100),
                 ],
               ),
-              ),
+            ),
             ],
           ),
         ),
+        ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: DetailBottomBar(
+              showFavorite: true,
+              isFavorite: appProvider.isFavorite(companion.id),
+              onFavoriteTap: () => appProvider.toggleFavorite(companion.id),
+              price: companion.pricePerDay,
+              priceSuffix: AppLocalizations.of(context)!.perDay,
+              primaryLabel: l10n.bookNow,
+              onPrimaryTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CompanionBookingScreen(companion: companion),
+                  ),
+                );
+              },
+              primaryEnabled: companion.isAvailable,
+              secondaryLabel: l10n.chat,
+              onSecondaryTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CompanionChatScreen(companion: companion),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -536,7 +407,7 @@ class CompanionDetailScreen extends StatelessWidget {
                           color.withOpacity(0.08),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppDesignSystem.borderRadiusImage,
                       border: Border.all(
                         color: color.withOpacity(0.3),
                         width: 1.5,

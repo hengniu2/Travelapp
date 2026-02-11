@@ -31,6 +31,8 @@ class TravelApp extends StatelessWidget {
           return MaterialApp(
             title: 'Travel App',
             theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.lightTheme,
+            themeMode: ThemeMode.light,
             locale: appProvider.locale,
             localizationsDelegates: [
               AppLocalizations.delegate,

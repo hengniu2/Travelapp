@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/companion.dart';
 import '../../utils/travel_images.dart';
+import '../../utils/app_design_system.dart';
+import '../../l10n/app_localizations.dart';
 
 class CompanionChatScreen extends StatefulWidget {
   final Companion companion;
@@ -83,7 +85,7 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
                         horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: isMe ? Colors.blue : Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: AppDesignSystem.borderRadiusImage,
                     ),
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.7,
@@ -99,7 +101,7 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          _formatTime(message['time'] as DateTime),
+                          _formatTime(context, message['time'] as DateTime),
                           style: TextStyle(
                             fontSize: 10,
                             color: isMe
@@ -132,9 +134,9 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
                   child: TextField(
                     controller: _messageController,
                     decoration: InputDecoration(
-                      hintText: 'Type a message...',
+                      hintText: AppLocalizations.of(context)!.typeMessage,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: AppDesignSystem.borderRadiusImage,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
@@ -157,9 +159,10 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
     );
   }
 
-  String _formatTime(DateTime time) {
+  String _formatTime(BuildContext context, DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
+    final l10n = AppLocalizations.of(context)!;
 
     if (difference.inDays > 0) {
       return '${difference.inDays}d ago';
@@ -168,7 +171,7 @@ class _CompanionChatScreenState extends State<CompanionChatScreen> {
     } else if (difference.inMinutes > 0) {
       return '${difference.inMinutes}m ago';
     } else {
-      return 'Just now';
+      return l10n.justNow;
     }
   }
 }

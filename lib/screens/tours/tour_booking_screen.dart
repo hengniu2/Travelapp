@@ -4,6 +4,7 @@ import '../../widgets/price_widget.dart';
 import '../../providers/app_provider.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
+import '../../l10n/app_localizations.dart';
 
 class TourBookingScreen extends StatelessWidget {
   final Tour tour;
@@ -11,26 +12,27 @@ class TourBookingScreen extends StatelessWidget {
   const TourBookingScreen({super.key, required this.tour});
 
   void _proceedToPayment(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Payment'),
+        title: Text(l10n.payment),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Total: \$${tour.price.toStringAsFixed(2)}'),
+            Text('${l10n.total}: \$${tour.price.toStringAsFixed(2)}'),
             const SizedBox(height: 16),
-            const Text('Select payment method:'),
+            Text(l10n.selectPaymentMethod),
             const SizedBox(height: 8),
             ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('Wallet'),
+              title: Text(l10n.wallet),
               onTap: () => _processPayment(context, 'wallet'),
             ),
             ListTile(
               leading: const Icon(Icons.credit_card),
-              title: const Text('Credit Card'),
+              title: Text(l10n.creditCard),
               onTap: () => _processPayment(context, 'card'),
             ),
           ],
@@ -38,7 +40,7 @@ class TourBookingScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
         ],
       ),
@@ -71,18 +73,19 @@ class TourBookingScreen extends StatelessWidget {
       appProvider.deductFromWallet(tour.price);
     }
 
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Booking Confirmed!'),
-        content: const Text('Your tour booking has been confirmed.'),
+        title: Text(l10n.bookingConfirmed),
+        content: Text(l10n.tourBookingConfirmed),
         actions: [
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            child: const Text('OK'),
+            child: Text(l10n.ok),
           ),
         ],
       ),
@@ -91,9 +94,10 @@ class TourBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Tour'),
+        title: Text(l10n.bookTour),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -175,7 +179,7 @@ class TourBookingScreen extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Text('Proceed to Payment'),
+            child: Text(l10n.proceedToPayment),
           ),
         ),
       ),

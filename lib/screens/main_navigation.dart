@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/app_theme.dart';
-import '../utils/travel_images.dart';
+import '../utils/app_design_system.dart';
 import 'home/home_screen.dart';
 import 'companions/companions_screen.dart';
 import 'tours/tours_screen.dart';
@@ -31,164 +31,90 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: _buildCustomBottomNav(context, l10n),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: _buildBottomNav(context, l10n),
     );
   }
 
-  Widget _buildCustomBottomNav(BuildContext context, AppLocalizations l10n) {
+  Widget _buildBottomNav(BuildContext context, AppLocalizations l10n) {
+    const double iconSize = 24;
+    const double labelSize = 11;
     final navItems = [
-      {
-        'icon': Icons.home,
-        'iconOutlined': Icons.home_outlined,
-        'label': l10n.home,
-        'image': TravelImages.getHomeHeader(0),
-      },
-      {
-        'icon': Icons.people,
-        'iconOutlined': Icons.people_outline,
-        'label': l10n.companions,
-        'image': TravelImages.getCompanionBackground(0),
-      },
-      {
-        'icon': Icons.explore,
-        'iconOutlined': Icons.explore_outlined,
-        'label': l10n.tours,
-        'image': TravelImages.getTourImage(0),
-      },
-      {
-        'icon': Icons.hotel,
-        'iconOutlined': Icons.hotel_outlined,
-        'label': l10n.bookings,
-        'image': TravelImages.getBookingBackground(0),
-      },
-      {
-        'icon': Icons.article,
-        'iconOutlined': Icons.article_outlined,
-        'label': l10n.content,
-        'image': TravelImages.getContentImage(0),
-      },
-      {
-        'icon': Icons.person,
-        'iconOutlined': Icons.person_outline,
-        'label': l10n.profile,
-        'image': TravelImages.getProfileBackground(0),
-      },
+      (icon: Icons.home_rounded, iconOut: Icons.home_outlined, label: l10n.home),
+      (icon: Icons.people_rounded, iconOut: Icons.people_outline_rounded, label: l10n.companions),
+      (icon: Icons.explore_rounded, iconOut: Icons.explore_outlined, label: l10n.tours),
+      (icon: Icons.hotel_rounded, iconOut: Icons.hotel_outlined, label: l10n.bookings),
+      (icon: Icons.article_rounded, iconOut: Icons.article_outlined, label: l10n.content),
+      (icon: Icons.person_rounded, iconOut: Icons.person_outline_rounded, label: l10n.profile),
     ];
 
     return Container(
       decoration: BoxDecoration(
+        color: AppTheme.surfaceColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-            spreadRadius: 0,
+            color: AppTheme.shadowColor,
+            blurRadius: 12,
+            offset: const Offset(0, -2),
           ),
         ],
       ),
-      child: ClipRRect(
-        child: TravelImages.buildImageBackground(
-          imageUrl: TravelImages.getHomeHeader(5),
-          opacity: 0.15,
-          cacheWidth: 1200,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.95),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDesignSystem.spacingSm,
+              vertical: AppDesignSystem.spacingSm,
             ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                height: 70,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(
-                      navItems.length,
-                      (index) => Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _currentIndex = index),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeInOutCubic,
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              gradient: _currentIndex == index
-                                  ? LinearGradient(
-                                      colors: [
-                                        AppTheme.primaryColor.withOpacity(0.2),
-                                        AppTheme.primaryColor.withOpacity(0.1),
-                                      ],
-                                    )
-                                  : null,
-                              boxShadow: _currentIndex == index
-                                  ? [
-                                      BoxShadow(
-                                        color: AppTheme.primaryColor.withOpacity(0.2),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ]
-                                  : null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                navItems.length,
+                (index) {
+                  final item = navItems[index];
+                  final selected = _currentIndex == index;
+                  return Expanded(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => setState(() => _currentIndex = index),
+                        borderRadius: AppDesignSystem.borderRadiusMd,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              selected ? item.icon : item.iconOut,
+                              size: iconSize,
+                              color: selected
+                                  ? AppTheme.primaryColor
+                                  : AppTheme.textTertiary,
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Flexible(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: _currentIndex == index
-                                          ? AppTheme.primaryColor.withOpacity(0.15)
-                                          : Colors.transparent,
-                                    ),
-                                    child: Icon(
-                                      _currentIndex == index
-                                          ? navItems[index]['icon'] as IconData
-                                          : navItems[index]['iconOutlined'] as IconData,
-                                      color: _currentIndex == index
-                                          ? AppTheme.primaryColor
-                                          : Colors.grey.shade600,
-                                      size: 22,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Flexible(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      navItems[index]['label'] as String,
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: _currentIndex == index
-                                            ? FontWeight.bold
-                                            : FontWeight.w500,
-                                        color: _currentIndex == index
-                                            ? AppTheme.primaryColor
-                                            : Colors.grey.shade600,
-                                        letterSpacing: 0.3,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(height: 4),
+                            Text(
+                              item.label,
+                              style: TextStyle(
+                                fontSize: labelSize,
+                                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                                color: selected
+                                    ? AppTheme.primaryColor
+                                    : AppTheme.textTertiary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ),
@@ -197,6 +123,3 @@ class _MainNavigationState extends State<MainNavigation> {
     );
   }
 }
-
-
-

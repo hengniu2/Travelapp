@@ -162,17 +162,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trending => 'Trending';
 
   @override
+  String get viewMore => 'View more';
+
+  @override
+  String get departFrom => 'Depart from';
+
+  @override
+  String get destinationKeywords => 'Destination / Keywords';
+
+  @override
+  String get recommend => 'Recommend';
+
+  @override
+  String get topRanking => 'Top ranking';
+
+  @override
   String get duration => 'Duration';
 
   @override
   String days(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'days',
-      one: 'day',
-    );
-    return '$_temp0';
+    return 'Days';
   }
 
   @override
@@ -281,4 +290,246 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logoutConfirm => 'Are you sure you want to log out?';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get copyLink => 'Copy link';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get noFavoritesYet => 'No favorites yet';
+
+  @override
+  String get noOrdersYet => 'No orders yet';
+
+  @override
+  String get myOrders => 'My Orders';
+
+  @override
+  String get myReviews => 'My Reviews';
+
+  @override
+  String get attractionTickets => 'Attraction Tickets';
+
+  @override
+  String get travelInsurance => 'Travel Insurance';
+
+  @override
+  String get currentBalance => 'Current Balance';
+
+  @override
+  String get addMoney => 'Add Money';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get creditCard => 'Credit Card';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get filterTours => 'Filter Tours';
+
+  @override
+  String get filterCompanions => 'Filter Companions';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get selectPaymentMethod => 'Select payment method:';
+
+  @override
+  String get bookingConfirmed => 'Booking confirmed!';
+
+  @override
+  String get tourBookingConfirmed => 'Your tour booking has been confirmed.';
+
+  @override
+  String get hotelBookingConfirmed => 'Your hotel booking has been confirmed.';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get bookTour => 'Book Tour';
+
+  @override
+  String get bookHotel => 'Book Hotel';
+
+  @override
+  String get bookCompanion => 'Book Companion';
+
+  @override
+  String get proceedToPayment => 'Proceed to Payment';
+
+  @override
+  String get pleaseSelectStartDate => 'Please select start date first';
+
+  @override
+  String get pleaseSelectDates => 'Please select dates';
+
+  @override
+  String get guests => 'Guests';
+
+  @override
+  String get rooms => 'Rooms';
+
+  @override
+  String get nights => 'Nights';
+
+  @override
+  String get eAgreement => 'E-Agreement';
+
+  @override
+  String get agreeAndConfirm => 'Agree & Confirm';
+
+  @override
+  String get insurancePurchasedSuccess => 'Insurance purchased successfully!';
+
+  @override
+  String get ticketBookedSuccess => 'Ticket booked successfully!';
+
+  @override
+  String get addedToWallet => 'Added to wallet';
+
+  @override
+  String get typeMessage => 'Type a message...';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String get referencePrice => 'Reference price';
+
+  @override
+  String get book => 'Book';
+
+  @override
+  String get priceFrom => 'from';
+
+  @override
+  String get favoritesEmptySubtitle => 'Tap the heart on tours, companions or hotels to add them here.';
+
+  @override
+  String get ordersEmptySubtitle => 'Your orders will appear here after booking.';
+
+  @override
+  String get perDay => '/day';
+
+  @override
+  String get perNight => '/night';
+
+  @override
+  String get viewOrders => 'View orders';
+
+  @override
+  String get viewFavorites => 'Favorites';
+
+  @override
+  String get promotionsComingSoon => 'Promotions coming soon';
+
+  @override
+  String get contentEmptySubtitle => 'Switch category above or check back later for new content.';
+
+  @override
+  String get hot => 'Hot';
+
+  @override
+  String get purePlay => 'Pure play';
+
+  @override
+  String get toursEmptySubtitle => 'Change filter or sort to discover more tours.';
+
+  @override
+  String get tagsLabel => 'Tags';
+
+  @override
+  String get bodyLabel => 'Content';
+
+  @override
+  String get wechat => 'WeChat';
+
+  @override
+  String get weibo => 'Weibo';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String sharedTo(String channel) {
+    return 'Shared to $channel';
+  }
+
+  @override
+  String get itineraryIntro => 'Itinerary';
+
+  @override
+  String get itineraryInfo => 'Trip info';
+
+  @override
+  String get itineraryRoute => 'Route';
+
+  @override
+  String get packageDetails => 'Package details';
+
+  @override
+  String get hotelIntro => 'Hotel overview';
+
+  @override
+  String get facilities => 'Facilities';
+
+  @override
+  String get noReviewsYet => 'No reviews yet';
+
+  @override
+  String get reviewsEmptySubtitle => 'After completing a trip or service, you can leave a review here.';
+
+  @override
+  String get tryOtherKeywords => 'Try other keywords or filters to find your ideal hotel.';
+
+  @override
+  String get specialRequirementsHint => 'Any special requirements or notes...';
+
+  @override
+  String get searchTickets => 'Search tickets...';
+
+  @override
+  String get eAgreementTerms => 'By proceeding, you agree to the terms and conditions:\n\n• Service agreement and cancellation policy apply.\n• Personal data will be used for booking and support only.';
+
+  @override
+  String get eAgreementConfirm => 'Do you agree to these terms?';
+
+  @override
+  String get selectDates => 'Select Dates';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get additionalNotes => 'Additional Notes';
 }

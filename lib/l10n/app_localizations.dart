@@ -401,6 +401,36 @@ abstract class AppLocalizations {
   /// **'Trending'**
   String get trending;
 
+  /// No description provided for @viewMore.
+  ///
+  /// In en, this message translates to:
+  /// **'View more'**
+  String get viewMore;
+
+  /// No description provided for @departFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Depart from'**
+  String get departFrom;
+
+  /// No description provided for @destinationKeywords.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination / Keywords'**
+  String get destinationKeywords;
+
+  /// No description provided for @recommend.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommend'**
+  String get recommend;
+
+  /// No description provided for @topRanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Top ranking'**
+  String get topRanking;
+
   /// No description provided for @duration.
   ///
   /// In en, this message translates to:
@@ -410,7 +440,7 @@ abstract class AppLocalizations {
   /// Number of days
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{day} other{days}}'**
+  /// **'Days'**
   String days(int count);
 
   /// Maximum participants
@@ -622,6 +652,486 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to log out?'**
   String get logoutConfirm;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @copyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get copyLink;
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// No description provided for @noFavoritesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorites yet'**
+  String get noFavoritesYet;
+
+  /// No description provided for @noOrdersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders yet'**
+  String get noOrdersYet;
+
+  /// No description provided for @myOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'My Orders'**
+  String get myOrders;
+
+  /// No description provided for @myReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'My Reviews'**
+  String get myReviews;
+
+  /// No description provided for @attractionTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'Attraction Tickets'**
+  String get attractionTickets;
+
+  /// No description provided for @travelInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Insurance'**
+  String get travelInsurance;
+
+  /// No description provided for @currentBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Balance'**
+  String get currentBalance;
+
+  /// No description provided for @addMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Money'**
+  String get addMoney;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @creditCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit Card'**
+  String get creditCard;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @filterTours.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Tours'**
+  String get filterTours;
+
+  /// No description provided for @filterCompanions.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Companions'**
+  String get filterCompanions;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @selectPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Select payment method:'**
+  String get selectPaymentMethod;
+
+  /// No description provided for @bookingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking confirmed!'**
+  String get bookingConfirmed;
+
+  /// No description provided for @tourBookingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tour booking has been confirmed.'**
+  String get tourBookingConfirmed;
+
+  /// No description provided for @hotelBookingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hotel booking has been confirmed.'**
+  String get hotelBookingConfirmed;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @bookTour.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Tour'**
+  String get bookTour;
+
+  /// No description provided for @bookHotel.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Hotel'**
+  String get bookHotel;
+
+  /// No description provided for @bookCompanion.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Companion'**
+  String get bookCompanion;
+
+  /// No description provided for @proceedToPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed to Payment'**
+  String get proceedToPayment;
+
+  /// No description provided for @pleaseSelectStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select start date first'**
+  String get pleaseSelectStartDate;
+
+  /// No description provided for @pleaseSelectDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select dates'**
+  String get pleaseSelectDates;
+
+  /// No description provided for @guests.
+  ///
+  /// In en, this message translates to:
+  /// **'Guests'**
+  String get guests;
+
+  /// No description provided for @rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get rooms;
+
+  /// No description provided for @nights.
+  ///
+  /// In en, this message translates to:
+  /// **'Nights'**
+  String get nights;
+
+  /// No description provided for @eAgreement.
+  ///
+  /// In en, this message translates to:
+  /// **'E-Agreement'**
+  String get eAgreement;
+
+  /// No description provided for @agreeAndConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Agree & Confirm'**
+  String get agreeAndConfirm;
+
+  /// No description provided for @insurancePurchasedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance purchased successfully!'**
+  String get insurancePurchasedSuccess;
+
+  /// No description provided for @ticketBookedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket booked successfully!'**
+  String get ticketBookedSuccess;
+
+  /// No description provided for @addedToWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to wallet'**
+  String get addedToWallet;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @referencePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference price'**
+  String get referencePrice;
+
+  /// No description provided for @book.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get book;
+
+  /// No description provided for @priceFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'from'**
+  String get priceFrom;
+
+  /// No description provided for @favoritesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the heart on tours, companions or hotels to add them here.'**
+  String get favoritesEmptySubtitle;
+
+  /// No description provided for @ordersEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your orders will appear here after booking.'**
+  String get ordersEmptySubtitle;
+
+  /// No description provided for @perDay.
+  ///
+  /// In en, this message translates to:
+  /// **'/day'**
+  String get perDay;
+
+  /// No description provided for @perNight.
+  ///
+  /// In en, this message translates to:
+  /// **'/night'**
+  String get perNight;
+
+  /// No description provided for @viewOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'View orders'**
+  String get viewOrders;
+
+  /// No description provided for @viewFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get viewFavorites;
+
+  /// No description provided for @promotionsComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotions coming soon'**
+  String get promotionsComingSoon;
+
+  /// No description provided for @contentEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch category above or check back later for new content.'**
+  String get contentEmptySubtitle;
+
+  /// No description provided for @hot.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get hot;
+
+  /// No description provided for @purePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Pure play'**
+  String get purePlay;
+
+  /// No description provided for @toursEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change filter or sort to discover more tours.'**
+  String get toursEmptySubtitle;
+
+  /// No description provided for @tagsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tagsLabel;
+
+  /// No description provided for @bodyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get bodyLabel;
+
+  /// No description provided for @wechat.
+  ///
+  /// In en, this message translates to:
+  /// **'WeChat'**
+  String get wechat;
+
+  /// No description provided for @weibo.
+  ///
+  /// In en, this message translates to:
+  /// **'Weibo'**
+  String get weibo;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @sharedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared to {channel}'**
+  String sharedTo(String channel);
+
+  /// No description provided for @itineraryIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Itinerary'**
+  String get itineraryIntro;
+
+  /// No description provided for @itineraryInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip info'**
+  String get itineraryInfo;
+
+  /// No description provided for @itineraryRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get itineraryRoute;
+
+  /// No description provided for @packageDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Package details'**
+  String get packageDetails;
+
+  /// No description provided for @hotelIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel overview'**
+  String get hotelIntro;
+
+  /// No description provided for @facilities.
+  ///
+  /// In en, this message translates to:
+  /// **'Facilities'**
+  String get facilities;
+
+  /// No description provided for @noReviewsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get noReviewsYet;
+
+  /// No description provided for @reviewsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'After completing a trip or service, you can leave a review here.'**
+  String get reviewsEmptySubtitle;
+
+  /// No description provided for @tryOtherKeywords.
+  ///
+  /// In en, this message translates to:
+  /// **'Try other keywords or filters to find your ideal hotel.'**
+  String get tryOtherKeywords;
+
+  /// No description provided for @specialRequirementsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Any special requirements or notes...'**
+  String get specialRequirementsHint;
+
+  /// No description provided for @searchTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'Search tickets...'**
+  String get searchTickets;
+
+  /// No description provided for @eAgreementTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'By proceeding, you agree to the terms and conditions:\n\n• Service agreement and cancellation policy apply.\n• Personal data will be used for booking and support only.'**
+  String get eAgreementTerms;
+
+  /// No description provided for @eAgreementConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you agree to these terms?'**
+  String get eAgreementConfirm;
+
+  /// No description provided for @selectDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Dates'**
+  String get selectDates;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// No description provided for @additionalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Notes'**
+  String get additionalNotes;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

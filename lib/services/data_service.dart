@@ -60,6 +60,7 @@ class DataService {
       Tour(
         id: '1',
         title: 'European Grand Tour',
+        titleZh: '欧洲经典之旅',
         description: 'Explore the best of Europe in 14 days',
         route: ['Paris', 'Brussels', 'Amsterdam', 'Berlin', 'Prague'],
         routeType: 'Multi-City',
@@ -74,6 +75,7 @@ class DataService {
       Tour(
         id: '2',
         title: 'Asian Adventure',
+        titleZh: '亚洲探险之旅',
         description: 'Discover Southeast Asia',
         route: ['Bangkok', 'Singapore', 'Kuala Lumpur'],
         routeType: 'City Tour',
@@ -88,6 +90,7 @@ class DataService {
       Tour(
         id: '3',
         title: 'Mediterranean Cruise',
+        titleZh: '地中海邮轮之旅',
         description: 'Luxury cruise through Mediterranean',
         route: ['Barcelona', 'Monaco', 'Rome', 'Athens'],
         routeType: 'Cruise',
@@ -202,9 +205,12 @@ class DataService {
       TravelContent(
         id: '1',
         title: 'Top 10 Destinations in 2024',
+        titleZh: '2024年十大必去目的地',
         content: 'Discover the most beautiful places to visit this year...',
+        contentZh: '探索今年最值得一去的美丽目的地……',
         type: 'Guide',
         author: 'Travel Expert',
+        authorZh: '旅行专家',
         publishDate: DateTime.now().subtract(const Duration(days: 5)),
         tags: ['Destinations', '2024', 'Travel Tips'],
         views: 15234,
@@ -213,9 +219,12 @@ class DataService {
       TravelContent(
         id: '2',
         title: 'Budget Travel Tips',
+        titleZh: '穷游省钱攻略',
         content: 'How to travel on a budget without compromising experience...',
+        contentZh: '如何在不牺牲体验的前提下省钱旅行……',
         type: 'Tips',
         author: 'Budget Traveler',
+        authorZh: '穷游达人',
         publishDate: DateTime.now().subtract(const Duration(days: 10)),
         tags: ['Budget', 'Tips', 'Saving'],
         views: 9876,
@@ -224,9 +233,12 @@ class DataService {
       TravelContent(
         id: '3',
         title: 'My Journey Through Japan',
+        titleZh: '我的日本之旅',
         content: 'A personal travelogue of my 3-week adventure...',
+        contentZh: '三周日本之行的个人游记……',
         type: 'Travel Notes',
         author: 'John Doe',
+        authorZh: '约翰',
         publishDate: DateTime.now().subtract(const Duration(days: 2)),
         tags: ['Japan', 'Personal', 'Adventure'],
         views: 5432,

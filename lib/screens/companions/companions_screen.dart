@@ -5,8 +5,11 @@ import '../../services/data_service.dart';
 import '../../models/companion.dart';
 import '../../widgets/rating_widget.dart';
 import '../../widgets/price_widget.dart';
+import '../../widgets/image_first_card.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
+import '../../utils/route_transitions.dart';
 import 'companion_detail_screen.dart';
 import 'companion_filter_screen.dart';
 
@@ -78,8 +81,8 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
     
     return Scaffold(
       body: TravelImages.buildImageBackground(
-        imageUrl: TravelImages.getCompanionBackground(10),
-        opacity: 0.05,
+        imageUrl: TravelImages.getCompanionPageHeader(1),
+        opacity: 0.12,
         cacheWidth: 1200,
         child: Container(
           color: const Color(0xFFF5F5F5),
@@ -94,8 +97,8 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                 elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   background: TravelImages.buildImageBackground(
-                    imageUrl: TravelImages.getCompanionBackground(0),
-                    opacity: 0.4,
+                    imageUrl: TravelImages.getCompanionPageHeader(DateTime.now().day % 3),
+                    opacity: 0.55,
                     cacheWidth: 1200,
                     child: Container(
                       decoration: BoxDecoration(
@@ -103,11 +106,11 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withOpacity(0.4),
-                            Colors.black.withOpacity(0.2),
+                            Colors.black.withOpacity(0.35),
+                            Colors.black.withOpacity(0.15),
                             Colors.transparent,
                           ],
-                          stops: const [0.0, 0.4, 0.8],
+                          stops: const [0.0, 0.45, 0.85],
                         ),
                       ),
                       child: SafeArea(
@@ -123,7 +126,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.25),
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: AppDesignSystem.borderRadiusImage,
                                       border: Border.all(
                                         color: Colors.white.withOpacity(0.4),
                                         width: 1.5,
@@ -217,7 +220,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                           Colors.white.withOpacity(0.95),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppDesignSystem.borderRadiusImage,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.06),
@@ -382,30 +385,11 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
     final isRecommended = companion.isAvailable && companion.rating >= 4.0;
     final isVerified = companion.reviewCount > 20;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CompanionDetailScreen(companion: companion),
-              ),
-            );
-          },
-          child: Column(
+    return ImageFirstCard(
+      onTap: () {
+        pushSlideUp(context, CompanionDetailScreen(companion: companion));
+      },
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Large image section with profile overlay
@@ -414,7 +398,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                   AspectRatio(
                     aspectRatio: 16 / 9,
                     child: TravelImages.buildImageBackground(
-                      imageUrl: TravelImages.getCompanionBackground(index),
+                      imageUrl: TravelImages.getCompanionBackground(companion.id.hashCode.abs()),
                       opacity: 0.0,
                       cacheWidth: 1200,
                       child: Container(
@@ -458,7 +442,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: companion.avatar ??
-                                  TravelImages.getCompanionAvatar(index),
+                                  TravelImages.getCompanionAvatar(companion.id.hashCode.abs()),
                               fit: BoxFit.cover,
                               memCacheWidth: 256,
                               memCacheHeight: 256,
@@ -563,7 +547,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               gradient: const LinearGradient(
                                 colors: [Color(0xFFFF1744), Color(0xFFFF6B6B)],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.3),
@@ -603,7 +587,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               gradient: const LinearGradient(
                                 colors: [Color(0xFF00C853), Color(0xFF4DD865)],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.3),
@@ -641,7 +625,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.95),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.2),
@@ -680,7 +664,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               gradient: const LinearGradient(
                                 colors: [Color(0xFF2979FF), Color(0xFF00E5FF)],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.3),
@@ -934,7 +918,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                             Colors.white,
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: AppDesignSystem.borderRadiusImage,
                         border: Border.all(
                           color: Colors.grey.shade200,
                           width: 1,
@@ -987,7 +971,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                             ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(colors: gradient),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: AppDesignSystem.borderRadiusImage,
                               boxShadow: [
                                 BoxShadow(
                                   color: avatarColor.withOpacity(0.4),
@@ -1025,8 +1009,6 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../widgets/price_widget.dart';
 import '../../providers/app_provider.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
+import '../../l10n/app_localizations.dart';
 
 class HotelBookingScreen extends StatefulWidget {
   final Hotel hotel;
@@ -48,7 +49,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
   Future<void> _selectCheckOut() async {
     if (_checkIn == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select check-in date first')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectStartDate)),
       );
       return;
     }
@@ -69,31 +70,32 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
   void _proceedToPayment() {
     if (_checkIn == null || _checkOut == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select dates')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectDates)),
       );
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Payment'),
+        title: Text(l10n.payment),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Total: \$${_totalPrice.toStringAsFixed(2)}'),
+            Text('${l10n.total}: \$${_totalPrice.toStringAsFixed(2)}'),
             const SizedBox(height: 16),
-            const Text('Select payment method:'),
+            Text(l10n.selectPaymentMethod),
             const SizedBox(height: 8),
             ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('Wallet'),
+              title: Text(l10n.wallet),
               onTap: () => _processPayment('wallet'),
             ),
             ListTile(
               leading: const Icon(Icons.credit_card),
-              title: const Text('Credit Card'),
+              title: Text(l10n.creditCard),
               onTap: () => _processPayment('card'),
             ),
           ],
@@ -101,7 +103,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
         ],
       ),
@@ -137,18 +139,19 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
       appProvider.deductFromWallet(_totalPrice);
     }
 
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Booking Confirmed!'),
-        content: const Text('Your hotel booking has been confirmed.'),
+        title: Text(l10n.bookingConfirmed),
+        content: Text(l10n.hotelBookingConfirmed),
         actions: [
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            child: const Text('OK'),
+            child: Text(l10n.ok),
           ),
         ],
       ),
@@ -157,9 +160,10 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Hotel'),
+        title: Text(l10n.bookHotel),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -230,7 +234,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Guests'),
+                        Text(l10n.guests),
                         Row(
                           children: [
                             IconButton(
@@ -252,7 +256,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Rooms'),
+                        Text(l10n.rooms),
                         Row(
                           children: [
                             IconButton(
@@ -284,7 +288,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Nights:'),
+                        Text('${l10n.nights}:'),
                         Text('$_nights'),
                       ],
                     ),
@@ -317,7 +321,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Text('Proceed to Payment'),
+            child: Text(l10n.proceedToPayment),
           ),
         ),
       ),

@@ -5,6 +5,7 @@ import '../../widgets/price_widget.dart';
 import '../../providers/app_provider.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
+import '../../l10n/app_localizations.dart';
 
 class CompanionBookingScreen extends StatefulWidget {
   final Companion companion;
@@ -49,7 +50,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
   Future<void> _selectEndDate() async {
     if (_startDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select start date first')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectStartDate)),
       );
       return;
     }
@@ -81,7 +82,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
   void _proceedToPayment() {
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select dates')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectDates)),
       );
       return;
     }
@@ -90,26 +91,27 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
   }
 
   void _showPaymentDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Payment'),
+        title: Text(l10n.payment),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Total: \$${_totalPrice.toStringAsFixed(2)}'),
+            Text('${l10n.total}: \$${_totalPrice.toStringAsFixed(2)}'),
             const SizedBox(height: 16),
-            const Text('Select payment method:'),
+            Text(l10n.selectPaymentMethod),
             const SizedBox(height: 8),
             ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('Wallet'),
+              title: Text(l10n.wallet),
               onTap: () => _processPayment('wallet'),
             ),
             ListTile(
               leading: const Icon(Icons.credit_card),
-              title: const Text('Credit Card'),
+              title: Text(l10n.creditCard),
               onTap: () => _processPayment('card'),
             ),
           ],
@@ -117,7 +119,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
         ],
       ),
@@ -155,37 +157,31 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
   }
 
   void _showAgreementDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('E-Agreement'),
-        content: const SingleChildScrollView(
-          child: Text(
-            'By proceeding, you agree to the terms and conditions:\n\n'
-            '1. Service terms and cancellation policy\n'
-            '2. Payment terms and refund policy\n'
-            '3. Liability and insurance coverage\n'
-            '4. Code of conduct during the trip\n\n'
-            'Do you agree to these terms?',
-          ),
+        title: Text(l10n.eAgreement),
+        content: SingleChildScrollView(
+          child: Text(l10n.eAgreementTerms + '\n\n' + l10n.eAgreementConfirm),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Booking confirmed!'),
+                SnackBar(
+                  content: Text(l10n.bookingConfirmed),
                   backgroundColor: Colors.green,
                 ),
               );
             },
-            child: const Text('Agree & Confirm'),
+            child: Text(l10n.agreeAndConfirm),
           ),
         ],
       ),
@@ -194,9 +190,10 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Companion'),
+        title: Text(l10n.bookCompanion),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -237,9 +234,9 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Select Dates',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.selectDates,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
@@ -250,7 +247,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
                     icon: const Icon(Icons.calendar_today),
                     label: Text(
                       _startDate == null
-                          ? 'Start Date'
+                          ? l10n.startDate
                           : DateFormat('MMM dd, yyyy').format(_startDate!),
                     ),
                   ),
@@ -262,7 +259,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
                     icon: const Icon(Icons.calendar_today),
                     label: Text(
                       _endDate == null
-                          ? 'End Date'
+                          ? l10n.endDate
                           : DateFormat('MMM dd, yyyy').format(_endDate!),
                     ),
                   ),
@@ -270,17 +267,17 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Additional Notes',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.additionalNotes,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _notesController,
               maxLines: 4,
-              decoration: const InputDecoration(
-                hintText: 'Any special requirements or notes...',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: l10n.specialRequirementsHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 24),
@@ -293,17 +290,17 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Days:'),
-                        Text('$_days days'),
+                        Text('${l10n.days}:'),
+                        Text('$_days'),
                       ],
                     ),
                     const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Total Price:',
-                          style: TextStyle(
+                        Text(
+                          '${l10n.total}:',
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -326,7 +323,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Text('Proceed to Payment'),
+            child: Text(l10n.proceedToPayment),
           ),
         ),
       ),

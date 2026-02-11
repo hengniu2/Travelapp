@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
+import '../../utils/app_theme.dart';
 
 class TourFilterScreen extends StatefulWidget {
   final String selectedType;
@@ -30,9 +32,10 @@ class _TourFilterScreenState extends State<TourFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filter Tours'),
+        title: Text(l10n.filterTours),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -64,7 +67,17 @@ class _TourFilterScreenState extends State<TourFilterScreen> {
                     _sort = 'Trending';
                   });
                 },
-                child: const Text('Reset'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppTheme.primaryColor,
+                  side: BorderSide(color: AppTheme.primaryColor, width: 2),
+                ),
+                child: Text(
+                  l10n.reset,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 16),
@@ -76,7 +89,7 @@ class _TourFilterScreenState extends State<TourFilterScreen> {
                     'sort': _sort,
                   });
                 },
-                child: const Text('Apply'),
+                child: Text(l10n.apply),
               ),
             ),
           ],
@@ -99,6 +112,7 @@ class _TourFilterScreenState extends State<TourFilterScreen> {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -108,13 +122,25 @@ class _TourFilterScreenState extends State<TourFilterScreen> {
           children: options.map((option) {
             final isSelected = option == selected;
             return FilterChip(
-              label: Text(option),
+              label: Text(
+                option,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: isSelected ? Colors.white : AppTheme.textPrimary,
+                ),
+              ),
               selected: isSelected,
-              onSelected: (selected) {
-                if (selected) {
-                  onChanged(option);
-                }
+              onSelected: (value) {
+                if (value) onChanged(option);
               },
+              backgroundColor: Colors.grey.shade200,
+              selectedColor: AppTheme.primaryColor,
+              checkmarkColor: Colors.white,
+              side: BorderSide(
+                color: isSelected ? AppTheme.primaryColor : Colors.grey.shade400,
+                width: 1.5,
+              ),
             );
           }).toList(),
         ),

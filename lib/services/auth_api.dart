@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthApi {
-  static const String _baseUrl = 'https://travel-china-api.onrender.com/api/auth/customer';
+  static const String _baseUrl = 'https://travel-china-api.onrender.com/api/auth';
+  static String get _customerUrl => '$_baseUrl/customer';
 
   /// Register. Returns user_id on success (201), throws [AuthApiException] on error.
   static Future<String> register({
@@ -12,7 +13,7 @@ class AuthApi {
     required String password,
     required String displayName,
   }) async {
-    final uri = Uri.parse('$_baseUrl/register');
+    final uri = Uri.parse('$_customerUrl/register');
     final body = jsonEncode({
       'email': email.trim(),
       'phone': phone.trim(),
@@ -42,7 +43,7 @@ class AuthApi {
     required String phone,
     required String password,
   }) async {
-    final uri = Uri.parse('$_baseUrl/login');
+    final uri = Uri.parse('$_customerUrl/login');
     final body = jsonEncode({
       'email': email.trim(),
       'phone': phone.trim(),
@@ -66,6 +67,28 @@ class AuthApi {
         'access_token': accessToken,
         'refresh_token': refreshToken ?? '',
       };
+    }
+    throw AuthApiException(_extractMessage(decoded, response.statusCode));
+  }
+
+  /// Get current user profile. Requires valid access token. Returns account map (id, email, phone, display_name, ...).
+  static Future<Map<String, dynamic>> getMe(String accessToken) async {
+    final uri = Uri.parse('$_baseUrl/me');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    final decoded = _decodeJson(response.body);
+    if (response.statusCode == 200) {
+      final data = decoded != null ? decoded['data'] : null;
+      final account = data is Map ? data['account'] : null;
+      if (account is! Map<String, dynamic>) {
+        throw AuthApiException('Invalid response: missing account');
+      }
+      return account;
     }
     throw AuthApiException(_extractMessage(decoded, response.statusCode));
   }

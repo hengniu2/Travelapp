@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
 import 'package:provider/provider.dart';
 import 'orders_screen.dart';
@@ -22,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       body: TravelImages.buildImageBackground(
         imageUrl: TravelImages.getProfileBackground(5),
-        opacity: 0.04,
+        opacity: 0.1,
         cacheWidth: 1200,
         child: Container(
           color: AppTheme.backgroundColor,
@@ -153,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppDesignSystem.borderRadiusImage,
                     ),
                     child: Text(
                     user?.email ?? '',
@@ -337,7 +338,7 @@ class ProfileScreen extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppDesignSystem.borderRadiusImage,
         boxShadow: [
           BoxShadow(
             color: menuColor.withOpacity(0.1),
@@ -350,7 +351,7 @@ class ProfileScreen extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
       onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: AppDesignSystem.borderRadiusImage,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: Row(
@@ -364,7 +365,7 @@ class ProfileScreen extends StatelessWidget {
                         menuColor.withOpacity(0.7),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppDesignSystem.borderRadiusImage,
                     boxShadow: [
                       BoxShadow(
                         color: menuColor.withOpacity(0.3),

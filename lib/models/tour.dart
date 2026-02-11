@@ -1,6 +1,8 @@
 class Tour {
   final String id;
   final String title;
+  /// Chinese (or other locale) title when available; use when locale is zh.
+  final String? titleZh;
   final String? image;
   final String description;
   final List<String> route;
@@ -17,6 +19,7 @@ class Tour {
   Tour({
     required this.id,
     required this.title,
+    this.titleZh,
     this.image,
     required this.description,
     required this.route,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 class CompanionFilterScreen extends StatefulWidget {
   final String selectedDestination;
@@ -66,9 +67,10 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filter Companions'),
+        title: Text(l10n.filterCompanions),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -108,7 +110,7 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
                     _skill = 'All';
                   });
                 },
-                child: const Text('Reset'),
+                child: Text(l10n.reset),
               ),
             ),
             const SizedBox(width: 16),
@@ -121,7 +123,7 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
                     'skill': _skill,
                   });
                 },
-                child: const Text('Apply'),
+                child: Text(l10n.apply),
               ),
             ),
           ],
