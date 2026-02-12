@@ -7,6 +7,7 @@ import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
 import '../../utils/route_transitions.dart';
+import '../../utils/tag_localizations.dart';
 import '../../widgets/skeleton_loader.dart';
 import '../../widgets/empty_state.dart';
 import 'tour_detail_screen.dart';
@@ -108,6 +109,17 @@ class _ToursScreenState extends State<ToursScreen> {
     }
   }
 
+  String _categoryLabel(AppLocalizations l10n, String id) {
+    switch (id) {
+      case 'hot': return l10n.categoryHot;
+      case 'island': return l10n.categoryIsland;
+      case 'mountain': return l10n.categoryMountain;
+      case 'town': return l10n.categoryTown;
+      case 'city': return l10n.categoryCity;
+      default: return id;
+    }
+  }
+
   String _routeTypeLabel(String routeType) {
     final l10n = AppLocalizations.of(context)!;
     if (l10n.localeName == 'zh') {
@@ -122,6 +134,7 @@ class _ToursScreenState extends State<ToursScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       height: _headerHeight,
       decoration: BoxDecoration(
@@ -177,8 +190,8 @@ class _ToursScreenState extends State<ToursScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    '跟团游',
+                  Text(
+                    l10n.toursTitle,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -197,8 +210,8 @@ class _ToursScreenState extends State<ToursScreen> {
                 ],
               ),
               const SizedBox(height: 6),
-              const Text(
-                '省时省心 · 一站式旅行方案',
+              Text(
+                l10n.toursSubtitle,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.white70,
@@ -206,7 +219,7 @@ class _ToursScreenState extends State<ToursScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildSearchBar(),
+              _buildSearchBar(context),
             ],
           ),
         ),
@@ -217,7 +230,8 @@ class _ToursScreenState extends State<ToursScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -243,9 +257,9 @@ class _ToursScreenState extends State<ToursScreen> {
                     children: [
                       Icon(Icons.location_on, size: 20, color: AppTheme.primaryColor),
                       const SizedBox(width: 10),
-                      const Text(
-                        '上海出发',
-                        style: TextStyle(
+                      Text(
+                        l10n.departShanghai,
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: AppTheme.textPrimary,
@@ -271,7 +285,7 @@ class _ToursScreenState extends State<ToursScreen> {
                       Icon(Icons.search, size: 20, color: AppTheme.textTertiary),
                       const SizedBox(width: 10),
                       Text(
-                        '目的地/关键词',
+                        l10n.destinationKeywords,
                         style: TextStyle(
                           fontSize: 15,
                           color: AppTheme.textTertiary,
@@ -289,7 +303,8 @@ class _ToursScreenState extends State<ToursScreen> {
     );
   }
 
-  Widget _buildCategoryRow() {
+  Widget _buildCategoryRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: 88,
       child: ListView.builder(
@@ -299,6 +314,7 @@ class _ToursScreenState extends State<ToursScreen> {
         itemBuilder: (context, index) {
           final cat = _categories[index];
           final selected = _selectedCategoryIndex == index;
+          final label = _categoryLabel(l10n, cat['id'] as String);
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
@@ -329,7 +345,7 @@ class _ToursScreenState extends State<ToursScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      cat['label'] as String,
+                      label,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -346,15 +362,16 @@ class _ToursScreenState extends State<ToursScreen> {
     );
   }
 
-  Widget _buildDestinationChips() {
+  Widget _buildDestinationChips(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            '热门出发城市',
+            l10n.hotDepartureCities,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -374,7 +391,8 @@ class _ToursScreenState extends State<ToursScreen> {
             childAspectRatio: 2.2,
             children: List.generate(_destinations.length, (index) {
               final selected = _selectedDestinationIndex == index;
-              final name = _destinations[index];
+              final zhName = _destinations[index];
+              final name = TagLocalizations.cityDisplayName(l10n.localeName, zhName);
               return GestureDetector(
                 onTap: () => setState(() {
                   _selectedDestinationIndex = _selectedDestinationIndex == index ? null : index;
@@ -429,8 +447,8 @@ class _ToursScreenState extends State<ToursScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '精选推荐',
+              Text(
+                l10n.featuredRecommend,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -445,7 +463,7 @@ class _ToursScreenState extends State<ToursScreen> {
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text(
-                  '查看全部 >',
+                  l10n.viewAll,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -506,8 +524,8 @@ class _ToursScreenState extends State<ToursScreen> {
               : CustomScrollView(
                   slivers: [
                     SliverToBoxAdapter(child: _buildHeader(context)),
-                    SliverToBoxAdapter(child: _buildCategoryRow()),
-                    SliverToBoxAdapter(child: _buildDestinationChips()),
+                    SliverToBoxAdapter(child: _buildCategoryRow(context)),
+                    SliverToBoxAdapter(child: _buildDestinationChips(context)),
                     SliverToBoxAdapter(child: _buildFeaturedSection(context)),
                   ],
                 ),

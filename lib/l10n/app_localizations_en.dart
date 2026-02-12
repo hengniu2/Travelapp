@@ -645,4 +645,146 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get countryIndia => 'India';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get ratingPoints => ' pts';
+
+  @override
+  String reviewCountWithNumber(int count) {
+    return '$count reviews';
+  }
+
+  @override
+  String bookedCount(int count) {
+    return '$count booked';
+  }
+
+  @override
+  String get discoverCompanions => 'Discover Companions';
+
+  @override
+  String get companionSubtitle => 'Find like-minded travel partners to explore the world together';
+
+  @override
+  String get companionsCount => ' companions';
+
+  @override
+  String get highRating => ' high rating';
+
+  @override
+  String get tryAdjustFilter => 'Try adjusting filters';
+
+  @override
+  String get local => 'Local';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get viewDetails => 'View details';
+
+  @override
+  String get toursTitle => 'Group Tours';
+
+  @override
+  String get toursSubtitle => 'Hassle-free · All-in-one travel';
+
+  @override
+  String get departShanghai => 'From Shanghai';
+
+  @override
+  String get hotDepartureCities => 'Popular departure cities';
+
+  @override
+  String get featuredRecommend => 'Featured';
+
+  @override
+  String get viewAll => 'View all >';
+
+  @override
+  String get categoryHot => 'Hot';
+
+  @override
+  String get categoryIsland => 'Island';
+
+  @override
+  String get categoryMountain => 'Mountain';
+
+  @override
+  String get categoryTown => 'Ancient town';
+
+  @override
+  String get categoryCity => 'City';
+
+  @override
+  String get cityXishuangbanna => 'Xishuangbanna';
+
+  @override
+  String get cityBeijing => 'Beijing';
+
+  @override
+  String get citySanya => 'Sanya';
+
+  @override
+  String get cityLijiang => 'Lijiang';
+
+  @override
+  String get cityGuilin => 'Guilin';
+
+  @override
+  String get cityChengdu => 'Chengdu';
+
+  @override
+  String get cityHarbin => 'Harbin';
+
+  @override
+  String get cityChongqing => 'Chongqing';
+
+  @override
+  String get experiencedGuideBio => 'Experienced travel guide with 5+ years';
+
+  @override
+  String get localExpertBio => 'Local expert in Asian destinations';
+
+  @override
+  String get urbanExplorerBio => 'Urban explorer and culture enthusiast';
+
+  @override
+  String get dailyLabel => 'per day';
+
+  @override
+  String get routeTypeLabel => 'Route type';
+
+  @override
+  String get itineraryDuration => 'Duration';
+
+  @override
+  String get startDateLabel => 'Start date';
+
+  @override
+  String get referencePriceLabel => 'Reference price';
+
+  @override
+  String get maxParticipantsLabel => 'Max participants';
+
+  @override
+  String get peopleUnit => 'people';
+
+  @override
+  String get bookingInformation => 'Booking Information';
+
+  @override
+  String get tourLabel => 'Tour';
+
+  @override
+  String get participantsLabel => 'Participants';
+
+  @override
+  String get totalPriceLabel => 'Total Price:';
 }

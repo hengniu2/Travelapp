@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 class RatingWidget extends StatelessWidget {
   final double rating;
@@ -14,6 +15,7 @@ class RatingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -41,7 +43,7 @@ class RatingWidget extends StatelessWidget {
         ),
         const SizedBox(width: 4),
         Text(
-          '分',
+          l10n.ratingPoints,
           style: TextStyle(
             fontSize: size - 4,
             color: Colors.grey.shade600,
@@ -51,7 +53,7 @@ class RatingWidget extends StatelessWidget {
           const SizedBox(width: 4),
           Flexible(
             child: Text(
-              '共$reviewCount人预订',
+              l10n.bookedCount(reviewCount),
               style: TextStyle(
                 fontSize: size - 6,
                 color: Colors.grey.shade600,

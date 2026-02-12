@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../models/tour.dart';
 import '../../widgets/price_widget.dart';
 import '../../providers/app_provider.dart';
@@ -111,7 +112,7 @@ class TourBookingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tour.title,
+                      l10n.localeName == 'zh' ? (tour.titleZh ?? tour.title) : tour.title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -119,7 +120,7 @@ class TourBookingScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Duration: ${tour.duration} days',
+                      '${l10n.itineraryDuration}: ${l10n.days(tour.duration)}',
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -127,9 +128,9 @@ class TourBookingScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Booking Information',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.bookingInformation,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Card(
@@ -137,13 +138,16 @@ class TourBookingScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _buildInfoRow('Tour', tour.title),
+                    _buildInfoRow(l10n.tourLabel, l10n.localeName == 'zh' ? (tour.titleZh ?? tour.title) : tour.title),
                     const Divider(),
-                    _buildInfoRow('Start Date', tour.startDate.toString().split(' ')[0]),
+                    _buildInfoRow(
+                      l10n.startDateLabel,
+                      DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(tour.startDate),
+                    ),
                     const Divider(),
-                    _buildInfoRow('Duration', '${tour.duration} days'),
+                    _buildInfoRow(l10n.itineraryDuration, l10n.days(tour.duration)),
                     const Divider(),
-                    _buildInfoRow('Participants', '1'),
+                    _buildInfoRow(l10n.participantsLabel, '1'),
                   ],
                 ),
               ),
@@ -156,9 +160,9 @@ class TourBookingScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Total Price:',
-                      style: TextStyle(
+                    Text(
+                      l10n.totalPriceLabel,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),

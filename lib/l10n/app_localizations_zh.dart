@@ -645,4 +645,146 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get countryIndia => '印度';
+
+  @override
+  String get online => '在线';
+
+  @override
+  String get offline => '离线';
+
+  @override
+  String get ratingPoints => '分';
+
+  @override
+  String reviewCountWithNumber(int count) {
+    return '$count 评价';
+  }
+
+  @override
+  String bookedCount(int count) {
+    return '共$count人订';
+  }
+
+  @override
+  String get discoverCompanions => '发现旅伴';
+
+  @override
+  String get companionSubtitle => '找到志同道合的旅行伙伴，一起探索世界';
+
+  @override
+  String get companionsCount => '位旅伴';
+
+  @override
+  String get highRating => '高评分';
+
+  @override
+  String get tryAdjustFilter => '试试调整筛选条件';
+
+  @override
+  String get local => '本地人';
+
+  @override
+  String get verified => '认证';
+
+  @override
+  String get viewDetails => '查看详情';
+
+  @override
+  String get toursTitle => '跟团游';
+
+  @override
+  String get toursSubtitle => '省时省心 · 一站式旅行方案';
+
+  @override
+  String get departShanghai => '上海出发';
+
+  @override
+  String get hotDepartureCities => '热门出发城市';
+
+  @override
+  String get featuredRecommend => '精选推荐';
+
+  @override
+  String get viewAll => '查看全部 >';
+
+  @override
+  String get categoryHot => '热门';
+
+  @override
+  String get categoryIsland => '海岛';
+
+  @override
+  String get categoryMountain => '山川';
+
+  @override
+  String get categoryTown => '古镇';
+
+  @override
+  String get categoryCity => '城市';
+
+  @override
+  String get cityXishuangbanna => '西双版纳';
+
+  @override
+  String get cityBeijing => '北京';
+
+  @override
+  String get citySanya => '三亚';
+
+  @override
+  String get cityLijiang => '丽江';
+
+  @override
+  String get cityGuilin => '桂林';
+
+  @override
+  String get cityChengdu => '成都';
+
+  @override
+  String get cityHarbin => '哈尔滨';
+
+  @override
+  String get cityChongqing => '重庆';
+
+  @override
+  String get experiencedGuideBio => '5年以上经验丰富的旅行向导';
+
+  @override
+  String get localExpertBio => '亚洲目的地本地专家';
+
+  @override
+  String get urbanExplorerBio => '城市探索与文化爱好者';
+
+  @override
+  String get dailyLabel => '每天';
+
+  @override
+  String get routeTypeLabel => '路线类型';
+
+  @override
+  String get itineraryDuration => '行程天数';
+
+  @override
+  String get startDateLabel => '出发日期';
+
+  @override
+  String get referencePriceLabel => '参考房价';
+
+  @override
+  String get maxParticipantsLabel => '人数上限';
+
+  @override
+  String get peopleUnit => '人';
+
+  @override
+  String get bookingInformation => '预订信息';
+
+  @override
+  String get tourLabel => '行程';
+
+  @override
+  String get participantsLabel => '人数';
+
+  @override
+  String get totalPriceLabel => '总价：';
 }

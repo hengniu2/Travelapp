@@ -131,7 +131,7 @@ class HotelDetailScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '参考房价',
+                                    AppLocalizations.of(context)!.referencePriceLabel,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: AppTheme.textSecondary,

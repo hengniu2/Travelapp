@@ -8,6 +8,7 @@ import '../../providers/app_provider.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
+import '../../utils/tag_localizations.dart';
 import 'package:provider/provider.dart';
 import 'companion_chat_screen.dart';
 import 'companion_booking_screen.dart';
@@ -195,7 +196,7 @@ class CompanionDetailScreen extends StatelessWidget {
                       children: [
                         _buildStatCard(
                           Icons.check_circle,
-                          companion.isAvailable ? '在线' : '离线',
+                          companion.isAvailable ? l10n.online : l10n.offline,
                           companion.isAvailable ? const Color(0xFF4CAF50) : Colors.grey,
                         ),
                         Container(
@@ -205,7 +206,7 @@ class CompanionDetailScreen extends StatelessWidget {
                         ),
                         _buildStatCard(
                           Icons.star,
-                          '${companion.rating}分',
+                          '${companion.rating}${l10n.ratingPoints}',
                           AppTheme.categoryOrange,
                         ),
                         Container(
@@ -215,7 +216,7 @@ class CompanionDetailScreen extends StatelessWidget {
                         ),
                         _buildStatCard(
                           Icons.people,
-                          '${companion.reviewCount}评价',
+                          l10n.reviewCountWithNumber(companion.reviewCount),
                           AppTheme.categoryBlue,
                         ),
                       ],
@@ -255,7 +256,9 @@ class CompanionDetailScreen extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              companion.bio!,
+                              (l10n.localeName == 'zh'
+                                  ? (companion.bioZh ?? companion.bio)
+                                  : companion.bio)!,
                               style: TextStyle(
                                 fontSize: 16,
                                 height: 1.6,
@@ -270,6 +273,7 @@ class CompanionDetailScreen extends StatelessWidget {
                           companion.destinations,
                           Icons.location_on,
                           AppTheme.categoryBlue,
+                          (key) => TagLocalizations.destination(l10n.localeName, key),
                         ),
                         const SizedBox(height: 20),
                         _buildSection(
@@ -277,6 +281,7 @@ class CompanionDetailScreen extends StatelessWidget {
                           companion.interests,
                           Icons.favorite,
                           AppTheme.categoryPink,
+                          (key) => TagLocalizations.interest(l10n.localeName, key),
                         ),
                         const SizedBox(height: 20),
                         _buildSection(
@@ -284,6 +289,7 @@ class CompanionDetailScreen extends StatelessWidget {
                           companion.skills,
                           Icons.star,
                           AppTheme.categoryOrange,
+                          (key) => TagLocalizations.skill(l10n.localeName, key),
                         ),
                         const SizedBox(height: 20),
                         _buildSection(
@@ -291,6 +297,7 @@ class CompanionDetailScreen extends StatelessWidget {
                           companion.languages,
                           Icons.language,
                           AppTheme.categoryPurple,
+                          (key) => TagLocalizations.language(l10n.localeName, key),
                         ),
                         const SizedBox(height: AppDesignSystem.spacingXxl),
                       ],
@@ -359,7 +366,13 @@ class CompanionDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, List<String> items, IconData icon, Color color) {
+  Widget _buildSection(
+    String title,
+    List<String> items,
+    IconData icon,
+    Color color,
+    String Function(String) translateTag,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -426,7 +439,7 @@ class CompanionDetailScreen extends StatelessWidget {
                         Icon(icon, size: 16, color: color),
                         const SizedBox(width: 6),
                         Text(
-                          item,
+                          translateTag(item),
                           style: TextStyle(
                             fontSize: 14,
                             color: color,

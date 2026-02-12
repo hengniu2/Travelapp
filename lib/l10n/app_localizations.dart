@@ -1354,6 +1354,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'India'**
   String get countryIndia;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// No description provided for @ratingPoints.
+  ///
+  /// In en, this message translates to:
+  /// **' pts'**
+  String get ratingPoints;
+
+  /// No description provided for @reviewCountWithNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reviews'**
+  String reviewCountWithNumber(int count);
+
+  /// No description provided for @bookedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} booked'**
+  String bookedCount(int count);
+
+  /// No description provided for @discoverCompanions.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Companions'**
+  String get discoverCompanions;
+
+  /// No description provided for @companionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find like-minded travel partners to explore the world together'**
+  String get companionSubtitle;
+
+  /// No description provided for @companionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **' companions'**
+  String get companionsCount;
+
+  /// No description provided for @highRating.
+  ///
+  /// In en, this message translates to:
+  /// **' high rating'**
+  String get highRating;
+
+  /// No description provided for @tryAdjustFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting filters'**
+  String get tryAdjustFilter;
+
+  /// No description provided for @local.
+  ///
+  /// In en, this message translates to:
+  /// **'Local'**
+  String get local;
+
+  /// No description provided for @verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verified;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get viewDetails;
+
+  /// No description provided for @toursTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Tours'**
+  String get toursTitle;
+
+  /// No description provided for @toursSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hassle-free · All-in-one travel'**
+  String get toursSubtitle;
+
+  /// No description provided for @departShanghai.
+  ///
+  /// In en, this message translates to:
+  /// **'From Shanghai'**
+  String get departShanghai;
+
+  /// No description provided for @hotDepartureCities.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular departure cities'**
+  String get hotDepartureCities;
+
+  /// No description provided for @featuredRecommend.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured'**
+  String get featuredRecommend;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all >'**
+  String get viewAll;
+
+  /// No description provided for @categoryHot.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get categoryHot;
+
+  /// No description provided for @categoryIsland.
+  ///
+  /// In en, this message translates to:
+  /// **'Island'**
+  String get categoryIsland;
+
+  /// No description provided for @categoryMountain.
+  ///
+  /// In en, this message translates to:
+  /// **'Mountain'**
+  String get categoryMountain;
+
+  /// No description provided for @categoryTown.
+  ///
+  /// In en, this message translates to:
+  /// **'Ancient town'**
+  String get categoryTown;
+
+  /// No description provided for @categoryCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get categoryCity;
+
+  /// No description provided for @cityXishuangbanna.
+  ///
+  /// In en, this message translates to:
+  /// **'Xishuangbanna'**
+  String get cityXishuangbanna;
+
+  /// No description provided for @cityBeijing.
+  ///
+  /// In en, this message translates to:
+  /// **'Beijing'**
+  String get cityBeijing;
+
+  /// No description provided for @citySanya.
+  ///
+  /// In en, this message translates to:
+  /// **'Sanya'**
+  String get citySanya;
+
+  /// No description provided for @cityLijiang.
+  ///
+  /// In en, this message translates to:
+  /// **'Lijiang'**
+  String get cityLijiang;
+
+  /// No description provided for @cityGuilin.
+  ///
+  /// In en, this message translates to:
+  /// **'Guilin'**
+  String get cityGuilin;
+
+  /// No description provided for @cityChengdu.
+  ///
+  /// In en, this message translates to:
+  /// **'Chengdu'**
+  String get cityChengdu;
+
+  /// No description provided for @cityHarbin.
+  ///
+  /// In en, this message translates to:
+  /// **'Harbin'**
+  String get cityHarbin;
+
+  /// No description provided for @cityChongqing.
+  ///
+  /// In en, this message translates to:
+  /// **'Chongqing'**
+  String get cityChongqing;
+
+  /// No description provided for @experiencedGuideBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Experienced travel guide with 5+ years'**
+  String get experiencedGuideBio;
+
+  /// No description provided for @localExpertBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Local expert in Asian destinations'**
+  String get localExpertBio;
+
+  /// No description provided for @urbanExplorerBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Urban explorer and culture enthusiast'**
+  String get urbanExplorerBio;
+
+  /// No description provided for @dailyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'per day'**
+  String get dailyLabel;
+
+  /// No description provided for @routeTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Route type'**
+  String get routeTypeLabel;
+
+  /// No description provided for @itineraryDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get itineraryDuration;
+
+  /// No description provided for @startDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start date'**
+  String get startDateLabel;
+
+  /// No description provided for @referencePriceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference price'**
+  String get referencePriceLabel;
+
+  /// No description provided for @maxParticipantsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Max participants'**
+  String get maxParticipantsLabel;
+
+  /// No description provided for @peopleUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'people'**
+  String get peopleUnit;
+
+  /// No description provided for @bookingInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Information'**
+  String get bookingInformation;
+
+  /// No description provided for @tourLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tour'**
+  String get tourLabel;
+
+  /// No description provided for @participantsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get participantsLabel;
+
+  /// No description provided for @totalPriceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price:'**
+  String get totalPriceLabel;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

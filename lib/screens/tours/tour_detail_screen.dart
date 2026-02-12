@@ -207,15 +207,30 @@ class TourDetailScreen extends StatelessWidget {
                       title: AppLocalizations.of(context)!.itineraryInfo,
                       child: Column(
                         children: [
-                          _buildInfoRow('路线类型', tour.routeType, Icons.route, AppTheme.categoryBlue),
-                          const SizedBox(height: AppDesignSystem.spacingMd),
-                          _buildInfoRow('行程天数', '${tour.duration} 天', Icons.access_time, AppTheme.categoryOrange),
-                          const SizedBox(height: AppDesignSystem.spacingMd),
-                          _buildInfoRow('人数上限', '${tour.maxParticipants} 人', Icons.people, AppTheme.categoryPurple),
+                          _buildInfoRow(
+                            AppLocalizations.of(context)!.routeTypeLabel,
+                            _routeTypeLabel(context, tour.routeType),
+                            Icons.route,
+                            AppTheme.categoryBlue,
+                          ),
                           const SizedBox(height: AppDesignSystem.spacingMd),
                           _buildInfoRow(
-                            '出发日期',
-                            DateFormat('yyyy年MM月dd日').format(tour.startDate),
+                            AppLocalizations.of(context)!.itineraryDuration,
+                            AppLocalizations.of(context)!.days(tour.duration),
+                            Icons.access_time,
+                            AppTheme.categoryOrange,
+                          ),
+                          const SizedBox(height: AppDesignSystem.spacingMd),
+                          _buildInfoRow(
+                            AppLocalizations.of(context)!.maxParticipantsLabel,
+                            '${tour.maxParticipants} ${AppLocalizations.of(context)!.peopleUnit}',
+                            Icons.people,
+                            AppTheme.categoryPurple,
+                          ),
+                          const SizedBox(height: AppDesignSystem.spacingMd),
+                          _buildInfoRow(
+                            AppLocalizations.of(context)!.startDateLabel,
+                            DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(tour.startDate),
                             Icons.calendar_today,
                             AppTheme.categoryGreen,
                           ),
@@ -294,6 +309,19 @@ class TourDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static String _routeTypeLabel(BuildContext context, String routeType) {
+    final l10n = AppLocalizations.of(context)!;
+    if (l10n.localeName == 'zh') {
+      switch (routeType) {
+        case 'Multi-City': return '多城连线';
+        case 'City Tour': return '城市游';
+        case 'Cruise': return '邮轮';
+        default: return routeType;
+      }
+    }
+    return routeType;
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon, Color color) {

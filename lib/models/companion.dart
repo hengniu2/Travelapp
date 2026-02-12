@@ -8,6 +8,8 @@ class Companion {
   final double rating;
   final int reviewCount;
   final String? bio;
+  /// Chinese (or locale) bio when available; use when locale is zh.
+  final String? bioZh;
   final double pricePerDay;
   final bool isAvailable;
   final List<String> languages;
@@ -22,6 +24,7 @@ class Companion {
     required this.rating,
     required this.reviewCount,
     this.bio,
+    this.bioZh,
     required this.pricePerDay,
     required this.isAvailable,
     required this.languages,

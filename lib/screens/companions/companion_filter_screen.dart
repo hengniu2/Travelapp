@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/tag_localizations.dart';
 
 class CompanionFilterScreen extends StatefulWidget {
   final String selectedDestination;
@@ -77,24 +78,27 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           _buildSection(
-            'Destination',
+            l10n.destinations,
             _destinations,
             _destination,
             (value) => setState(() => _destination = value),
+            (v) => v == 'All' ? l10n.all : TagLocalizations.destination(l10n.localeName, v),
           ),
           const SizedBox(height: 24),
           _buildSection(
-            'Interest',
+            l10n.interests,
             _interests,
             _interest,
             (value) => setState(() => _interest = value),
+            (v) => v == 'All' ? l10n.all : TagLocalizations.interest(l10n.localeName, v),
           ),
           const SizedBox(height: 24),
           _buildSection(
-            'Skill',
+            l10n.skills,
             _skills,
             _skill,
             (value) => setState(() => _skill = value),
+            (v) => v == 'All' ? l10n.all : TagLocalizations.skill(l10n.localeName, v),
           ),
         ],
       ),
@@ -138,6 +142,7 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
     List<String> options,
     String selected,
     Function(String) onChanged,
+    String Function(String) displayLabel,
   ) {
     final theme = Theme.of(context);
     return Column(
@@ -159,7 +164,7 @@ class _CompanionFilterScreenState extends State<CompanionFilterScreen> {
             final isSelected = option == selected;
             return FilterChip(
               label: Text(
-                option,
+                displayLabel(option),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

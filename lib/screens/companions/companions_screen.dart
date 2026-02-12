@@ -9,6 +9,7 @@ import '../../widgets/image_first_card.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_design_system.dart';
 import '../../utils/travel_images.dart';
+import '../../utils/tag_localizations.dart';
 import '../../utils/route_transitions.dart';
 import 'companion_detail_screen.dart';
 import 'companion_filter_screen.dart';
@@ -139,9 +140,9 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 12),
-                                  const Expanded(
+                                  Expanded(
                                     child: Text(
-                                      '发现旅伴',
+                                      l10n.discoverCompanions,
                                       style: TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.bold,
@@ -161,7 +162,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                '找到志同道合的旅行伙伴，一起探索世界',
+                                l10n.companionSubtitle,
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.white.withOpacity(0.95),
@@ -235,7 +236,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                         _buildStatItem(
                           Icons.people_outline,
                           '${_filteredCompanions.length}',
-                          '位旅伴',
+                          l10n.companionsCount,
                           AppTheme.categoryBlue,
                         ),
                         Container(
@@ -246,7 +247,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                         _buildStatItem(
                           Icons.star_outline,
                           '${_filteredCompanions.where((c) => c.rating >= 4.5).length}',
-                          '高评分',
+                          l10n.highRating,
                           AppTheme.categoryOrange,
                         ),
                         Container(
@@ -257,7 +258,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                         _buildStatItem(
                           Icons.location_on_outlined,
                           '${_filteredCompanions.where((c) => c.isAvailable).length}',
-                          '在线',
+                          l10n.online,
                           AppTheme.categoryGreen,
                         ),
                       ],
@@ -357,7 +358,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '试试调整筛选条件',
+            l10n.tryAdjustFilter,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade600,
@@ -511,9 +512,9 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                         color: const Color(0xFF4CAF50),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: const Text(
-                                        '在线',
-                                        style: TextStyle(
+                                      child: Text(
+                                        l10n.online,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
@@ -556,18 +557,18 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 ),
                               ],
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.local_fire_department,
                                   color: Colors.white,
                                   size: 14,
                                 ),
-                                SizedBox(width: 4),
+                                const SizedBox(width: 4),
                                 Text(
-                                  '热门',
-                                  style: TextStyle(
+                                  l10n.hot,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
@@ -596,18 +597,18 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 ),
                               ],
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.verified,
                                   color: Colors.white,
                                   size: 12,
                                 ),
-                                SizedBox(width: 4),
+                                const SizedBox(width: 4),
                                 Text(
-                                  '推荐',
-                                  style: TextStyle(
+                                  l10n.recommend,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
@@ -634,18 +635,18 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 ),
                               ],
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.location_on,
                                   color: AppTheme.primaryColor,
                                   size: 14,
                                 ),
-                                SizedBox(width: 4),
+                                const SizedBox(width: 4),
                                 Text(
-                                  '本地人',
-                                  style: TextStyle(
+                                  l10n.local,
+                                  style: const TextStyle(
                                     color: AppTheme.primaryColor,
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
@@ -673,18 +674,18 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 ),
                               ],
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.verified_user,
                                   color: Colors.white,
                                   size: 12,
                                 ),
-                                SizedBox(width: 4),
+                                const SizedBox(width: 4),
                                 Text(
-                                  '认证',
-                                  style: TextStyle(
+                                  l10n.verified,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
@@ -719,11 +720,12 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (companion.bio != null && companion.bio!.isNotEmpty)
+                              if ((l10n.localeName == 'zh' ? (companion.bioZh ?? companion.bio) : companion.bio) != null &&
+                                  (l10n.localeName == 'zh' ? (companion.bioZh ?? companion.bio) : companion.bio)!.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: Text(
-                                    companion.bio!,
+                                    (l10n.localeName == 'zh' ? (companion.bioZh ?? companion.bio) : companion.bio)!,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade800,
@@ -765,7 +767,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            '在线',
+                                            l10n.online,
                                             style: TextStyle(
                                               fontSize: 10,
                                               color: const Color(0xFF4CAF50),
@@ -824,7 +826,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                dest,
+                                TagLocalizations.destination(l10n.localeName, dest),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: avatarColor,
@@ -857,7 +859,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                skill,
+                                TagLocalizations.skill(l10n.localeName, skill),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade700,
@@ -895,7 +897,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                interest,
+                                TagLocalizations.interest(l10n.localeName, interest),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: AppTheme.categoryPink,
@@ -955,7 +957,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '每天',
+                                l10n.dailyLabel,
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: Colors.grey.shade600,
@@ -980,12 +982,12 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
                                 ),
                               ],
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  '查看详情',
-                                  style: TextStyle(
+                                  l10n.viewDetails,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
