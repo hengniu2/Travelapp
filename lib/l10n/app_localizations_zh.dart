@@ -522,10 +522,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get itineraryRoute => '行程路线';
 
   @override
-  String get packageDetails => '套餐详情';
+  String get itinerarySchedule => '日程介绍';
 
   @override
-  String get itinerarySchedule => '日程介绍';
+  String get packageDetails => '套餐详情';
 
   @override
   String get highlights => '亮点';
@@ -537,7 +537,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notIncluded => '费用不含';
 
   @override
-  String dayNumber(int number) => '第$number天';
+  String dayNumber(int number) {
+    return '第$number天';
+  }
 
   @override
   String get departureCity => '出发城市';
@@ -582,13 +584,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bookingNotes => '预订须知';
 
   @override
+  String get visaInfoDetail => '请根据您的国籍确认签证要求。护照需有6个月以上有效期。';
+
+  @override
+  String get whatToBringDetail => '舒适鞋子、应季衣物、转换插头、常用药品。';
+
+  @override
+  String get travelTipsDetail => '建议购买当地电话卡或开通漫游。保留预订确认单复印件。';
+
+  @override
   String get mealsIncluded => '含餐说明';
 
   @override
-  String tourCardNightsHotel(int nights) => '含$nights晚酒店';
+  String tourCardNightsHotel(int nights) {
+    return '含$nights晚酒店';
+  }
 
   @override
-  String tourCardMeals(int count) => '含$count次正餐';
+  String tourCardMeals(int count) {
+    return '含$count次正餐';
+  }
 
   @override
   String get tourCardGroupGuarantee => '成团保障';
@@ -597,19 +612,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tourCardInstantConfirm => '立即确认';
 
   @override
-  String departureFromCity(String city) => '$city出发';
+  String departureFromCity(String city) {
+    return '$city出发';
+  }
 
   @override
   String get selectedItineraries => '精选旅行线路';
-
-  @override
-  String get visaInfoDetail => '请根据您的国籍确认签证要求。护照需有6个月以上有效期。';
-
-  @override
-  String get whatToBringDetail => '舒适鞋子、应季衣物、转换插头、常用药品。';
-
-  @override
-  String get travelTipsDetail => '建议购买当地电话卡或开通漫游。保留预订确认单复印件。';
 
   @override
   String get hotelIntro => '酒店介绍';
@@ -1026,4 +1034,80 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get commentsSection => '评论';
+
+  @override
+  String get selectDatePackageGuests => '选择日期/套餐/人数';
+
+  @override
+  String get travelPackage => '行程套餐';
+
+  @override
+  String get departureDate => '出发日期';
+
+  @override
+  String get numberOfTravelers => '出行人数';
+
+  @override
+  String get adults12AndAbove => '成人 12周岁以上';
+
+  @override
+  String get children2To12 => '儿童 2-12周岁(不含)';
+
+  @override
+  String spotsLeft(int count) {
+    return '仅剩$count个名额';
+  }
+
+  @override
+  String get allTourDates => '全部团期';
+
+  @override
+  String get selected => '已选';
+
+  @override
+  String get fillOrder => '填写订单';
+
+  @override
+  String get itineraryPackage => '行程套餐';
+
+  @override
+  String get confirmWithin24h => '24小时内确认：本产品付款后可快速确认，放心期待您的旅行';
+
+  @override
+  String needSelectAdultTravelers(int count) {
+    return '需选$count成人出游';
+  }
+
+  @override
+  String get ensureInfoMatchesId => '请务必保障填写项与出游所持证件一致';
+
+  @override
+  String get addTravelerButton => '添加出行人';
+
+  @override
+  String get numberOfRooms => '房间数';
+
+  @override
+  String get roomSharingInfo => '1名成人需要与同性团友拼房，如不想拼房可增加房间数。尽量安排拼房(不保证)。如产生单房差请补齐。';
+
+  @override
+  String get roomSharingSelect => '请选择拼房成员';
+
+  @override
+  String get contactPerson => '联系人';
+
+  @override
+  String get realNameRequired => '真实姓名*';
+
+  @override
+  String get enterContactName => '请输入姓名';
+
+  @override
+  String get totalAmount => '总金额';
+
+  @override
+  String get submitOrder => '提交订单';
+
+  @override
+  String get perPerson => '/人';
 }

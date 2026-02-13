@@ -522,10 +522,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itineraryRoute => 'Route';
 
   @override
-  String get packageDetails => 'Package details';
+  String get itinerarySchedule => 'Day-by-day itinerary';
 
   @override
-  String get itinerarySchedule => 'Day-by-day itinerary';
+  String get packageDetails => 'Package details';
 
   @override
   String get highlights => 'Highlights';
@@ -537,7 +537,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notIncluded => 'Not included';
 
   @override
-  String dayNumber(int number) => 'Day $number';
+  String dayNumber(int number) {
+    return 'Day $number';
+  }
 
   @override
   String get departureCity => 'Departure';
@@ -582,13 +584,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bookingNotes => 'Booking notes';
 
   @override
+  String get visaInfoDetail => 'Check visa requirements for your nationality. Passport valid 6+ months.';
+
+  @override
+  String get whatToBringDetail => 'Comfortable shoes, weather-appropriate clothing, adapter, medication.';
+
+  @override
+  String get travelTipsDetail => 'Local SIM or roaming recommended. Keep copies of booking confirmations.';
+
+  @override
   String get mealsIncluded => 'Meals included';
 
   @override
-  String tourCardNightsHotel(int nights) => 'Includes $nights nights hotel';
+  String tourCardNightsHotel(int nights) {
+    return 'Includes $nights nights hotel';
+  }
 
   @override
-  String tourCardMeals(int count) => 'Includes $count meals';
+  String tourCardMeals(int count) {
+    return 'Includes $count meals';
+  }
 
   @override
   String get tourCardGroupGuarantee => 'Group guarantee';
@@ -597,19 +612,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourCardInstantConfirm => 'Instant confirm';
 
   @override
-  String departureFromCity(String city) => 'From $city';
+  String departureFromCity(String city) {
+    return 'From $city';
+  }
 
   @override
   String get selectedItineraries => 'Selected itineraries';
-
-  @override
-  String get visaInfoDetail => 'Check visa requirements for your nationality. Passport valid 6+ months.';
-
-  @override
-  String get whatToBringDetail => 'Comfortable shoes, weather-appropriate clothing, adapter, medication.';
-
-  @override
-  String get travelTipsDetail => 'Local SIM or roaming recommended. Keep copies of booking confirmations.';
 
   @override
   String get hotelIntro => 'Hotel overview';
@@ -1026,4 +1034,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commentsSection => 'Comments';
+
+  @override
+  String get selectDatePackageGuests => 'Select Date / Package / Guests';
+
+  @override
+  String get travelPackage => 'Travel Package';
+
+  @override
+  String get departureDate => 'Departure Date';
+
+  @override
+  String get numberOfTravelers => 'Number of Travelers';
+
+  @override
+  String get adults12AndAbove => 'Adults 12 years and above';
+
+  @override
+  String get children2To12 => 'Children 2–12 years (excl.)';
+
+  @override
+  String spotsLeft(int count) {
+    return 'Only $count spots left';
+  }
+
+  @override
+  String get allTourDates => 'All tour dates';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get fillOrder => 'Fill in Order';
+
+  @override
+  String get itineraryPackage => 'Itinerary Package';
+
+  @override
+  String get confirmWithin24h => 'Confirm within 24h: Payment can be confirmed quickly.';
+
+  @override
+  String needSelectAdultTravelers(int count) {
+    return 'Need to select $count adult traveler(s)';
+  }
+
+  @override
+  String get ensureInfoMatchesId => 'Please ensure the information matches the travel document.';
+
+  @override
+  String get addTravelerButton => 'Add Traveler';
+
+  @override
+  String get numberOfRooms => 'Number of Rooms';
+
+  @override
+  String get roomSharingInfo => '1 adult may share a room. To avoid sharing, increase rooms. Single supplement may apply.';
+
+  @override
+  String get roomSharingSelect => 'Select room-sharing members';
+
+  @override
+  String get contactPerson => 'Contact Person';
+
+  @override
+  String get realNameRequired => 'Real name *';
+
+  @override
+  String get enterContactName => 'Enter contact name';
+
+  @override
+  String get totalAmount => 'Total';
+
+  @override
+  String get submitOrder => 'Submit Order';
+
+  @override
+  String get perPerson => '/ person';
 }

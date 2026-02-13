@@ -1109,41 +1109,185 @@ abstract class AppLocalizations {
   /// **'Route'**
   String get itineraryRoute;
 
+  /// No description provided for @itinerarySchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Day-by-day itinerary'**
+  String get itinerarySchedule;
+
   /// No description provided for @packageDetails.
   ///
   /// In en, this message translates to:
   /// **'Package details'**
   String get packageDetails;
 
-  String get itinerarySchedule;
+  /// No description provided for @highlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlights'**
   String get highlights;
+
+  /// No description provided for @included.
+  ///
+  /// In en, this message translates to:
+  /// **'Included'**
   String get included;
+
+  /// No description provided for @notIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not included'**
   String get notIncluded;
+
+  /// No description provided for @dayNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number}'**
   String dayNumber(int number);
+
+  /// No description provided for @departureCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
   String get departureCity;
+
+  /// No description provided for @notIncludedPersonalExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal expenses'**
   String get notIncludedPersonalExpenses;
+
+  /// No description provided for @notIncludedTravelInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel insurance'**
   String get notIncludedTravelInsurance;
+
+  /// No description provided for @activityMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning: Arrival & check-in'**
   String get activityMorning;
+
+  /// No description provided for @activityAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon: Sightseeing'**
   String get activityAfternoon;
+
+  /// No description provided for @importantInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Important information'**
   String get importantInfo;
+
+  /// No description provided for @whatToBring.
+  ///
+  /// In en, this message translates to:
+  /// **'What to bring'**
   String get whatToBring;
+
+  /// No description provided for @visaInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa & documents'**
   String get visaInfo;
+
+  /// No description provided for @similarTours.
+  ///
+  /// In en, this message translates to:
+  /// **'Similar tours'**
   String get similarTours;
+
+  /// No description provided for @viewAllPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'View all photos'**
   String get viewAllPhotos;
+
+  /// No description provided for @tourPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
   String get tourPhotos;
+
+  /// No description provided for @seeAllReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'See all reviews'**
   String get seeAllReviews;
+
+  /// No description provided for @travelTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel tips'**
   String get travelTips;
+
+  /// No description provided for @bookingNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking notes'**
   String get bookingNotes;
-  String get mealsIncluded;
-  String tourCardNightsHotel(int nights);
-  String tourCardMeals(int count);
-  String get tourCardGroupGuarantee;
-  String get tourCardInstantConfirm;
-  String departureFromCity(String city);
-  String get selectedItineraries;
+
+  /// No description provided for @visaInfoDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Check visa requirements for your nationality. Passport valid 6+ months.'**
   String get visaInfoDetail;
+
+  /// No description provided for @whatToBringDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable shoes, weather-appropriate clothing, adapter, medication.'**
   String get whatToBringDetail;
+
+  /// No description provided for @travelTipsDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Local SIM or roaming recommended. Keep copies of booking confirmations.'**
   String get travelTipsDetail;
+
+  /// No description provided for @mealsIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals included'**
+  String get mealsIncluded;
+
+  /// No description provided for @tourCardNightsHotel.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes {nights} nights hotel'**
+  String tourCardNightsHotel(int nights);
+
+  /// No description provided for @tourCardMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes {count} meals'**
+  String tourCardMeals(int count);
+
+  /// No description provided for @tourCardGroupGuarantee.
+  ///
+  /// In en, this message translates to:
+  /// **'Group guarantee'**
+  String get tourCardGroupGuarantee;
+
+  /// No description provided for @tourCardInstantConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant confirm'**
+  String get tourCardInstantConfirm;
+
+  /// No description provided for @departureFromCity.
+  ///
+  /// In en, this message translates to:
+  /// **'From {city}'**
+  String departureFromCity(String city);
+
+  /// No description provided for @selectedItineraries.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected itineraries'**
+  String get selectedItineraries;
 
   /// No description provided for @hotelIntro.
   ///
@@ -1163,15 +1307,64 @@ abstract class AppLocalizations {
   /// **'No reviews yet'**
   String get noReviewsYet;
 
+  /// No description provided for @reviewComment1.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent experience! Highly recommended.'**
   String get reviewComment1;
+
+  /// No description provided for @reviewComment2.
+  ///
+  /// In en, this message translates to:
+  /// **'Great service, would book again.'**
   String get reviewComment2;
+
+  /// No description provided for @reviewComment3.
+  ///
+  /// In en, this message translates to:
+  /// **'The itinerary was perfect. Our guide was knowledgeable and the hotels were great. Worth every penny!'**
   String get reviewComment3;
+
+  /// No description provided for @reviewComment4.
+  ///
+  /// In en, this message translates to:
+  /// **'Good value. Some days were a bit rushed but overall a memorable trip.'**
   String get reviewComment4;
+
+  /// No description provided for @reviewComment5.
+  ///
+  /// In en, this message translates to:
+  /// **'Beautiful destinations and well organized. Would recommend to friends.'**
   String get reviewComment5;
+
+  /// No description provided for @reviewUserName1.
+  ///
+  /// In en, this message translates to:
+  /// **'Alice Smith'**
   String get reviewUserName1;
+
+  /// No description provided for @reviewUserName2.
+  ///
+  /// In en, this message translates to:
+  /// **'Bob Johnson'**
   String get reviewUserName2;
+
+  /// No description provided for @reviewUserName3.
+  ///
+  /// In en, this message translates to:
+  /// **'Maria García'**
   String get reviewUserName3;
+
+  /// No description provided for @reviewUserName4.
+  ///
+  /// In en, this message translates to:
+  /// **'James Lee'**
   String get reviewUserName4;
+
+  /// No description provided for @reviewUserName5.
+  ///
+  /// In en, this message translates to:
+  /// **'Sophie Martin'**
   String get reviewUserName5;
 
   /// No description provided for @reviewsEmptySubtitle.
@@ -1911,6 +2104,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Comments'**
   String get commentsSection;
+
+  /// No description provided for @selectDatePackageGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date / Package / Guests'**
+  String get selectDatePackageGuests;
+
+  /// No description provided for @travelPackage.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Package'**
+  String get travelPackage;
+
+  /// No description provided for @departureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Date'**
+  String get departureDate;
+
+  /// No description provided for @numberOfTravelers.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Travelers'**
+  String get numberOfTravelers;
+
+  /// No description provided for @adults12AndAbove.
+  ///
+  /// In en, this message translates to:
+  /// **'Adults 12 years and above'**
+  String get adults12AndAbove;
+
+  /// No description provided for @children2To12.
+  ///
+  /// In en, this message translates to:
+  /// **'Children 2–12 years (excl.)'**
+  String get children2To12;
+
+  /// No description provided for @spotsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {count} spots left'**
+  String spotsLeft(int count);
+
+  /// No description provided for @allTourDates.
+  ///
+  /// In en, this message translates to:
+  /// **'All tour dates'**
+  String get allTourDates;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @fillOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in Order'**
+  String get fillOrder;
+
+  /// No description provided for @itineraryPackage.
+  ///
+  /// In en, this message translates to:
+  /// **'Itinerary Package'**
+  String get itineraryPackage;
+
+  /// No description provided for @confirmWithin24h.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm within 24h: Payment can be confirmed quickly.'**
+  String get confirmWithin24h;
+
+  /// No description provided for @needSelectAdultTravelers.
+  ///
+  /// In en, this message translates to:
+  /// **'Need to select {count} adult traveler(s)'**
+  String needSelectAdultTravelers(int count);
+
+  /// No description provided for @ensureInfoMatchesId.
+  ///
+  /// In en, this message translates to:
+  /// **'Please ensure the information matches the travel document.'**
+  String get ensureInfoMatchesId;
+
+  /// No description provided for @addTravelerButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Traveler'**
+  String get addTravelerButton;
+
+  /// No description provided for @numberOfRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Rooms'**
+  String get numberOfRooms;
+
+  /// No description provided for @roomSharingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'1 adult may share a room. To avoid sharing, increase rooms. Single supplement may apply.'**
+  String get roomSharingInfo;
+
+  /// No description provided for @roomSharingSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select room-sharing members'**
+  String get roomSharingSelect;
+
+  /// No description provided for @contactPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Person'**
+  String get contactPerson;
+
+  /// No description provided for @realNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Real name *'**
+  String get realNameRequired;
+
+  /// No description provided for @enterContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter contact name'**
+  String get enterContactName;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get totalAmount;
+
+  /// No description provided for @submitOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Order'**
+  String get submitOrder;
+
+  /// No description provided for @perPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'/ person'**
+  String get perPerson;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

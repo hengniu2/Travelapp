@@ -13,7 +13,7 @@ import '../../utils/travel_images.dart';
 import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../utils/tag_localizations.dart';
-import 'tour_booking_screen.dart';
+import 'tour_select_options_screen.dart';
 import 'tour_gallery_screen.dart';
 
 // Premium detail design system (8px grid, spec spacing/radius/shadow)
@@ -99,7 +99,7 @@ class TourDetailScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TourBookingScreen(tour: tour),
+                    builder: (context) => TourSelectOptionsScreen(tour: tour),
                   ),
                 );
               },
