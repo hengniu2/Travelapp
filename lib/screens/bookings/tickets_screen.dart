@@ -41,9 +41,10 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 
   void _bookTicket(Ticket ticket) {
+    final displayName = _displayName(context, ticket);
     showIosActionSheet(
       context,
-      title: '${ticket.name} · ¥${ticket.price.toStringAsFixed(0)}',
+      title: '$displayName · ¥${ticket.price.toStringAsFixed(0)}',
       cancelLabel: AppLocalizations.of(context)!.cancel,
       actions: [
         IosSheetAction(
@@ -94,12 +95,28 @@ class _TicketsScreenState extends State<TicketsScreen> {
     );
   }
 
+  String _displayName(BuildContext context, Ticket ticket) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (ticket.nameZh ?? ticket.name) : ticket.name;
+  }
+
+  String _displayLocation(BuildContext context, Ticket ticket) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (ticket.locationZh ?? ticket.location) : ticket.location;
+  }
+
+  String _displayType(BuildContext context, Ticket ticket) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (ticket.typeZh ?? ticket.type) : ticket.type;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.attractionTickets),
+        title: Text(l10n.attractionTickets),
       ),
       body: Column(
         children: [
@@ -120,7 +137,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.searchTickets,
+                hintText: l10n.searchTickets,
                 prefixIcon: Container(
                   margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.all(8),
@@ -150,10 +167,10 @@ class _TicketsScreenState extends State<TicketsScreen> {
               itemBuilder: (context, index) {
                 final ticket = _tickets[index];
                 final matchesSearch = _searchController.text.isEmpty ||
-                    ticket.name
+                    _displayName(context, ticket)
                         .toLowerCase()
                         .contains(_searchController.text.toLowerCase()) ||
-                    ticket.location
+                    _displayLocation(context, ticket)
                         .toLowerCase()
                         .contains(_searchController.text.toLowerCase());
 
@@ -193,7 +210,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                             top: AppDesignSystem.spacingMd,
                             right: AppDesignSystem.spacingMd,
                             child: CardBadge(
-                              label: ticket.type,
+                              label: _displayType(context, ticket),
                               color: typeColor,
                             ),
                           ),
@@ -205,7 +222,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              ticket.name,
+                              _displayName(context, ticket),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -222,7 +239,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
-                                    ticket.location,
+                                    _displayLocation(context, ticket),
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: AppTheme.categoryBlue,
@@ -256,15 +273,15 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                     borderRadius:
                                         AppDesignSystem.borderRadiusSm,
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.book_online,
+                                      const Icon(Icons.book_online,
                                           color: Colors.white, size: 16),
-                                      SizedBox(width: 4),
+                                      const SizedBox(width: 4),
                                       Text(
-                                        'Book',
-                                        style: TextStyle(
+                                        l10n.book,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 13,

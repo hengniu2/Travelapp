@@ -1,96 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../models/tour.dart';
 import '../../widgets/price_widget.dart';
 import '../../providers/app_provider.dart';
-import 'package:provider/provider.dart';
-import '../../models/order.dart';
 import '../../l10n/app_localizations.dart';
+import '../bookings/guest_info_screen.dart';
 
-class TourBookingScreen extends StatelessWidget {
+/// 旅行套餐预订：选择出发日期、人数 → 下一步填写出行人信息 → 选择支付方式（支付宝/微信）
+class TourBookingScreen extends StatefulWidget {
   final Tour tour;
 
   const TourBookingScreen({super.key, required this.tour});
 
-  void _proceedToPayment(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.payment),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${l10n.total}: \$${tour.price.toStringAsFixed(2)}'),
-            const SizedBox(height: 16),
-            Text(l10n.selectPaymentMethod),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: Text(l10n.wallet),
-              onTap: () => _processPayment(context, 'wallet'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.credit_card),
-              title: Text(l10n.creditCard),
-              onTap: () => _processPayment(context, 'card'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-        ],
-      ),
-    );
-  }
+  @override
+  State<TourBookingScreen> createState() => _TourBookingScreenState();
+}
 
-  void _processPayment(BuildContext context, String method) {
-    Navigator.pop(context);
+class _TourBookingScreenState extends State<TourBookingScreen> {
+  int _participants = 1;
+  DateTime get _startDate => widget.tour.startDate;
 
+  void _goToGuestInfo(BuildContext context) {
     final appProvider = Provider.of<AppProvider>(context, listen: false);
-
-    final order = Order(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      type: 'tour',
-      itemId: tour.id,
-      itemName: tour.title,
-      amount: tour.price,
-      orderDate: DateTime.now(),
-      status: 'confirmed',
-      details: {
-        'startDate': tour.startDate.toIso8601String(),
-        'duration': tour.duration,
-        'paymentMethod': method,
-      },
-    );
-
-    appProvider.addOrder(order);
-
-    if (method == 'wallet') {
-      appProvider.deductFromWallet(tour.price);
-    }
-
     final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.bookingConfirmed),
-        content: Text(l10n.tourBookingConfirmed),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Text(l10n.ok),
-          ),
-        ],
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GuestInfoScreen(
+          bookingType: 'tour',
+          itemId: widget.tour.id,
+          itemName: l10n.localeName == 'zh' ? (widget.tour.titleZh ?? widget.tour.title) : widget.tour.title,
+          amount: widget.tour.price,
+          extraDetails: {
+            'startDate': _startDate.toIso8601String(),
+            'duration': widget.tour.duration,
+            'participants': _participants,
+          },
+          prefilledPhone: appProvider.currentUser?.phone,
+        ),
       ),
-    );
+    ).then((result) {
+      if (result == true && mounted) Navigator.pop(context);
+    });
   }
 
   @override
@@ -112,7 +64,7 @@ class TourBookingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.localeName == 'zh' ? (tour.titleZh ?? tour.title) : tour.title,
+                      l10n.localeName == 'zh' ? (widget.tour.titleZh ?? widget.tour.title) : widget.tour.title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -120,7 +72,7 @@ class TourBookingScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '${l10n.itineraryDuration}: ${l10n.days(tour.duration)}',
+                      '${l10n.itineraryDuration}: ${l10n.days(widget.tour.duration)}',
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -138,16 +90,34 @@ class TourBookingScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _buildInfoRow(l10n.tourLabel, l10n.localeName == 'zh' ? (tour.titleZh ?? tour.title) : tour.title),
+                    _buildInfoRow(l10n.tourLabel, l10n.localeName == 'zh' ? (widget.tour.titleZh ?? widget.tour.title) : widget.tour.title),
                     const Divider(),
                     _buildInfoRow(
                       l10n.startDateLabel,
-                      DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(tour.startDate),
+                      DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(_startDate),
                     ),
                     const Divider(),
-                    _buildInfoRow(l10n.itineraryDuration, l10n.days(tour.duration)),
+                    _buildInfoRow(l10n.itineraryDuration, l10n.days(widget.tour.duration)),
                     const Divider(),
-                    _buildInfoRow(l10n.participantsLabel, '1'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(l10n.participantsLabel, style: const TextStyle(color: Colors.grey)),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: _participants > 1 ? () => setState(() => _participants--) : null,
+                            ),
+                            Text('$_participants'),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () => setState(() => _participants++),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -167,7 +137,7 @@ class TourBookingScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    PriceWidget(price: tour.price),
+                    PriceWidget(price: widget.tour.price),
                   ],
                 ),
               ),
@@ -179,11 +149,11 @@ class TourBookingScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ElevatedButton(
-            onPressed: () => _proceedToPayment(context),
+            onPressed: () => _goToGuestInfo(context),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: Text(l10n.proceedToPayment),
+            child: Text(l10n.nextStep),
           ),
         ),
       ),
@@ -196,17 +166,10 @@ class TourBookingScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(color: Colors.grey),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
 }
-

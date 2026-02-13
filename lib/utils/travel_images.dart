@@ -74,6 +74,28 @@ class TravelImages {
     return List.generate(15, (i) => getTourImage(i));
   }
 
+  /// Gallery images for tour detail (multiple scenes). Uses gallery + detail + cards.
+  /// To add more: put images in assets/images/tours/gallery/ and add paths to [pool] below.
+  static List<String> getTourGalleryImages(int tourHash, {int count = 8}) {
+    final pool = [
+      'assets/images/tours/gallery/tour_gallery_1.jpg',
+      'assets/images/tours/gallery/tour_gallery_2.jpg',
+      'assets/images/tours/gallery/tour_gallery_3.jpg',
+      'assets/images/tours/gallery/tour_gallery_4.jpg',
+      'assets/images/tours/gallery/tour_gallery_5.jpg',
+      'assets/images/tours/detail/tour_detail_hero_1.jpg',
+      'assets/images/tours/detail/tour_detail_hero_2.jpg',
+      'assets/images/tours/detail/tour_detail_hero_3.jpg',
+      'assets/images/tours/cards/tour_list_item_1.jpg',
+      'assets/images/tours/cards/tour_list_item_2.jpg',
+      'assets/images/tours/cards/tour_list_item_3.jpg',
+      'assets/images/tours/cards/tour_list_item_4.jpg',
+      'assets/images/tours/cards/tour_list_item_5.jpg',
+      'assets/images/tours/cards/tour_list_item_6.jpg',
+    ];
+    return List.generate(count, (i) => pool[(tourHash.abs() + i) % pool.length]);
+  }
+
   /// Light-style header image for Tours page (use with low opacity for soft background).
   static String getToursPageHeader(int index) {
     final images = [

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_api.dart';
 import '../../utils/app_theme.dart';
+import '../../widgets/otp_code_input.dart';
 import 'login_screen.dart';
 
 class PhoneVerificationScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class PhoneVerificationScreen extends StatefulWidget {
 }
 
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
-  final _codeController = TextEditingController();
+  String _code = '';
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _resendEnabled = false;
@@ -33,7 +34,6 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    _codeController.dispose();
     super.dispose();
   }
 
@@ -84,13 +84,25 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     if (mounted) _startResendTimer();
   }
 
+  String? _validateCode(String? code) {
+    if (code == null || code.length != 6) return AppLocalizations.of(context)!.enter6DigitCode;
+    return null;
+  }
+
   Future<void> _verify() async {
-    if (!_formKey.currentState!.validate() || _isLoading) return;
+    final error = _validateCode(_code);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error), backgroundColor: AppTheme.categoryRed),
+      );
+      return;
+    }
+    if (_isLoading) return;
     setState(() => _isLoading = true);
     try {
       await AuthApi.verifyPhone(
         phoneNumber: widget.phoneNumber,
-        code: _codeController.text.trim(),
+        code: _code.trim(),
       );
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
@@ -156,24 +168,9 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                TextFormField(
-                  controller: _codeController,
-                  keyboardType: TextInputType.number,
-                  maxLength: 6,
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (_) => _verify(),
-                  decoration: InputDecoration(
-                    labelText: l10n.code,
-                    hintText: '000000',
-                    prefixIcon: const Icon(Icons.sms_outlined),
-                    counterText: '',
-                  ),
-                  validator: (v) {
-                    if (v == null || v.trim().length != 6) {
-                      return l10n.enter6DigitCode;
-                    }
-                    return null;
-                  },
+                OtpCodeInput(
+                  onChanged: (code) => setState(() => _code = code),
+                  onCompleted: (_) => _verify(),
                 ),
                 const SizedBox(height: 24),
                 SizedBox(

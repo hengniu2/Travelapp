@@ -198,7 +198,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get departFrom => 'Depart from';
 
   @override
-  String get destinationKeywords => 'Destination / Keywords';
+  String get destinationKeywords => 'Dest. / Keyword';
 
   @override
   String get recommend => 'Recommend';
@@ -525,6 +525,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get packageDetails => 'Package details';
 
   @override
+  String get itinerarySchedule => 'Day-by-day itinerary';
+
+  @override
+  String get highlights => 'Highlights';
+
+  @override
+  String get included => 'Included';
+
+  @override
+  String get notIncluded => 'Not included';
+
+  @override
+  String dayNumber(int number) => 'Day $number';
+
+  @override
+  String get departureCity => 'Departure';
+
+  @override
+  String get notIncludedPersonalExpenses => 'Personal expenses';
+
+  @override
+  String get notIncludedTravelInsurance => 'Travel insurance';
+
+  @override
+  String get activityMorning => 'Morning: Arrival & check-in';
+
+  @override
+  String get activityAfternoon => 'Afternoon: Sightseeing';
+
+  @override
+  String get importantInfo => 'Important information';
+
+  @override
+  String get whatToBring => 'What to bring';
+
+  @override
+  String get visaInfo => 'Visa & documents';
+
+  @override
+  String get similarTours => 'Similar tours';
+
+  @override
+  String get viewAllPhotos => 'View all photos';
+
+  @override
+  String get tourPhotos => 'Photos';
+
+  @override
+  String get seeAllReviews => 'See all reviews';
+
+  @override
+  String get travelTips => 'Travel tips';
+
+  @override
+  String get bookingNotes => 'Booking notes';
+
+  @override
+  String get mealsIncluded => 'Meals included';
+
+  @override
+  String tourCardNightsHotel(int nights) => 'Includes $nights nights hotel';
+
+  @override
+  String tourCardMeals(int count) => 'Includes $count meals';
+
+  @override
+  String get tourCardGroupGuarantee => 'Group guarantee';
+
+  @override
+  String get tourCardInstantConfirm => 'Instant confirm';
+
+  @override
+  String departureFromCity(String city) => 'From $city';
+
+  @override
+  String get selectedItineraries => 'Selected itineraries';
+
+  @override
+  String get visaInfoDetail => 'Check visa requirements for your nationality. Passport valid 6+ months.';
+
+  @override
+  String get whatToBringDetail => 'Comfortable shoes, weather-appropriate clothing, adapter, medication.';
+
+  @override
+  String get travelTipsDetail => 'Local SIM or roaming recommended. Keep copies of booking confirmations.';
+
+  @override
   String get hotelIntro => 'Hotel overview';
 
   @override
@@ -532,6 +619,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noReviewsYet => 'No reviews yet';
+
+  @override
+  String get reviewComment1 => 'Excellent experience! Highly recommended.';
+
+  @override
+  String get reviewComment2 => 'Great service, would book again.';
+
+  @override
+  String get reviewComment3 => 'The itinerary was perfect. Our guide was knowledgeable and the hotels were great. Worth every penny!';
+
+  @override
+  String get reviewComment4 => 'Good value. Some days were a bit rushed but overall a memorable trip.';
+
+  @override
+  String get reviewComment5 => 'Beautiful destinations and well organized. Would recommend to friends.';
+
+  @override
+  String get reviewUserName1 => 'Alice Smith';
+
+  @override
+  String get reviewUserName2 => 'Bob Johnson';
+
+  @override
+  String get reviewUserName3 => 'Maria García';
+
+  @override
+  String get reviewUserName4 => 'James Lee';
+
+  @override
+  String get reviewUserName5 => 'Sophie Martin';
 
   @override
   String get reviewsEmptySubtitle => 'After completing a trip or service, you can leave a review here.';
@@ -762,6 +879,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routeTypeLabel => 'Route type';
 
   @override
+  String get routeTypeMultiCity => 'Multi-City';
+
+  @override
+  String get routeTypeCityTour => 'City Tour';
+
+  @override
+  String get routeTypeCruise => 'Cruise';
+
+  @override
   String get itineraryDuration => 'Duration';
 
   @override
@@ -787,4 +913,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totalPriceLabel => 'Total Price:';
+
+  @override
+  String get purchase => 'Purchase';
+
+  @override
+  String coverageLine(String coverage, int duration) {
+    return 'Coverage: $coverage · $duration days';
+  }
+
+  @override
+  String get bookingCategories => 'Booking categories';
+
+  @override
+  String get quickBooking => 'Quick booking';
+
+  @override
+  String get mySection => 'My';
+
+  @override
+  String get bookingService => 'Booking service';
+
+  @override
+  String get bookingServiceSubtitle => 'Hotels / Tickets / Insurance / Transport';
+
+  @override
+  String get featuredDeals => 'Featured deals';
+
+  @override
+  String get hotAttractions => 'Hot attractions';
+
+  @override
+  String get travelProtection => 'Travel protection';
+
+  @override
+  String get transport => 'Transport';
+
+  @override
+  String get transferAndCar => 'Transfer / Car';
+
+  @override
+  String get quickItemShanghaiBund => 'Shanghai Bund Hotel';
+
+  @override
+  String get quickItemForbiddenCity => 'Forbidden City Ticket';
+
+  @override
+  String get quickItemSanyaTrip => 'Sanya Package';
+
+  @override
+  String get recentBookings => 'Recent';
+
+  @override
+  String get hotRecommendations => 'Popular';
+
+  @override
+  String get todayDeals => 'Today\'s deals';
+
+  @override
+  String get hintDisplayName => 'e.g. John Smith';
+
+  @override
+  String get hintEmail => 'e.g. customer@example.com';
+
+  @override
+  String get hintAvatarUrl => 'https://...';
+
+  @override
+  String get promotionsDiscountTitle => 'Promos / Discounts';
+
+  @override
+  String get promotionsDiscountSubtitle => 'Limited-time offers, use coupons to save';
+
+  @override
+  String get travelerName => 'Name';
+
+  @override
+  String get idCardNumber => 'ID card number';
+
+  @override
+  String get travelerPhone => 'Phone';
+
+  @override
+  String get addTraveler => 'Add traveler';
+
+  @override
+  String get fillTravelerInfo => 'Fill traveler info';
+
+  @override
+  String get travelerInfoRequired => 'Please fill name, ID card and phone for all travelers';
+
+  @override
+  String get nextStep => 'Next';
+
+  @override
+  String get payWithAlipay => 'Alipay';
+
+  @override
+  String get payWithWeChat => 'WeChat Pay';
+
+  @override
+  String get selectPayment => 'Select payment method';
+
+  @override
+  String get checkInLabel => 'Check-in';
+
+  @override
+  String get checkOutLabel => 'Check-out';
+
+  @override
+  String get bookingDetailsLabel => 'Booking details';
+
+  @override
+  String get commentsSection => 'Comments';
 }

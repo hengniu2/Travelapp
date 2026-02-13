@@ -16,6 +16,7 @@ class ContentArticleCard extends StatelessWidget {
     this.typeColor,
     this.getContentTypeLabel,
     this.compact = false,
+    this.dense = false,
     this.imageIndex,
   });
 
@@ -24,6 +25,8 @@ class ContentArticleCard extends StatelessWidget {
   final Color? typeColor;
   final String Function(String type)? getContentTypeLabel;
   final bool compact;
+  /// Dense list row: small image, title, meta only (~88px height).
+  final bool dense;
   /// When set, used to pick a distinct image per list item. Otherwise derived from content.id.
   final int? imageIndex;
 
@@ -74,7 +77,17 @@ class ContentArticleCard extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: radius,
-            child: compact
+            child: dense
+                ? _buildDense(
+                    context,
+                    theme,
+                    l10n,
+                    typeColor,
+                    typeLabel,
+                    title,
+                    author,
+                  )
+                : compact
                 ? _buildCompact(
                     context,
                     theme,
@@ -99,6 +112,85 @@ class ContentArticleCard extends StatelessWidget {
                   ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDense(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    Color typeColor,
+    String typeLabel,
+    String title,
+    String? author,
+  ) {
+    const double imageSize = 76;
+    const double rowHeight = 88;
+    return SizedBox(
+      height: rowHeight,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.horizontal(left: Radius.circular(10)),
+            child: SizedBox(
+              width: imageSize,
+              height: imageSize,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    TravelImages.getContentImage(imageIndex ?? content.id.hashCode.abs() % 6),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: typeColor.withValues(alpha: 0.15),
+                      child: Icon(Icons.article_outlined, size: 24, color: typeColor.withValues(alpha: 0.6)),
+                    ),
+                  ),
+                  Positioned(
+                    top: 4,
+                    left: 4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: typeColor.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        typeLabel,
+                        style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                      height: 1.2,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  _buildMetaRow(context, theme, l10n, author, true),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

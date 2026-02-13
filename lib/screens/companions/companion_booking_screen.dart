@@ -290,7 +290,7 @@ class _CompanionBookingScreenState extends State<CompanionBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${l10n.days}:'),
+                        Text('${l10n.duration}:'),
                         Text('$_days'),
                       ],
                     ),

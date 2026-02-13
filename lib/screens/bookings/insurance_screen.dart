@@ -15,9 +15,11 @@ class InsuranceScreen extends StatelessWidget {
   const InsuranceScreen({super.key});
 
   void _purchaseInsurance(BuildContext context, Insurance insurance) {
+    final l10n = AppLocalizations.of(context)!;
+    final name = l10n.localeName == 'zh' ? (insurance.nameZh ?? insurance.name) : insurance.name;
     showIosActionSheet(
       context,
-      title: '${insurance.name} · ¥${insurance.price.toStringAsFixed(0)}',
+      title: '$name · ¥${insurance.price.toStringAsFixed(0)}',
       cancelLabel: AppLocalizations.of(context)!.cancel,
       actions: [
         IosSheetAction(
@@ -71,10 +73,34 @@ class InsuranceScreen extends StatelessWidget {
     );
   }
 
+  String _localizedName(BuildContext context, Insurance insurance) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (insurance.nameZh ?? insurance.name) : insurance.name;
+  }
+
+  String _localizedType(BuildContext context, Insurance insurance) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (insurance.typeZh ?? insurance.type) : insurance.type;
+  }
+
+  String _localizedCoverage(BuildContext context, Insurance insurance) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (insurance.coverageZh ?? insurance.coverage) : insurance.coverage;
+  }
+
+  String _localizedBenefit(BuildContext context, Insurance insurance, int index) {
+    final l10n = AppLocalizations.of(context)!;
+    if (l10n.localeName == 'zh' && insurance.benefitsZh != null && index < insurance.benefitsZh!.length) {
+      return insurance.benefitsZh![index];
+    }
+    return insurance.benefits[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     final dataService = DataService();
     final insurances = dataService.getInsurancePlans();
+    final l10n = AppLocalizations.of(context)!;
 
     final typeColors = {
       'Basic': AppTheme.categoryBlue,
@@ -132,7 +158,7 @@ class InsuranceScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              insurance.name,
+                              _localizedName(context, insurance),
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -141,21 +167,21 @@ class InsuranceScreen extends StatelessWidget {
                             ),
                           ),
                           CardBadge(
-                            label: insurance.type,
+                            label: _localizedType(context, insurance),
                             color: typeColor,
                           ),
                         ],
                       ),
                       const SizedBox(height: AppDesignSystem.spacingSm),
                       Text(
-                        'Coverage: ${insurance.coverage} · ${insurance.duration} days',
+                        l10n.coverageLine(_localizedCoverage(context, insurance), insurance.duration),
                         style: TextStyle(
                           fontSize: 14,
                           color: AppTheme.textSecondary,
                         ),
                       ),
                       const SizedBox(height: AppDesignSystem.spacingMd),
-                      ...insurance.benefits.take(3).map((benefit) => Padding(
+                      ...insurance.benefits.take(3).toList().asMap().entries.map((e) => Padding(
                             padding: const EdgeInsets.only(bottom: 4),
                             child: Row(
                               children: [
@@ -163,7 +189,7 @@ class InsuranceScreen extends StatelessWidget {
                                     size: 16, color: AppTheme.categoryGreen),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                    child: Text(benefit,
+                                    child: Text(_localizedBenefit(context, insurance, e.key),
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: AppTheme.textPrimary))),
@@ -193,9 +219,9 @@ class InsuranceScreen extends StatelessWidget {
                               borderRadius:
                                   AppDesignSystem.borderRadiusSm,
                             ),
-                            child: const Text(
-                              'Purchase',
-                              style: TextStyle(
+                            child: Text(
+                              l10n.purchase,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,

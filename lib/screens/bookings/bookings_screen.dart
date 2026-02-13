@@ -149,15 +149,15 @@ class BookingsScreen extends StatelessWidget {
           children: [
             _buildServiceCard(context, theme),
             const SizedBox(height: 24),
-            _buildSectionTitle(theme, '预订分类'),
+            _buildSectionTitle(theme, l10n.bookingCategories),
             const SizedBox(height: 12),
             _buildCategoryCards(context, theme, l10n),
             const SizedBox(height: 28),
-            _buildSectionTitle(theme, '快捷预订'),
+            _buildSectionTitle(theme, l10n.quickBooking),
             const SizedBox(height: 12),
-            _buildQuickBookingSection(context, theme),
+            _buildQuickBookingSection(context, theme, l10n),
             const SizedBox(height: 28),
-            _buildSectionTitle(theme, '我的'),
+            _buildSectionTitle(theme, l10n.mySection),
             const SizedBox(height: 12),
             _buildSmartFeatures(context, theme, l10n),
           ],
@@ -168,6 +168,7 @@ class BookingsScreen extends StatelessWidget {
 
   /// 预订服务: soft card with subtle green tint. No photo background.
   Widget _buildServiceCard(BuildContext context, ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     final primary = theme.colorScheme.primary;
     final onSurface = theme.colorScheme.onSurface;
     final onSurfaceVariant = theme.colorScheme.onSurfaceVariant;
@@ -201,7 +202,7 @@ class BookingsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '预订服务',
+                  l10n.bookingService,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: onSurface,
@@ -211,7 +212,7 @@ class BookingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '酒店 / 门票 / 保险 / 交通',
+                  l10n.bookingServiceSubtitle,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: onSurfaceVariant,
                     fontWeight: FontWeight.w500,
@@ -242,16 +243,16 @@ class BookingsScreen extends StatelessWidget {
   /// 预订分类: clean surface, no section background image. Floating cards only.
   Widget _buildCategoryCards(BuildContext context, ThemeData theme, AppLocalizations l10n) {
     final categories = [
-      _CategoryItem(l10n.hotels, '精选低价', Icons.hotel_rounded, AppTheme.categoryBlue, () {
+      _CategoryItem(l10n.hotels, l10n.featuredDeals, Icons.hotel_rounded, AppTheme.categoryBlue, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const HotelsScreen()));
       }),
-      _CategoryItem(l10n.tickets, '热门景点', Icons.confirmation_number_rounded, AppTheme.categoryOrange, () {
+      _CategoryItem(l10n.tickets, l10n.hotAttractions, Icons.confirmation_number_rounded, AppTheme.categoryOrange, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const TicketsScreen()));
       }),
-      _CategoryItem(l10n.insurance, '出行保障', Icons.shield_rounded, AppTheme.categoryGreen, () {
+      _CategoryItem(l10n.insurance, l10n.travelProtection, Icons.shield_rounded, AppTheme.categoryGreen, () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const InsuranceScreen()));
       }),
-      _CategoryItem('交通', '接送/包车', Icons.directions_car_rounded, AppTheme.categoryPurple, () {
+      _CategoryItem(l10n.transport, l10n.transferAndCar, Icons.directions_car_rounded, AppTheme.categoryPurple, () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.viewMore), behavior: SnackBarBehavior.floating),
         );
@@ -268,13 +269,13 @@ class BookingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickBookingSection(BuildContext context, ThemeData theme) {
+  Widget _buildQuickBookingSection(BuildContext context, ThemeData theme, AppLocalizations l10n) {
     final items = [
-      _QuickItem('上海外滩酒店', 688, Icons.hotel_rounded, AppTheme.categoryBlue),
-      _QuickItem('故宫门票', 60, Icons.confirmation_number_rounded, AppTheme.categoryOrange),
-      _QuickItem('三亚自由行', 1299, Icons.beach_access_rounded, AppTheme.categoryGreen),
+      _QuickItem(l10n.quickItemShanghaiBund, 688, Icons.hotel_rounded, AppTheme.categoryBlue),
+      _QuickItem(l10n.quickItemForbiddenCity, 60, Icons.confirmation_number_rounded, AppTheme.categoryOrange),
+      _QuickItem(l10n.quickItemSanyaTrip, 1299, Icons.beach_access_rounded, AppTheme.categoryGreen),
     ];
-    const tags = ['最近预订', '热门推荐', '今日特价'];
+    final tags = [l10n.recentBookings, l10n.hotRecommendations, l10n.todayDeals];
     return SizedBox(
       height: 168,
       child: ListView.builder(
@@ -321,6 +322,7 @@ class BookingsScreen extends StatelessWidget {
         const SizedBox(height: 12),
         _DiscountCard(
           theme: theme,
+          l10n: l10n,
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(l10n.promotionsComingSoon), behavior: SnackBarBehavior.floating),
@@ -591,9 +593,10 @@ class _SmartCard extends StatelessWidget {
 
 class _DiscountCard extends StatelessWidget {
   final ThemeData theme;
+  final AppLocalizations l10n;
   final VoidCallback onTap;
 
-  const _DiscountCard({required this.theme, required this.onTap});
+  const _DiscountCard({required this.theme, required this.l10n, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -631,7 +634,7 @@ class _DiscountCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '优惠 / 折扣',
+                      l10n.promotionsDiscountTitle,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: onSurface,
@@ -641,7 +644,7 @@ class _DiscountCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '限时特惠，领券立减',
+                      l10n.promotionsDiscountSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(color: onSurfaceVariant),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

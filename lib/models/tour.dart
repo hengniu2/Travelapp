@@ -5,6 +5,9 @@ class Tour {
   final String? titleZh;
   final String? image;
   final String description;
+  /// Chinese (or other locale) description when available; use when locale is zh.
+  final String? _descriptionZh;
+  String? get descriptionZh => _descriptionZh;
   final List<String> route;
   final String routeType;
   final double price;
@@ -22,6 +25,7 @@ class Tour {
     this.titleZh,
     this.image,
     required this.description,
+    String? descriptionZh,
     required this.route,
     required this.routeType,
     required this.price,
@@ -32,7 +36,7 @@ class Tour {
     required this.startDate,
     this.isTrending = false,
     this.packageDetails,
-  });
+  }) : _descriptionZh = descriptionZh;
 }
 
 

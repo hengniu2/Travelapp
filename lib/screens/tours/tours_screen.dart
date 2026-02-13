@@ -63,31 +63,33 @@ class _ToursScreenState extends State<ToursScreen> {
     _loadTours();
   }
 
+  void _applyFiltersInternal() {
+    _filteredTours = _tours.where((tour) {
+      return _filterType == 'All' || tour.routeType == _filterType;
+    }).toList();
+    if (_sortBy == 'Trending') {
+      _filteredTours.sort((a, b) => b.isTrending ? 1 : -1);
+    } else if (_sortBy == 'Price Low') {
+      _filteredTours.sort((a, b) => a.price.compareTo(b.price));
+    } else if (_sortBy == 'Price High') {
+      _filteredTours.sort((a, b) => b.price.compareTo(a.price));
+    } else if (_sortBy == 'Duration') {
+      _filteredTours.sort((a, b) => a.duration.compareTo(b.duration));
+    }
+  }
+
   Future<void> _loadTours() async {
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     setState(() {
       _tours = _dataService.getTours();
       _isLoading = false;
+      _applyFiltersInternal();
     });
-    _applyFilters();
   }
 
   void _applyFilters() {
-    setState(() {
-      _filteredTours = _tours.where((tour) {
-        return _filterType == 'All' || tour.routeType == _filterType;
-      }).toList();
-      if (_sortBy == 'Trending') {
-        _filteredTours.sort((a, b) => b.isTrending ? 1 : -1);
-      } else if (_sortBy == 'Price Low') {
-        _filteredTours.sort((a, b) => a.price.compareTo(b.price));
-      } else if (_sortBy == 'Price High') {
-        _filteredTours.sort((a, b) => b.price.compareTo(a.price));
-      } else if (_sortBy == 'Duration') {
-        _filteredTours.sort((a, b) => a.duration.compareTo(b.duration));
-      }
-    });
+    setState(() => _applyFiltersInternal());
   }
 
   Future<void> _showFilterDialog() async {

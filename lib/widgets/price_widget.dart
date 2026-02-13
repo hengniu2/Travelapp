@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 
 class PriceWidget extends StatelessWidget {
   final double price;
@@ -18,13 +19,14 @@ class PriceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(symbol: prefix ?? '¥', decimalDigits: 0);
+    final fromSuffix = showFrom ? (AppLocalizations.of(context)?.priceFrom ?? 'from') : null;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Flexible(
           child: Text(
-            showFrom ? '${formatter.format(price)}起' : formatter.format(price),
+            fromSuffix != null ? '${formatter.format(price)}$fromSuffix' : formatter.format(price),
             style: style ?? const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

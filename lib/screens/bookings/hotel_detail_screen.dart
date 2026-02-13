@@ -16,6 +16,24 @@ class HotelDetailScreen extends StatelessWidget {
 
   const HotelDetailScreen({super.key, required this.hotel});
 
+  String _name(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (hotel.nameZh ?? hotel.name) : hotel.name;
+  }
+
+  String _location(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.localeName == 'zh' ? (hotel.locationZh ?? hotel.location) : hotel.location;
+  }
+
+  String _amenityAt(BuildContext context, int index) {
+    final l10n = AppLocalizations.of(context)!;
+    if (l10n.localeName == 'zh' && hotel.amenitiesZh != null && index < hotel.amenitiesZh!.length) {
+      return hotel.amenitiesZh![index];
+    }
+    return hotel.amenities[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     final appProvider = Provider.of<AppProvider>(context);
@@ -93,7 +111,7 @@ class HotelDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            hotel.name,
+                            _name(context),
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
@@ -108,7 +126,7 @@ class HotelDetailScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  hotel.location,
+                                  _location(context),
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: AppTheme.textSecondary,
@@ -188,7 +206,9 @@ class HotelDetailScreen extends StatelessWidget {
                         spacing: 10,
                         runSpacing: 10,
                         children: hotel.amenities
-                            .map((amenity) => Container(
+                            .asMap()
+                            .entries
+                            .map((e) => Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 14, vertical: 10),
                                   decoration: BoxDecoration(
@@ -206,7 +226,7 @@ class HotelDetailScreen extends StatelessWidget {
                                           size: 18, color: AppTheme.categoryBlue),
                                       const SizedBox(width: 6),
                                       Text(
-                                        amenity,
+                                        _amenityAt(context, e.key),
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: AppTheme.categoryBlue,

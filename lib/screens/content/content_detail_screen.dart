@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/content.dart';
+import '../../models/content_comment.dart';
+import '../../services/data_service.dart';
 import '../../widgets/detail_bottom_bar.dart';
 import '../../widgets/ios_bottom_sheet.dart';
 import '../../providers/app_provider.dart';
@@ -51,7 +53,7 @@ class ContentDetailScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     SizedBox(
-                      height: 380,
+                      height: 240,
                       width: double.infinity,
                       child: Stack(
                         fit: StackFit.expand,
@@ -250,32 +252,9 @@ class ContentDetailScreen extends StatelessWidget {
                       ),
                     ],
                     const SizedBox(height: AppDesignSystem.spacingLg),
-                    _sectionCard(
-                      title: l10n.bodyLabel,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(AppDesignSystem.spacingLg),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.06),
-                          borderRadius: AppDesignSystem.borderRadiusSm,
-                          border: Border.all(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.15),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          l10n.localeName == 'zh'
-                              ? (content.contentZh ?? content.content)
-                              : content.content,
-                          style: TextStyle(
-                            fontSize: 17,
-                            height: 1.8,
-                            color: AppTheme.textPrimary,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                      ),
-                    ),
+                    _buildRichBody(context, l10n),
+                    const SizedBox(height: AppDesignSystem.spacingLg),
+                    _buildCommentsSection(context, content.id, l10n),
                     const SizedBox(height: AppDesignSystem.spacingXxl),
                   ]),
                 ),
@@ -328,6 +307,77 @@ class ContentDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildRichBody(BuildContext context, AppLocalizations l10n) {
+    final body = l10n.localeName == 'zh'
+        ? (content.contentZh ?? content.content)
+        : content.content;
+    final paragraphs = body.split(RegExp(r'\n\n+')).where((s) => s.trim().isNotEmpty).toList();
+    if (paragraphs.isEmpty) {
+      return _sectionCard(
+        title: l10n.bodyLabel,
+        child: Text(
+          body,
+          style: TextStyle(
+            fontSize: 15,
+            height: 1.65,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+      );
+    }
+    final contentImages = [
+      TravelImages.getContentImage(0),
+      TravelImages.getContentImage(1),
+      TravelImages.getContentImage(2),
+      TravelImages.getContentImage(3),
+      TravelImages.getContentImage(4),
+    ];
+    final children = <Widget>[];
+    for (int i = 0; i < paragraphs.length; i++) {
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(
+            paragraphs[i].trim(),
+            style: TextStyle(
+              fontSize: 15,
+              height: 1.65,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+        ),
+      );
+      if (i < paragraphs.length - 1) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.asset(
+                  contentImages[i % contentImages.length],
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: AppTheme.backgroundColor,
+                    child: const Icon(Icons.image_outlined, size: 48, color: AppTheme.textTertiary),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    return _sectionCard(
+      title: l10n.bodyLabel,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
       ),
     );
   }
@@ -399,6 +449,81 @@ class ContentDetailScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCommentsSection(BuildContext context, String contentId, AppLocalizations l10n) {
+    final comments = DataService().getContentComments(contentId);
+    return _sectionCard(
+      title: '${l10n.commentsSection} (${comments.length})',
+      child: comments.isEmpty
+          ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                l10n.noReviewsYet,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: comments.map((c) {
+                final author = l10n.localeName == 'zh' ? (c.authorNameZh ?? c.authorName) : c.authorName;
+                final body = l10n.localeName == 'zh' ? (c.bodyZh ?? c.body) : c.body;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: AppDesignSystem.spacingLg),
+                  child: Container(
+                    padding: const EdgeInsets.all(AppDesignSystem.spacingMd),
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundColor,
+                      borderRadius: AppDesignSystem.borderRadiusSm,
+                      border: Border.all(
+                        color: AppTheme.primaryColor.withValues(alpha: 0.12),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.person_outline, size: 18, color: AppTheme.textSecondary),
+                            const SizedBox(width: 8),
+                            Text(
+                              author,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(c.date),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          body,
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.5,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
     );
   }
 }

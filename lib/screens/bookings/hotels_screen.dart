@@ -43,6 +43,35 @@ class _HotelsScreenState extends State<HotelsScreen> {
     _filteredHotels = _hotels;
   }
 
+  String _amenityDisplay(AppLocalizations l10n, Hotel hotel, int index) {
+    if (l10n.localeName == 'zh' && hotel.amenitiesZh != null && index < hotel.amenitiesZh!.length) {
+      return hotel.amenitiesZh![index];
+    }
+    return hotel.amenities[index];
+  }
+
+  Widget _localizedAmenity(AppLocalizations l10n, Hotel hotel, int index) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppTheme.categoryGreen.withOpacity(0.12),
+        borderRadius: AppDesignSystem.borderRadiusSm,
+        border: Border.all(
+          color: AppTheme.categoryGreen.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Text(
+        _amenityDisplay(l10n, hotel, index),
+        style: TextStyle(
+          fontSize: 11,
+          color: AppTheme.categoryGreen,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
   void _searchHotels(String query) {
     setState(() {
       if (query.isEmpty) {
@@ -214,7 +243,7 @@ class _HotelsScreenState extends State<HotelsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    hotel.name,
+                                    l10n.localeName == 'zh' ? (hotel.nameZh ?? hotel.name) : hotel.name,
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -231,7 +260,7 @@ class _HotelsScreenState extends State<HotelsScreen> {
                                       const SizedBox(width: 4),
                                       Expanded(
                                         child: Text(
-                                          hotel.location,
+                                          l10n.localeName == 'zh' ? (hotel.locationZh ?? hotel.location) : hotel.location,
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: AppTheme.categoryBlue,
@@ -254,29 +283,10 @@ class _HotelsScreenState extends State<HotelsScreen> {
                                     runSpacing: 6,
                                     children: hotel.amenities
                                         .take(3)
-                                        .map((amenity) => Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 4),
-                                              decoration: BoxDecoration(
-                                                color: AppTheme.categoryGreen
-                                                    .withOpacity(0.12),
-                                                borderRadius:
-                                                    AppDesignSystem.borderRadiusSm,
-                                                border: Border.all(
-                                                  color: AppTheme.categoryGreen
-                                                      .withOpacity(0.3),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: Text(
-                                                amenity,
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                  color: AppTheme.categoryGreen,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ))
+                                        .toList()
+                                        .asMap()
+                                        .entries
+                                        .map((e) => _localizedAmenity(l10n, hotel, e.key))
                                         .toList(),
                                   ),
                                   const SizedBox(height: AppDesignSystem.spacingMd),

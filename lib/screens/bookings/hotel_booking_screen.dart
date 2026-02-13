@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../models/hotel.dart';
 import '../../widgets/price_widget.dart';
 import '../../providers/app_provider.dart';
-import 'package:provider/provider.dart';
-import '../../models/order.dart';
 import '../../l10n/app_localizations.dart';
+import 'guest_info_screen.dart';
 
 class HotelBookingScreen extends StatefulWidget {
   final Hotel hotel;
@@ -67,95 +67,37 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
     }
   }
 
-  void _proceedToPayment() {
+  void _goToGuestInfo() {
     if (_checkIn == null || _checkOut == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectDates)),
       );
       return;
     }
-
     final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.payment),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${l10n.total}: \$${_totalPrice.toStringAsFixed(2)}'),
-            const SizedBox(height: 16),
-            Text(l10n.selectPaymentMethod),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: Text(l10n.wallet),
-              onTap: () => _processPayment('wallet'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.credit_card),
-              title: Text(l10n.creditCard),
-              onTap: () => _processPayment('card'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _processPayment(String method) {
-    Navigator.pop(context);
-
     final appProvider = Provider.of<AppProvider>(context, listen: false);
-
-    final order = Order(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      type: 'hotel',
-      itemId: widget.hotel.id,
-      itemName: widget.hotel.name,
-      amount: _totalPrice,
-      orderDate: DateTime.now(),
-      status: 'confirmed',
-      details: {
-        'checkIn': _checkIn!.toIso8601String(),
-        'checkOut': _checkOut!.toIso8601String(),
-        'nights': _nights,
-        'rooms': _rooms,
-        'guests': _guests,
-        'paymentMethod': method,
-      },
-    );
-
-    appProvider.addOrder(order);
-
-    if (method == 'wallet') {
-      appProvider.deductFromWallet(_totalPrice);
-    }
-
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.bookingConfirmed),
-        content: Text(l10n.hotelBookingConfirmed),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Text(l10n.ok),
-          ),
-        ],
+    final hotelName = l10n.localeName == 'zh' ? (widget.hotel.nameZh ?? widget.hotel.name) : widget.hotel.name;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GuestInfoScreen(
+          bookingType: 'hotel',
+          itemId: widget.hotel.id,
+          itemName: hotelName,
+          amount: _totalPrice,
+          extraDetails: {
+            'checkIn': _checkIn!.toIso8601String(),
+            'checkOut': _checkOut!.toIso8601String(),
+            'nights': _nights,
+            'rooms': _rooms,
+            'guests': _guests,
+          },
+          prefilledPhone: appProvider.currentUser?.phone,
+        ),
       ),
-    );
+    ).then((result) {
+      if (result == true && mounted) Navigator.pop(context);
+    });
   }
 
   @override
@@ -177,7 +119,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.hotel.name,
+                      l10n.localeName == 'zh' ? (widget.hotel.nameZh ?? widget.hotel.name) : widget.hotel.name,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -185,7 +127,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      widget.hotel.location,
+                      l10n.localeName == 'zh' ? (widget.hotel.locationZh ?? widget.hotel.location) : widget.hotel.location,
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -193,9 +135,9 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Booking Details',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.bookingDetailsLabel,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
@@ -206,8 +148,8 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     icon: const Icon(Icons.calendar_today),
                     label: Text(
                       _checkIn == null
-                          ? 'Check-in'
-                          : DateFormat('MMM dd, yyyy').format(_checkIn!),
+                          ? l10n.checkInLabel
+                          : DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(_checkIn!),
                     ),
                   ),
                 ),
@@ -218,8 +160,8 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     icon: const Icon(Icons.calendar_today),
                     label: Text(
                       _checkOut == null
-                          ? 'Check-out'
-                          : DateFormat('MMM dd, yyyy').format(_checkOut!),
+                          ? l10n.checkOutLabel
+                          : DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(_checkOut!),
                     ),
                   ),
                 ),
@@ -296,9 +238,9 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Total Price:',
-                          style: TextStyle(
+                        Text(
+                          l10n.totalPriceLabel,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -317,11 +259,11 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ElevatedButton(
-            onPressed: _proceedToPayment,
+            onPressed: _goToGuestInfo,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: Text(l10n.proceedToPayment),
+            child: Text(l10n.nextStep),
           ),
         ),
       ),

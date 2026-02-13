@@ -16,6 +16,7 @@ class FeaturedContentCard extends StatelessWidget {
     this.typeColor,
     this.getContentTypeLabel,
     this.imageIndex,
+    this.compact = false,
   });
 
   final TravelContent content;
@@ -24,6 +25,8 @@ class FeaturedContentCard extends StatelessWidget {
   final String Function(String type)? getContentTypeLabel;
   /// When set, used to pick a distinct image. Otherwise derived from content.id.
   final int? imageIndex;
+  /// Compact horizontal bar (image left, text right) for dense list.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,9 @@ class FeaturedContentCard extends StatelessWidget {
             : content.author!)
         : null;
 
+    if (compact) {
+      return _buildCompactBar(context, theme, l10n, typeColor, typeLabel, title, author);
+    }
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -201,6 +207,128 @@ class FeaturedContentCard extends StatelessWidget {
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactBar(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    Color typeColor,
+    String typeLabel,
+    String title,
+    String? author,
+  ) {
+    const double barHeight = 92;
+    const double imageSize = 92;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          height: barHeight,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withValues(alpha: 0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: imageSize,
+                  height: imageSize,
+                  child: Image.asset(
+                    TravelImages.getContentImage(
+                      imageIndex ?? content.id.hashCode.abs() % 6,
+                    ),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: typeColor.withValues(alpha: 0.15),
+                      child: Icon(Icons.article_outlined, color: typeColor.withValues(alpha: 0.6), size: 28),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: typeColor.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            typeLabel,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: typeColor,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          title,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                            height: 1.2,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            if (author != null) ...[
+                              Icon(Icons.person_outline_rounded, size: 12, color: theme.colorScheme.onSurfaceVariant),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  author,
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            Icon(Icons.calendar_today_rounded, size: 11, color: theme.colorScheme.onSurfaceVariant),
+                            const SizedBox(width: 4),
+                            Text(
+                              DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(content.publishDate),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

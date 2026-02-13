@@ -101,7 +101,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: l10n.displayName,
-                    hintText: 'e.g. Zhang San',
+                    hintText: l10n.hintDisplayName,
                     prefixIcon: const Icon(Icons.person_outline),
                     border: const OutlineInputBorder(),
                   ),
@@ -117,7 +117,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: l10n.email,
-                    hintText: 'customer@example.com',
+                    hintText: l10n.hintEmail,
                     prefixIcon: const Icon(Icons.email_outlined),
                     border: const OutlineInputBorder(),
                   ),
@@ -130,7 +130,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   onFieldSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
                     labelText: l10n.avatarUrlOptional,
-                    hintText: 'https://...',
+                    hintText: l10n.hintAvatarUrl,
                     prefixIcon: const Icon(Icons.image_outlined),
                     border: const OutlineInputBorder(),
                   ),

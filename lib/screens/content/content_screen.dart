@@ -12,8 +12,8 @@ import 'widgets/content_category_tab_bar.dart';
 import 'widgets/featured_content_card.dart';
 import 'widgets/content_article_card.dart';
 
-/// Content hub: hero header, category pills, featured → trending → latest hierarchy,
-/// pull-to-refresh, empty state. Travel magazine feel.
+/// Content hub: compact rich header, category pills, dense list of articles.
+/// Magazine-style with many items per screen and rich detail in articles.
 class ContentScreen extends StatefulWidget {
   const ContentScreen({super.key});
 
@@ -82,14 +82,6 @@ class _ContentScreenState extends State<ContentScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final filtered = _filteredContent;
-    final featured =
-        filtered.isEmpty ? null : filtered.first;
-    final trending = filtered.length > 1
-        ? filtered.sublist(1, filtered.length > 4 ? 4 : filtered.length)
-        : <TravelContent>[];
-    final latest = filtered.length > 1
-        ? filtered.sublist(1)
-        : <TravelContent>[];
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surfaceContainerLow,
@@ -98,7 +90,7 @@ class _ContentScreenState extends State<ContentScreen> {
         color: AppTheme.primaryColor,
         child: CustomScrollView(
           slivers: [
-            _buildHero(theme, l10n),
+            _buildCompactHeader(theme, l10n),
             SliverPersistentHeader(
               pinned: true,
               delegate: _CategorySliverDelegate(
@@ -109,76 +101,7 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppDesignSystem.spacingLg,
-                  AppDesignSystem.spacingXl,
-                  AppDesignSystem.spacingLg,
-                  AppDesignSystem.spacingMd,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (featured != null) ...[
-                      _sectionTitle(theme, l10n.featured),
-                      const SizedBox(height: 12),
-                      FeaturedContentCard(
-                        content: featured,
-                        onTap: () => pushSlideUp(
-                          context,
-                          ContentDetailScreen(content: featured),
-                        ),
-                        typeColor: _typeColor(featured.type),
-                        getContentTypeLabel: (t) => _getContentTypeLabel(t, l10n),
-                        imageIndex: 0,
-                      ),
-                    ],
-                    const SizedBox(height: 28),
-                    _sectionTitle(theme, l10n.hot),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 200,
-                      child: trending.isEmpty
-                          ? _buildTrendingPlaceholder(context, theme)
-                          : ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(
-                                left: 0,
-                                right: AppDesignSystem.spacingLg,
-                              ),
-                              itemCount: trending.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 12),
-                              itemBuilder: (context, index) {
-                                final c = trending[index];
-                                return SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: ContentArticleCard(
-                                    content: c,
-                                    compact: true,
-                                    onTap: () => pushSlideUp(
-                                      context,
-                                      ContentDetailScreen(content: c),
-                                    ),
-                                    typeColor: _typeColor(c.type),
-                                    getContentTypeLabel: (t) =>
-                                        _getContentTypeLabel(t, l10n),
-                                    imageIndex: index + 1,
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                    const SizedBox(height: 28),
-                    _sectionTitle(theme, l10n.latestArticles),
-                    const SizedBox(height: 12),
-                  ],
-                ),
-              ),
-            ),
-            if (latest.isEmpty)
+            if (filtered.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Padding(
@@ -193,31 +116,44 @@ class _ContentScreenState extends State<ContentScreen> {
               )
             else
               SliverPadding(
-                padding: const EdgeInsets.only(
-                  left: AppDesignSystem.spacingLg,
-                  right: AppDesignSystem.spacingLg,
-                  bottom: AppDesignSystem.spacingXxl + 24,
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final c = latest[index];
+                      if (index == 0) {
+                        final c = filtered[0];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: FeaturedContentCard(
+                            content: c,
+                            compact: true,
+                            onTap: () => pushSlideUp(
+                              context,
+                              ContentDetailScreen(content: c),
+                            ),
+                            typeColor: _typeColor(c.type),
+                            getContentTypeLabel: (t) => _getContentTypeLabel(t, l10n),
+                            imageIndex: 0,
+                          ),
+                        );
+                      }
+                      final item = filtered[index];
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: ContentArticleCard(
-                          content: c,
+                          content: item,
+                          dense: true,
                           onTap: () => pushSlideUp(
                             context,
-                            ContentDetailScreen(content: c),
+                            ContentDetailScreen(content: item),
                           ),
-                          typeColor: _typeColor(c.type),
-                          getContentTypeLabel: (t) =>
-                              _getContentTypeLabel(t, l10n),
-                          imageIndex: index + 1,
+                          typeColor: _typeColor(item.type),
+                          getContentTypeLabel: (t) => _getContentTypeLabel(t, l10n),
+                          imageIndex: index,
                         ),
                       );
                     },
-                    childCount: latest.length,
+                    childCount: filtered.isEmpty ? 0 : filtered.length,
                   ),
                 ),
               ),
@@ -227,46 +163,29 @@ class _ContentScreenState extends State<ContentScreen> {
     );
   }
 
-  Widget _buildHero(ThemeData theme, AppLocalizations l10n) {
+  /// Compact rich header: smaller hero, search bar, trending chips.
+  Widget _buildCompactHeader(ThemeData theme, AppLocalizations l10n) {
     return SliverToBoxAdapter(
-      child: SizedBox(
-        height: 200,
-        width: double.infinity,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              TravelImages.getContentImage(0),
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppTheme.categoryPurple.withValues(alpha: 0.5),
-                    AppTheme.categoryPurple.withValues(alpha: 0.75),
-                    AppTheme.primaryColor.withValues(alpha: 0.85),
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
-                ),
-              ),
-            ),
-            SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppTheme.categoryPurple.withValues(alpha: 0.85),
+              AppTheme.primaryColor.withValues(alpha: 0.9),
+            ],
+          ),
+        ),
+        child: SafeArea(
           bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppDesignSystem.spacingLg,
-              AppDesignSystem.spacingMd,
-              AppDesignSystem.spacingLg,
-              AppDesignSystem.spacingLg,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+                child: Row(
                   children: [
                     Expanded(
                       child: Column(
@@ -275,71 +194,97 @@ class _ContentScreenState extends State<ContentScreen> {
                         children: [
                           Text(
                             l10n.contentDiscover,
-                            style: theme.textTheme.headlineMedium?.copyWith(
+                            style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              letterSpacing: 0.5,
+                              letterSpacing: 0.3,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Text(
                             l10n.contentSubtitle,
-                            style: theme.textTheme.bodyMedium?.copyWith(
+                            style: theme.textTheme.bodySmall?.copyWith(
                               color: Colors.white.withValues(alpha: 0.9),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Material(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius:
-                          BorderRadius.circular(AppDesignSystem.radiusMd),
-                      child: InkWell(
-                        onTap: () {
-                          // TODO: open search
-                        },
-                        borderRadius:
-                            BorderRadius.circular(AppDesignSystem.radiusMd),
-                        child: const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.search_rounded,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
-              ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                child: Material(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(14),
+                  child: InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(14),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      child: Row(
+                        children: [
+                          Icon(Icons.search_rounded, color: Colors.white.withValues(alpha: 0.95), size: 22),
+                          const SizedBox(width: 10),
+                          Text(
+                            l10n.search,
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                child: Row(
+                  children: [
+                    _headerChip(l10n.featured, Icons.star_rounded),
+                    const SizedBox(width: 8),
+                    _headerChip(l10n.hot, Icons.local_fire_department),
+                    const SizedBox(width: 8),
+                    _headerChip(l10n.latestArticles, Icons.article_outlined),
+                    const SizedBox(width: 8),
+                    _headerChip(l10n.guide, Icons.explore),
+                    const SizedBox(width: 8),
+                    _headerChip(l10n.tips, Icons.lightbulb_outline),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _headerChip(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.25),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Colors.white),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
           ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _sectionTitle(ThemeData theme, String title) {
-    return Text(
-      title,
-      style: theme.textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.bold,
-        color: theme.colorScheme.onSurface,
-      ),
-    );
-  }
-
-  Widget _buildTrendingPlaceholder(BuildContext context, ThemeData theme) {
-    return Center(
-      child: Text(
-        AppLocalizations.of(context)!.noContentFound,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
+        ],
       ),
     );
   }
@@ -367,16 +312,16 @@ class _CategorySliverDelegate extends SliverPersistentHeaderDelegate {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: child,
     );
   }
 
   @override
-  double get maxExtent => 56;
+  double get maxExtent => 52;
 
   @override
-  double get minExtent => 56;
+  double get minExtent => 52;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>

@@ -82,26 +82,30 @@ class CountryCodePhoneInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 140,
+          width: 160,
           height: 56,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
               borderRadius: BorderRadius.circular(8),
             ),
+            alignment: Alignment.center,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<CountryCode>(
                 value: selectedCountry,
                 isExpanded: true,
-                icon: const Icon(Icons.arrow_drop_down, size: 24),
+                icon: const Icon(Icons.arrow_drop_down, size: 26),
                 items: kCountryCodes.map((c) {
                   return DropdownMenuItem(
                     value: c,
-                    child: Text(
-                      '${c.flagEmoji} ${countryDisplayName(c, l10n)} +${c.dialCode}',
-                      style: const TextStyle(fontSize: 14),
-                      overflow: TextOverflow.ellipsis,
+                    child: Center(
+                      child: Text(
+                        '${c.flagEmoji} ${countryDisplayName(c, l10n)}',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -120,7 +124,12 @@ class CountryCodePhoneInput extends StatelessWidget {
             decoration: InputDecoration(
               labelText: labelText,
               hintText: hintText ?? (selectedCountry.code == 'CN' ? '13800138000' : ''),
-              prefixIcon: const Icon(Icons.phone_outlined),
+              prefixText: '+${selectedCountry.dialCode} ',
+              prefixStyle: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),

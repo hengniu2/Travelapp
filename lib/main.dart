@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/app_provider.dart';
 import 'utils/app_theme.dart';
@@ -10,6 +11,8 @@ import 'screens/auth/profile_update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('zh', null);
+  await initializeDateFormatting('en', null);
   runApp(const TravelApp());
 }
 

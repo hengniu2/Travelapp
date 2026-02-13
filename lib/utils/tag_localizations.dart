@@ -27,6 +27,8 @@ class TagLocalizations {
     'Prague': '布拉格',
     'Singapore': '新加坡',
     'Kuala Lumpur': '吉隆坡',
+    'Monaco': '摩纳哥',
+    'Athens': '雅典',
   };
 
   static const Map<String, String> _interestsZh = {

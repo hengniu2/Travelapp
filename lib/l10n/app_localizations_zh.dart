@@ -525,6 +525,93 @@ class AppLocalizationsZh extends AppLocalizations {
   String get packageDetails => '套餐详情';
 
   @override
+  String get itinerarySchedule => '日程介绍';
+
+  @override
+  String get highlights => '亮点';
+
+  @override
+  String get included => '费用包含';
+
+  @override
+  String get notIncluded => '费用不含';
+
+  @override
+  String dayNumber(int number) => '第$number天';
+
+  @override
+  String get departureCity => '出发城市';
+
+  @override
+  String get notIncludedPersonalExpenses => '个人消费';
+
+  @override
+  String get notIncludedTravelInsurance => '旅游保险';
+
+  @override
+  String get activityMorning => '上午：抵达与入住';
+
+  @override
+  String get activityAfternoon => '下午：游览观光';
+
+  @override
+  String get importantInfo => '重要须知';
+
+  @override
+  String get whatToBring => '行前准备';
+
+  @override
+  String get visaInfo => '签证与证件';
+
+  @override
+  String get similarTours => '相似行程';
+
+  @override
+  String get viewAllPhotos => '查看全部照片';
+
+  @override
+  String get tourPhotos => '照片';
+
+  @override
+  String get seeAllReviews => '查看全部评价';
+
+  @override
+  String get travelTips => '出行贴士';
+
+  @override
+  String get bookingNotes => '预订须知';
+
+  @override
+  String get mealsIncluded => '含餐说明';
+
+  @override
+  String tourCardNightsHotel(int nights) => '含$nights晚酒店';
+
+  @override
+  String tourCardMeals(int count) => '含$count次正餐';
+
+  @override
+  String get tourCardGroupGuarantee => '成团保障';
+
+  @override
+  String get tourCardInstantConfirm => '立即确认';
+
+  @override
+  String departureFromCity(String city) => '$city出发';
+
+  @override
+  String get selectedItineraries => '精选旅行线路';
+
+  @override
+  String get visaInfoDetail => '请根据您的国籍确认签证要求。护照需有6个月以上有效期。';
+
+  @override
+  String get whatToBringDetail => '舒适鞋子、应季衣物、转换插头、常用药品。';
+
+  @override
+  String get travelTipsDetail => '建议购买当地电话卡或开通漫游。保留预订确认单复印件。';
+
+  @override
   String get hotelIntro => '酒店介绍';
 
   @override
@@ -532,6 +619,36 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noReviewsYet => '暂无评价';
+
+  @override
+  String get reviewComment1 => '体验很棒，强烈推荐。';
+
+  @override
+  String get reviewComment2 => '服务很好，会再次预订。';
+
+  @override
+  String get reviewComment3 => '行程安排完美，导游专业，酒店也很棒，物超所值！';
+
+  @override
+  String get reviewComment4 => '性价比高，有些天稍赶，但整体是一次难忘的旅行。';
+
+  @override
+  String get reviewComment5 => '目的地很美，行程组织有序，会推荐给朋友。';
+
+  @override
+  String get reviewUserName1 => '艾丽斯';
+
+  @override
+  String get reviewUserName2 => '鲍勃';
+
+  @override
+  String get reviewUserName3 => '玛丽亚';
+
+  @override
+  String get reviewUserName4 => '詹姆斯';
+
+  @override
+  String get reviewUserName5 => '索菲';
 
   @override
   String get reviewsEmptySubtitle => '完成行程或服务后，可以在这里写下评价。';
@@ -762,6 +879,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routeTypeLabel => '路线类型';
 
   @override
+  String get routeTypeMultiCity => '多城连线';
+
+  @override
+  String get routeTypeCityTour => '城市游';
+
+  @override
+  String get routeTypeCruise => '邮轮';
+
+  @override
   String get itineraryDuration => '行程天数';
 
   @override
@@ -787,4 +913,117 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get totalPriceLabel => '总价：';
+
+  @override
+  String get purchase => '购买';
+
+  @override
+  String coverageLine(String coverage, int duration) {
+    return '保障：$coverage · $duration天';
+  }
+
+  @override
+  String get bookingCategories => '预订分类';
+
+  @override
+  String get quickBooking => '快捷预订';
+
+  @override
+  String get mySection => '我的';
+
+  @override
+  String get bookingService => '预订服务';
+
+  @override
+  String get bookingServiceSubtitle => '酒店 / 门票 / 保险 / 交通';
+
+  @override
+  String get featuredDeals => '精选低价';
+
+  @override
+  String get hotAttractions => '热门景点';
+
+  @override
+  String get travelProtection => '出行保障';
+
+  @override
+  String get transport => '交通';
+
+  @override
+  String get transferAndCar => '接送/包车';
+
+  @override
+  String get quickItemShanghaiBund => '上海外滩酒店';
+
+  @override
+  String get quickItemForbiddenCity => '故宫门票';
+
+  @override
+  String get quickItemSanyaTrip => '三亚自由行';
+
+  @override
+  String get recentBookings => '最近预订';
+
+  @override
+  String get hotRecommendations => '热门推荐';
+
+  @override
+  String get todayDeals => '今日特价';
+
+  @override
+  String get hintDisplayName => '例如：张三';
+
+  @override
+  String get hintEmail => '例如：customer@example.com';
+
+  @override
+  String get hintAvatarUrl => 'https://...';
+
+  @override
+  String get promotionsDiscountTitle => '优惠 / 折扣';
+
+  @override
+  String get promotionsDiscountSubtitle => '限时特惠，领券立减';
+
+  @override
+  String get travelerName => '姓名';
+
+  @override
+  String get idCardNumber => '身份证号';
+
+  @override
+  String get travelerPhone => '手机号';
+
+  @override
+  String get addTraveler => '添加随行人员';
+
+  @override
+  String get fillTravelerInfo => '填写出行人信息';
+
+  @override
+  String get travelerInfoRequired => '请填写所有出行人的姓名、身份证号和手机号';
+
+  @override
+  String get nextStep => '下一步';
+
+  @override
+  String get payWithAlipay => '支付宝';
+
+  @override
+  String get payWithWeChat => '微信支付';
+
+  @override
+  String get selectPayment => '选择支付方式';
+
+  @override
+  String get checkInLabel => '入住日期';
+
+  @override
+  String get checkOutLabel => '退房日期';
+
+  @override
+  String get bookingDetailsLabel => '预订信息';
+
+  @override
+  String get commentsSection => '评论';
 }

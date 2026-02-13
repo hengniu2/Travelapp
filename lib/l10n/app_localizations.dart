@@ -476,7 +476,7 @@ abstract class AppLocalizations {
   /// No description provided for @destinationKeywords.
   ///
   /// In en, this message translates to:
-  /// **'Destination / Keywords'**
+  /// **'Dest. / Keyword'**
   String get destinationKeywords;
 
   /// No description provided for @recommend.
@@ -1115,6 +1115,36 @@ abstract class AppLocalizations {
   /// **'Package details'**
   String get packageDetails;
 
+  String get itinerarySchedule;
+  String get highlights;
+  String get included;
+  String get notIncluded;
+  String dayNumber(int number);
+  String get departureCity;
+  String get notIncludedPersonalExpenses;
+  String get notIncludedTravelInsurance;
+  String get activityMorning;
+  String get activityAfternoon;
+  String get importantInfo;
+  String get whatToBring;
+  String get visaInfo;
+  String get similarTours;
+  String get viewAllPhotos;
+  String get tourPhotos;
+  String get seeAllReviews;
+  String get travelTips;
+  String get bookingNotes;
+  String get mealsIncluded;
+  String tourCardNightsHotel(int nights);
+  String tourCardMeals(int count);
+  String get tourCardGroupGuarantee;
+  String get tourCardInstantConfirm;
+  String departureFromCity(String city);
+  String get selectedItineraries;
+  String get visaInfoDetail;
+  String get whatToBringDetail;
+  String get travelTipsDetail;
+
   /// No description provided for @hotelIntro.
   ///
   /// In en, this message translates to:
@@ -1132,6 +1162,17 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No reviews yet'**
   String get noReviewsYet;
+
+  String get reviewComment1;
+  String get reviewComment2;
+  String get reviewComment3;
+  String get reviewComment4;
+  String get reviewComment5;
+  String get reviewUserName1;
+  String get reviewUserName2;
+  String get reviewUserName3;
+  String get reviewUserName4;
+  String get reviewUserName5;
 
   /// No description provided for @reviewsEmptySubtitle.
   ///
@@ -1577,6 +1618,24 @@ abstract class AppLocalizations {
   /// **'Route type'**
   String get routeTypeLabel;
 
+  /// No description provided for @routeTypeMultiCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-City'**
+  String get routeTypeMultiCity;
+
+  /// No description provided for @routeTypeCityTour.
+  ///
+  /// In en, this message translates to:
+  /// **'City Tour'**
+  String get routeTypeCityTour;
+
+  /// No description provided for @routeTypeCruise.
+  ///
+  /// In en, this message translates to:
+  /// **'Cruise'**
+  String get routeTypeCruise;
+
   /// No description provided for @itineraryDuration.
   ///
   /// In en, this message translates to:
@@ -1630,6 +1689,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Price:'**
   String get totalPriceLabel;
+
+  /// No description provided for @purchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase'**
+  String get purchase;
+
+  /// No description provided for @coverageLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Coverage: {coverage} · {duration} days'**
+  String coverageLine(String coverage, int duration);
+
+  /// No description provided for @bookingCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking categories'**
+  String get bookingCategories;
+
+  /// No description provided for @quickBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick booking'**
+  String get quickBooking;
+
+  /// No description provided for @mySection.
+  ///
+  /// In en, this message translates to:
+  /// **'My'**
+  String get mySection;
+
+  /// No description provided for @bookingService.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking service'**
+  String get bookingService;
+
+  /// No description provided for @bookingServiceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotels / Tickets / Insurance / Transport'**
+  String get bookingServiceSubtitle;
+
+  /// No description provided for @featuredDeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured deals'**
+  String get featuredDeals;
+
+  /// No description provided for @hotAttractions.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot attractions'**
+  String get hotAttractions;
+
+  /// No description provided for @travelProtection.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel protection'**
+  String get travelProtection;
+
+  /// No description provided for @transport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get transport;
+
+  /// No description provided for @transferAndCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer / Car'**
+  String get transferAndCar;
+
+  /// No description provided for @quickItemShanghaiBund.
+  ///
+  /// In en, this message translates to:
+  /// **'Shanghai Bund Hotel'**
+  String get quickItemShanghaiBund;
+
+  /// No description provided for @quickItemForbiddenCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Forbidden City Ticket'**
+  String get quickItemForbiddenCity;
+
+  /// No description provided for @quickItemSanyaTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sanya Package'**
+  String get quickItemSanyaTrip;
+
+  /// No description provided for @recentBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recentBookings;
+
+  /// No description provided for @hotRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get hotRecommendations;
+
+  /// No description provided for @todayDeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s deals'**
+  String get todayDeals;
+
+  /// No description provided for @hintDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. John Smith'**
+  String get hintDisplayName;
+
+  /// No description provided for @hintEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. customer@example.com'**
+  String get hintEmail;
+
+  /// No description provided for @hintAvatarUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'https://...'**
+  String get hintAvatarUrl;
+
+  /// No description provided for @promotionsDiscountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Promos / Discounts'**
+  String get promotionsDiscountTitle;
+
+  /// No description provided for @promotionsDiscountSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Limited-time offers, use coupons to save'**
+  String get promotionsDiscountSubtitle;
+
+  /// No description provided for @travelerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get travelerName;
+
+  /// No description provided for @idCardNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'ID card number'**
+  String get idCardNumber;
+
+  /// No description provided for @travelerPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get travelerPhone;
+
+  /// No description provided for @addTraveler.
+  ///
+  /// In en, this message translates to:
+  /// **'Add traveler'**
+  String get addTraveler;
+
+  /// No description provided for @fillTravelerInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill traveler info'**
+  String get fillTravelerInfo;
+
+  /// No description provided for @travelerInfoRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill name, ID card and phone for all travelers'**
+  String get travelerInfoRequired;
+
+  /// No description provided for @nextStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextStep;
+
+  /// No description provided for @payWithAlipay.
+  ///
+  /// In en, this message translates to:
+  /// **'Alipay'**
+  String get payWithAlipay;
+
+  /// No description provided for @payWithWeChat.
+  ///
+  /// In en, this message translates to:
+  /// **'WeChat Pay'**
+  String get payWithWeChat;
+
+  /// No description provided for @selectPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Select payment method'**
+  String get selectPayment;
+
+  /// No description provided for @checkInLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get checkInLabel;
+
+  /// No description provided for @checkOutLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get checkOutLabel;
+
+  /// No description provided for @bookingDetailsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking details'**
+  String get bookingDetailsLabel;
+
+  /// No description provided for @commentsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get commentsSection;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
